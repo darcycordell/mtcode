@@ -1,0 +1,104 @@
+function plot_misfit_percent_diff_map(dobs,dpred,ip)
+% Function which plots the percent difference between observed and
+% predicted MT data as interpolated percent difference of apparent
+% resistivity and phase. 
+%
+% Usage: plot_misfit_percent_diff_map(dobs,dpred,ip)
+%
+% "dobs" is the observed MT data structure
+% "dpred" is the predicted MT data structurce
+% "ip" is the index of the period to plot
+%
+
+u = user_defaults;
+[L] = load_geoboundary_file_list;
+
+close all
+drho = 100*(abs(dobs.rho - dpred.rho)./dobs.rho); %Calcuate rho % diff
+
+%Calculate phase % diff. Must be done separately for xx/xy and yy/yx
+%components because yy/yx components are in the -180 to -90 quadrant
+dpha = zeros(dobs.nf,4,dobs.ns);
+for i = 1:2
+    dpha(:,i,:) = 100*(abs(dobs.pha(:,i,:) - dpred.pha(:,i,:))./dobs.pha(:,i,:));
+end
+
+for i = 3:4
+    dpha(:,i,:) = 100*(abs(dobs.pha(:,i,:) - dpred.pha(:,i,:))./(dobs.pha(:,i,:)+180));
+end    
+
+%Set up interpolation grid
+xgrid = dobs.lim(1):u.dx:dobs.lim(2);     
+ygrid = dobs.lim(3):u.dy:dobs.lim(4); 
+[X,Y] = meshgrid(xgrid,ygrid);
+  
+set_figure_size(1);
+
+drhogrid = zeros(length(ygrid),length(xgrid),4);
+for i = 1:4 %Loop over components
+
+    %Create gridded apparent resistivity % differences
+    drhogrid(:,:,i) = griddata(dobs.loc(:,2),dobs.loc(:,1), squeeze(drho(ip,i,:)),X,Y,u.interp_method);
+
+    subplot(2,4,i)
+    m_pcolor(X,Y,squeeze(drhogrid(:,:,i))); shading flat; hold on
+    m_grid('box','fancy','xlabeldir','end','tickdir','in'); hold on
+    m_plot(dobs.loc(:,2),dobs.loc(:,1),'k.','markersize',12);
+    plot_geoboundaries(L);
+
+    colormap('gray'); caxis([0 20]); hcb = colorbar;
+    hcb.Label.String = 'Percent Difference';
+
+    if dobs.nr == 2 % fix title plotting for off-diagonal only impedances
+        if i == 2 || i == 3
+            title([dobs.responses{i-1}(2:end),' App. Res.'])
+        else % clear axes for diagonal components
+            cla
+            colorbar('off')
+        end
+    else      
+        title([dobs.responses{i}(2:end),' App. Res.'])
+    end            
+    
+end
+
+dphagrid = zeros(length(ygrid),length(xgrid),4);
+for i = 1:4 %Loop over components
+    
+    %Create gridded apparent resistivity % differences
+    dphagrid(:,:,i) = griddata(dobs.loc(:,2),dobs.loc(:,1), squeeze(dpha(ip,i,:)),X,Y,u.interp_method);
+
+    subplot(2,4,i+4)
+    m_pcolor(X,Y,squeeze(dphagrid(:,:,i))); shading flat; hold on
+    m_grid('box','fancy','xlabeldir','end','tickdir','in'); hold on
+    m_plot(dobs.loc(:,2),dobs.loc(:,1),'k.','markersize',12);
+    plot_geoboundaries(L);
+
+    colormap('gray'); caxis([0 20]); hcb = colorbar;
+    hcb.Label.String = 'Percent Difference';
+    
+    if dobs.nr == 2 % fix title plotting for off-diagonal only impedances
+        if i == 2 || i == 3
+            title([dobs.responses{i-1}(2:end),' Phase'])
+        else % clear axes for diagonal components
+            cla
+            colorbar('off')
+        end
+    else           
+        title([dobs.responses{i}(2:end),' Phase'])
+    end
+           
+end
+
+annotation('textbox', [0 0.9 1 0.08], ...
+    'String', ['Interpolated Percent Difference @ T = ',num2str(dobs.T(ip)),' s'], ...
+    'EdgeColor', 'none', ...
+    'HorizontalAlignment', 'center','FontSize',12,'FontWeight','bold')
+
+
+print_figure(['compare_responses_map_',dpred.niter],['percent_diff_',num2str(dobs.T(ip))]); %Save figure
+
+
+
+
+end
