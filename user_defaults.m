@@ -14,7 +14,7 @@ function [u] = user_defaults
 
 
 %GENERAL OPTIONS-----------------------------------------------------------
-
+%test
 u.output_figure = 'png'; %Select file format to save figures.
                    % 'none' no figure is saved
                    % 'jpg' JPG is saved
