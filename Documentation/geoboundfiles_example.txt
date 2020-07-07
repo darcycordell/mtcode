@@ -1,0 +1,50 @@
+Lakes_Map.txt, fill, -k, 1, b, 0.5
+Seismicity_All.txt, marker, b., 4
+
+#
+Put other files after the "#" if you don't want to plot them
+
+
+This text file contains a list of two other text files: Lakes_Map and Seismicity_All (any files in the list must be on your MATLAB path)
+
+This first file contains longitude and latitude coordinates for the outline of some lakes in the study area. These will be plotted as a black
+line as shown by the line specifier (-k) with a line width of 1, a fill color of blue, and facealpha (transparency) of 0.5.
+
+The second file contains longitude, latitude and elevation coordinates for earthquake epicenters in the study area. These will be plotted as blue
+dots as shown by the color and marker specifier (b.) with a marker size of 4.
+
+After the list, there is a # and the file will not be read after this point, so you can add comments or whatever you want after that point.
+
+# each file must contain only lines, markers, or filled polygons
+# polygons should start and end at the same point
+# the plotting style will be the same for every object in a particular file
+
+# Valid entries:
+
+for Markers:
+filename, type
+filename, type, color+marker, markersize
+
+for Lines:
+filename, type
+filename, type, linestyle+color, linewidth
+filename, type, linestyle+color+marker, linewidth, markersize
+
+for Fills:
+filename, type
+filename, type, linestyle+color, linewidth, facecolor, facealpha
+
+# General Examples
+
+for Markers:
+points.txt, marker
+points.txt, marker, kd, 12
+
+for Lines: * note for lines you can specify a linestyle AND a marker *
+lines.txt, line
+lines.txt, line, --k, 2
+lines.txt, line, -.ko, 2, 8
+
+for Fills:
+polygons.txt, fill
+polygons.txt, fill, -k, 2, b, 0.5

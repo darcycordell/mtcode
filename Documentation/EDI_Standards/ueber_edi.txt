@@ -1,0 +1,502 @@
+
+           The SEG Standard for Magnetotelluric Data
+
+                       presented at the
+       Society of Exploration Geophysicists Annual Meeting
+                       November, 1988
+   
+                            by
+                      David E. Wight
+
+Summary
+
+In December, 1987, the Society of Exploration Geophysicists (SEG) adopted a 
+standard format for the interchange of magnetotelluric (MT) and 
+electromagnetic array profiling (EMAP) data. The standard format was 
+developed over a period of two years and incorporated input from a variety 
+of audiences who deal with MT and EMAP data including oil company 
+representatives, contractors, and consultants. The complete, published 
+description of the format is available from SEG.
+
+This presentation briefly summarizes some of the important aspects of the 
+standard. It includes brief discussions of the history, purpose, and scope 
+of the standard, the format of an interchange file, and the representation 
+of spatial relations. Finally, it makes recommendations regarding the 
+application of the format.
+
+Background
+
+In early 1986, representatives from some of the major users of 
+magnetotelluric (MT) and electromagnetic array profiling (EMAP) data formed 
+an ad hoc committee to investigate a standard for the interchange of MT and 
+EMAP data. By June, 1986, the committee produced a first draft describing an 
+industry-wide standard for the interchange of MT and EMAP data. Over the 
+course of the next 16 months, the standard was circulated to a variety of 
+audiences for review and revision. A draft was presented to the SEG 
+Standards Committee in November, 1986. In August, 1987, a meeting of the ad 
+hoc committee was held which approved a final draft and forwarded it to the 
+SEG Standards Committee. The standard was adopted by the SEG Executive 
+Committee on December 14, 1987. Copies of the standard may be obtained from 
+SEG.
+
+A data file which conforms to the standard for the interchange of MT, EMAP, 
+or similar electrical geophysical data is referred to here as an Electrical 
+Data Interchange (EDI) file.
+
+Purpose and Scope of the Standard
+
+The standard is intended to provide a complete, orthogonal, unambiguous 
+description of a data set. The standard has been designed such that the data 
+in an EDI file can be interpreted without referencing a base map or other 
+field documents. Within an EDI file, concepts specific to a particular 
+acquisition system do not drive the organization of the data.
+
+Although the format is rigorously specified, it has been designed to be 
+flexible and extensible. The inclusion of complete spatial information is 
+inherent in the standard. The format described by the standard was designed 
+for the interchange and archival of data. It is not intended for use as a 
+working format.
+
+The standard defines the physical format and media on which EDI files may 
+reside. Although the only media currently specified by the standard is 
+magnetic tape, the use of non-standard media is discussed within the 
+standard.
+
+The standard provides a consistent set of definitions for geophysical 
+quantities and units. These include units, phase conventions, and similar 
+concepts. It supports a variety of processing alternatives and includes 
+escape mechanisms to handle experimental and non-standard data.
+
+The standard specifies the syntax and semantics for an EDI file with the 
+same precision that a computer language is specified by its reference 
+manual. In fact, the format for an EDI file is analogous to a source code 
+file for a computer program. A program which reads EDI files and converts 
+the data into a usable form is analogous to a compiler.
+
+General Characteristics of Electrical Data Interchange (EDI) Files
+
+EDI files are ASCII text files. Although such a file is made up of a series 
+of data records, the file is considered to be a character stream. For 
+handling special cases with large amounts of data, the standard makes 
+provisions for parallel binary data files which are referenced by the EDI 
+file. However, these are the exception rather than the rule and will not be 
+discussed here.
+
+Comments may be embedded within EDI files, allowing special annotations to 
+be included. Additionally, there is a special provision for a section of 
+free-form text to be included with each file. This section serves a special 
+purpose, embedding a description of the system dependent parameters related 
+to the acquisition and processing of a particular data set.
+
+Building Blocks for EDI Files
+
+EDI files are constructed from Data Blocks (or sometimes simply, Blocks). A 
+data block consists of a keyword, optionally followed by one or more 
+options, optionally followed by a data set.
+
+All data blocks begin with a keyword. A keyword always begins with the 
+character >. Examples of keywords are >HEAD, >SPECTRA, >FREQ, and >ZXXR. 
+Over one hundred keywords are defined for EDI files. An option has two 
+parts: an option name, and an option argument, separated by an equal sign 
+(=). Examples of options are:
+
+DATAID=SITE1,
+ACQDATE=01/31/88,
+ROTATE=NORTH,
+REFLAT=+30:50:40.3,   and
+GAIN=1.25
+
+Normally, a data set consists of two slash characters //, followed by a 
+number which gives the number of data values, followed by the actual data 
+values. Alternatively, a data set may be represented by special characters 
+which indicate that the actual data is to be read from a parallel binary 
+data file.
+
+Syntactically, an EDI file is a sequence of data blocks. Every data block 
+exactly fits the description above. The one exception to this rule is the 
+free-form text which immediately follows the >INFO block.
+
+Organizing the Data Blocks
+
+Within an EDI file, sequences of data blocks may be grouped into sections. 
+Each section begins with a special data block whose keyword begins with the 
+two characters >=. These special data blocks are analogous to the FORTRAN 
+statements SUBROUTINE and FUNCTION which separate a FORTRAN program into 
+contexts.
+
+Just as there are rules for the order of statements in a FORTRAN program, 
+there are rules for the ordering of blocks within an EDI file. All files 
+begin with a >HEAD block, an >INFO block and a >=DEFINEMEAS section. 
+Following this are one or more data sections. Types of data sections include 
+>=MTSECT sections, >=EMAPSECT sections, and >=SPECTRASECT sections. 
+Following all of the data sections is an >END block.
+
+Measurements and Spatial Relations
+
+Each EDI file defines a set of measurements. All of the data within the file 
+is referenced back to that set of measurements. Each measurement corresponds 
+to a particular channel (E-field dipole or H-field sensor) and to a 
+particular run. A measurement is defined in terms of sensor locations and 
+other parameters.
+
+All sensor locations within an EDI file are expressed as relative offsets 
+from a single reference point.
+
+Programs to Read and Write EDI Files
+
+It has been pointed out repeatedly that EDI files are analogous to source 
+code files. That analogy may be extended to programs for reading them. The 
+same techniques used for writing compilers can be applied to developing 
+programs for reading EDI files. Formal specification mechanisms such as 
+Backus-Naur form for syntactic specification can be used to precisely 
+specify the syntax for an EDI file.
+
+Techniques are available which can take such formal specifications and 
+generate tables which succinctly describe the data format. Through the use 
+of unambiguous specifications, a program can verify an EDI file as 
+syntactically and semantically correct, just as a compiler verifies the 
+correctness of a source code file. Additionally, the same tables can be used 
+to write data which is guaranteed to be in the standard format.
+
+A FORTRAN 77 program for reading and writing data EDI files was developed in 
+parallel with the formulation of the standard. Not only did this assure that 
+the published standard was implementable, it pointed out a number of 
+inconsistencies which were addressed prior to the final version.
+
+Comments and Recommendations
+
+The EDI format allows a great deal of flexibility in the organization and 
+presentation of data, just as within a programming language there are many 
+ways to do the same task. The following recommendations may provide some 
+guidance:
+
+Expressing all spatial locations for measurements relative to a common 
+reference location allows the interpreter to relate a number of sites or 
+surveys to one another. Within the limits of projection accuracy, surveys 
+should attempt to use a common reference location.
+
+Channel identifiers should be chosen so as to be meaningful, such as 
+(10*SiteNumber)+C, where C=1 for Hx, 2 for Hy, 3 for Hz, 4 for Ex, and 5 for 
+Ey. Run identifiers should be assigned sequentially.
+
+For all but very large MT surveys, it is recommended that data for all sites 
+be put into a single EDI file. This guarantees a common reference location. 
+Within the file, an >=MTSECT section should be included for each site. 
+Within each section are data blocks for all of the computed quantities.
+
+If spectra for an MT survey are to be delivered, it is recommended that 
+these reside in an EDI file which is separate than that used for the 
+computed parameters. However, the reference location and measurement 
+definition section should be identical. A separate >SPECTRASECT section 
+should be used for each site.
+
+The set of measurements for the section should include all of those for the 
+site plus any others which may be used as remote reference pairs. Seven or 
+nine measurements would be typical. It is recommended that all spectra be 
+rotated to true North.
+
+For EMAP surveys, it is recommended that data for a survey be included 
+within a single EDI file. An >=EMAPSECT section will be used for each line. 
+Within each section, it is recommended that only the impedances (Z's) be 
+included for each dipole. The large data volume of the apparent 
+resistivities, phases, and 1-D inversions usually outweigh the time to re-
+compute them. Because the volume of EMAP data can become quite large, it may 
+be necessary to break the lines within a survey into separate files for 
+practical reasons. In such cases, the same reference should be used for all 
+files within the limits of projection accuracy. If both raw and spatially 
+filtered data are to be delivered, it is recommended that they be written in 
+separate EDI files.
+
+Spectra for EMAP surveys should be delivered in an EDI file which is 
+separate than that used for the impedances. The reference location and 
+measurement definition section would, however, be identical. A >=SPECTRASET 
+will be included for each set of simultaneously acquired dipoles and H-field 
+measurements.
+
+Specifications for delivery of time series data have been included within 
+the standard, but it is recommended that time series data not be included 
+with data deliveries unless there are specific reasons for doing so. 
+Parallel binary files have been defined within the standard for handling 
+very large data sets. They are not recommended for normal use.
+
+Conclusions
+
+In the past, each contractor has supported its own format for data 
+interchange. These formats were also subject to change from time to time. As 
+a result, many programs were required for reading and writing data. 
+Additionally, the content of the data formats was insufficient to 
+reconstruct the data without outside information.
+
+The introduction of a standard format will allow both contractors and 
+clients to support programs for reading and writing data in a single format. 
+Data written in the standard format is guaranteed to be completely and 
+unambiguously specified. Because the standard has been thoroughly documented 
+and officially adopted by the SEG, data archived in the standard format will 
+always be usable in the future.
+
+Additionally, the standard offers new opportunities for processing and 
+interpretation. New interpretation workstations are becoming available which 
+can take advantage of the spatial relations within a data set.
+
+Most of the MT and EMAP contractors are now able to produce data in the 
+standard format. Efforts are also underway to re-format old data to conform 
+to the new standard. The success of any standard hinges upon its widespread 
+acceptance. A great deal of effort has been put into producing a standard 
+which matches the current needs of the industry while retaining the 
+flexibility to meet future needs. This standard will, hopefully, be a major 
+benefit to MT and EMAP exploration.
+
+References
+
+Aho, A. V., and Ullman, J. D., 1978, Principles of Compiler Design: Addison 
+Wesley.
+
+Wight, D. E., 1988, SEG MT/EMAP Data Interchange Standard: Society of 
+Exploration Geophysicists.
+
+Example EDI File
+
+The following is a simple example of an Electrical Data Interchange (EDI) 
+file:
+
+>HEAD
+
+DATAID=DEMO
+ACQBY="GEOTOOLS CORP"
+FILEBY="GEOTOOLS CORP"
+ACQDATE=01/01/88
+FILEDATE=10/01/88
+PROSPECT=BLEAK
+LOC=NEAR AUSTIN
+LAT=30:46:00
+LONG=-98:54:38
+ELEV=170
+STDVERS=SEG 1.0
+PROGVERS=WSE_1.2
+PROGDATE=08/07/89
+MAXSECT=64
+EMPTY=1.0E+32
+
+>INFO MAXINFO=500
+
+THIS IS WHERE FREE-FORM TEXT GOES. IT SHOULD CONTAIN ANY AND ALL RELEVANT 
+INFORMATION WHICH IS NOT PROVIDED ELSEWHERE IN THE FILE. EXAMPLES OF ITEMS 
+TO BE INCLUDED HERE WOULD BE:
+
+-    A DESCRIPTION OF THE ACQUISITION SYSTEM USED
+-    A DESCRIPTION OF HOW THE DATA WAS PROCESSED
+-    OPERATOR LOGS FROM THE ACQUISITION
+-    ANY NON-STANDARD ASPECTS OF ACQUISITION
+-    ANY SPECIAL PROCESSING USED
+      ETC...
+
+THE FOLLOWING IS A VERY SIMPLE EXAMPLE OF MT DATA IN THE SEG STANDARD FORMAT 
+FOR MT DATA. COPIES OF THE SEG MT/EMAP DATA INTERCHANGE STANDARD DESCRIBING 
+THE STANDARD ARE AVAILABLE FROM:
+
+   THE SOCIETY OF EXPLORATION GEOPHYSICISTS
+   P.O. BOX 702740
+   TULSA, OKLAHOMA 74170 USA
+
+THIS EXAMPLE FILE CONTAINS SPECTRA FOR FOUR REMOTE REFERENCED MT SITES WHICH 
+WERE ACQUIRED TWO AT A TIME USING A 10 CHANNEL SYSTEM. RUN 1 INCLUDED SITES 
+1 AND 2. RUN 2 INCLUDED SITES 3 AND 4.
+
+>=DEFINEMEAS
+MAXCHAN=16
+MAXRUN=999
+MAXMEAS=320
+UNITS=M
+REFTYPE=CART
+REFLOC=NEAR AUSTIN
+REFLAT=30:46:00
+REFLONG=-98:54:38
+REFELEV=170
+
+>! ---- MEASUREMENTS FOR SITE DEMO-001 ---- !
+>HMEAS ID=11.001 CHTYPE=HX X=6932 Y=2697 Z=0 AZM=+0
+       ACQCHAN=CH1 SENSOR=COIL426
+>HMEAS ID=12.001 CHTYPE=HY X=6932 Y=2697 Z=0 AZM=+90
+       ACQCHAN=CH2 SENSOR=COIL429
+>HMEAS ID=13.001 CHTYPE=HZ X=6932 Y=2697 Z=0 AZM=0
+       ACQCHAN=CH3 SENSOR=LOOP419
+>EMEAS ID=14.001 CHTYPE=EX X=6853 Y=2697 Z=0 X2=7011 Y2=2697 Z2=0
+       ACQCHAN=CH4
+>EMEAS ID=15.001 CHTYPE=EY X=6932 Y=2620 Z=0 X2=6932 Y2=2775 Z2=0
+       ACQCHAN=CH5
+
+>! ---- MEASUREMENTS FOR SITE DEMO-002 ---- !
+>HMEAS ID=21.001 CHTYPE=HX X=6070 Y=2456 Z=0 AZM=+45
+       ACQCHAN=CH6 SENSOR=COIL210
+>HMEAS ID=22.001 CHTYPE=HY X=6070 Y=2456 Z=0 AZM=+135
+       ACQCHAN=CH7 SENSOR=COIL433
+>HMEAS D=23.001 CHTYPE=HZ X=6070 Y=2456 Z=0 AZM=0
+       ACQCHAN=CH8 SENSOR=LOOP420
+>EMEAS ID=24.001 CHTYPE=EX X=6014 Y=2400 Z=0 X2=6126 Y2=2512 Z2=0
+       ACQCHAN=CH9
+>EMEAS ID=25.001 CHTYPE=EY X=6127 Y=2399 Z=0 X2=6013 Y2=2513 Z2=0
+       ACQCHAN=CH10
+
+>! ---- MEASUREMENTS FOR SITE DEMO-003 ---- !
+>HMEAS D=31.002 CHTYPE=HX X=4068 Y=1729 Z=0 AZM=+0
+       ACQCHAN=CH6 SENSOR=COIL210
+>HMEAS ID=32.002 CHTYPE=HY X=4068 Y=1729 Z=0 AZM=+90
+       ACQCHAN=CH7 SENSOR=COIL433
+>HMEAS ID=33.002 CHTYPE=HZ X=4068 Y=1729 Z=0 AZM=0
+       ACQCHAN=CH8 SENSOR=LOOP420
+>EMEAS ID=34.002 CHTYPE=EX X=3988 Y=1729 Z=0 X2=4148 Y2=1729 Z2=0
+       ACQCHAN=CH9
+>EMEAS ID=35.002 CHTYPE=EY X=4068 Y=1654 Z=0 X2=4068 Y2=1804 Z2=0
+       ACQCHAN=CH10
+
+>! ---- MEASUREMENTS FOR SITE DEMO-004 ---- !
+>HMEAS   ID=41.002 CHTYPE=HX X=3543 Y=1332 Z=0 AZM=+0
+         ACQCHAN=CH1 SENSOR=COIL426
+>HMEAS   ID=42.002 CHTYPE=HY X=3543 Y=1332 Z=0 AZM=+90
+         ACQCHAN=CH2 SENSOR=COIL429
+>HMEAS   ID=43.002 CHTYPE=HZ X=3543 Y=1332 Z=0 AZM=0
+         ACQCHAN=CH3 SENSOR=LOOP419
+>EMEAS   ID=44.002 CHTYPE=EX X=3468 Y=1332 Z=0 X2=3618 Y2=1332 Z2=0
+         ACQCHAN=CH4
+>EMEAS   ID=45.002 CHTYPE=EY X=3543 Y=1257 Z=0 X2=3543 Y2=1407 Z2=0
+         ACQCHAN=CH5
+
+>=SPECTRASECT
+SECTID=DEMO-001 NCHAN=7 NFREQ=2 MAXBLKS=40 // 7
+  11.001
+  12.001
+  13.001
+  14.001
+  15.001
+  21.001
+  22.001
+
+>SPECTRA FREQ=3.840E+02 ROTSPEC=0 BW=9.600E+01 AVGT=128 // 49
+  8.93219188E-09  3.71313841E-09 -1.99191788E-10 -9.43570484E-08 -2.54417358E-07
+  6.56718013E-09  1.75055614E-10 -8.61504687E-11  9.85530768E-09 -2.53706234E-09
+  1.63427922E-06  4.33353976E-08  2.34660158E-09  6.69126132E-09  1.13502585E-09
+ -8.05332334E-09  1.11871438E-07  1.17737466E-06  3.85129027E-07 -3.16019499E-09
+ -1.26499855E-09 -5.67650205E-10 -1.43017530E-06  1.78105165E-06  2.78377570E-04
+  5.92902070E-05  8.31623552E-08  1.13337330E-06  3.81438383E-06  4.76444831E-07
+ -2.58341146E-07 -6.22527441E-05  1.01763383E-03  5.63803605E-07  9.25995527E-07
+  8.64011918E-10  4.57928584E-10 -1.40479095E-09  7.71970939E-07 -2.30292790E-06
+  6.16830498E-09  1.41650280E-09  2.73843559E-10  1.74602843E-10  6.35243058E-09
+  1.25763188E-06 -5.62930573E-08  1.31729710E-10  1.69909675E-09
+
+>SPECTRA FREQ=2.880E+02 ROTSPEC=0 BW=9.600E+01 AVGT=256 // 49
+  3.15044417E-07  1.06661282E-07  3.64470010E-09  3.87696252E-06 -1.80462666E-05
+  2.72093047E-07  3.34956098E-08 -7.56839569E-09  1.25672912E-07  1.69090590E-08
+  5.12637325E-06 -7.93242543E-06  8.65761720E-08  4.60385825E-08  1.52567363E-08
+  7.02055480E-09  2.08181916E-07  7.89371768E-07  1.14016069E-07  4.31243663E-09
+  1.09012408E-08  5.77810113E-07 -2.74804620E-06 -1.02846582E-06  3.50923481E-04
+ -3.33768548E-04  9.04688490E-06  3.67553912E-06  1.28061911E-05  4.04646153E-06
+  1.93325127E-06  2.96053035E-04  1.67080865E-03 -1.56074220E-05 -3.67275243E-06
+  1.12941212E-09  6.12248605E-09 -1.46238799E-08 -9.46047010E-07 -1.12315583E-05
+  2.47161296E-07  5.20412648E-08 -1.60585287E-08 -7.86881671E-09  2.23404428E-09
+  2.32770299E-06 -1.83344355E-07 -1.08858877E-08  7.89583936E-08
+
+>=SPECTRASECT
+SECTID=DEMO-002 NCHAN=7 NFREQ=2 MAXBLKS=40 // 7
+  21.001
+  22.001
+  23.001
+  24.001
+  25.001
+  11.001
+  12.001
+
+>SPECTRA FREQ=3.840E+02 ROTSPEC=0 BW=9.600E+01 AVGT=128 // 49
+  2.52592258E-07  4.65419134E-08  3.08377679E-09 -8.94308414E-06 -2.11387942E-05
+  2.88274492E-07  1.18568487E-07 -9.83677317E-09  7.07770056E-08  5.30707145E-10
+  5.83948986E-06 -5.11656572E-06  6.47362981E-08  9.01098929E-08 -3.86029209E-09
+ -1.66674993E-10  6.05896355E-09 -6.12111251E-08 -6.36822620E-07  3.55957752E-09
+  1.31788647E-09 -8.59396368E-06 -1.18576436E-05 -3.21819726E-07  3.17180669E-03
+ -2.05396049E-04 -9.69346820E-06  3.45619628E-06  2.43835020E-05  4.19823346E-06
+ -3.44752742E-08 -1.59833569E-03  4.23136307E-03 -2.33113933E-05 -1.03467892E-05
+  9.93493376E-09  1.64090661E-08  4.45259385E-09  1.17983709E-05 -2.88556057E-05
+  3.36828322E-07  1.49064846E-07 -9.23587873E-10  6.79298884E-09  1.34812683E-09
+  1.55594862E-05 -1.20594650E-05 -9.31386346E-09  1.34248651E-07
+
+>SPECTRA FREQ=2.880E+02 ROTSPEC=0 BW=9.600E+01 AVGT=256 // 49
+  4.26219188E-09  3.71313841E-09 -1.99191788E-10 -9.43570484E-08 -2.54417358E-07
+  6.56718013E-09  1.75055614E-10 -8.61504687E-11  9.85530768E-09 -2.53706234E-09
+  1.63427922E-06  4.33353976E-08  2.34660158E-09  6.69126132E-09  1.13502585E-09
+ -8.05332334E-09  1.11871438E-07  1.17737466E-06  3.85129027E-07 -3.16019499E-09
+ -1.26499855E-09 -5.67650205E-10 -1.43017530E-06  1.78105165E-06  2.78377570E-04
+  5.92902070E-05  8.31623552E-08  1.13337330E-06  3.81438383E-06  4.76444831E-07
+ -2.58341146E-07 -6.22527441E-05  1.01763383E-03  5.63803605E-07  9.25995527E-07
+  8.64011918E-10  4.57928584E-10 -1.40479095E-09  7.71970939E-07 -2.30292790E-06
+  6.16830498E-09  1.41650280E-09  2.73843559E-10  1.74602843E-10  6.35243058E-09
+  1.25763188E-06 -5.62930573E-08  1.31729710E-10  1.69909675E-09
+
+>=SPECTRASECT
+SECTID=DEMO-003 NCHAN=7 NFREQ=2 MAXBLKS=40 // 7
+  31.002
+  32.002
+  33.002
+  34.002
+  35.002
+  41.002
+  42.002
+
+>SPECTRA FREQ=3.840E+02 ROTSPEC=0 BW=9.600E+01 AVGT=448 // 49
+  1.85453537E-08 -2.35638553E-09  5.83249760E-09 -1.66184475E-06 -2.69476141E-06
+  2.08384048E-08  1.30347078E-09 -5.30692268E-10  2.72998335E-09 -3.55058960E-09
+  5.72594956E-07  2.03653656E-07 -2.52966537E-09  1.80482251E-09 -2.89235358E-10
+  5.16686416E-10  2.18115758E-07 -1.13343378E-06 -8.79012646E-07  7.39186001E-09
+ -2.49609133E-09  8.55428311E-07 -7.50339609E-07  9.73336569E-07  4.84545744E-04
+  4.08155844E-04 -1.94715790E-06  3.24843143E-07  3.75374361E-06 -5.15723684E-07
+  1.01657486E-06 -2.39149202E-04  1.24885608E-03 -3.13672035E-06 -2.62098297E-07
+ -2.61620337E-10  8.02747369E-10 -3.69188180E-10 -8.65357549E-07 -4.37259632E-06
+  2.49390926E-08  1.72167713E-09 -1.49038247E-11 -8.62808366E-11  4.03163170E-10
+  5.79959476E-07 -3.34648405E-07 -8.26554242E-11 3.05876013E-09
+
+>SPECTRA FREQ=2.880E+02 ROTSPEC=0 BW=9.600E+01 AVGT=448 // 49
+  2.63053010E-07 -1.86626856E-08  3.47274698E-09 -1.86342259E-05 -3.25878136E-05
+  2.92078738E-07  2.40497382E-08 -4.81067319E-09  2.11735447E-08  1.30200730E-08
+  3.86379634E-06  1.31988884E-06 -1.87654976E-08  1.52600848E-08 -4.05656273E-08
+  5.04376185E-09  3.89669310E-07 -4.38075006E-07 -6.91867081E-06  3.46689455E-09
+  9.79225145E-09  8.37796324E-06 -5.64516859E-06 -6.22880680E-06  3.41640925E-03
+  3.75395408E-03 -2.11596525E-05  9.93123649E-07  4.29204811E-05 -3.68187966E-06
+ -3.57394492E-06 -2.11867993E-03  1.14109479E-02 -3.72892173E-05 -2.33954370E-06
+ -3.77258891E-09  7.83583953E-09  4.04610319E-08 -8.13271345E-06 -4.76403948E-05
+  3.32276358E-07  2.87468112E-08  4.88581353E-09  5.42131451E-10  1.27342048E-09
+  3.54476401E-06 -4.47584534E-06  4.27400115E-09  2.29760690E-08
+
+>=SPECTRASECT
+SECTID=DEMO-004 NCHAN=7 NFREQ=2 MAXBLKS=40 // 7
+  41.002
+  42.002
+  43.002
+  44.002
+  45.002
+  31.002
+  32.002
+
+>SPECTRA FREQ=3.840E+02 ROTSPEC=0 BW=9.600E+01 AVGT=827 // 49
+  2.25159500E-08  2.66077760E-09  2.54485544E-10 -8.00217776E-07 -5.59272053E-07
+  1.86462330E-08 -1.33919453E-09 -1.79324611E-10  4.66960470E-09 -1.73868042E-09
+ -7.22674329E-08 -2.78178121E-08  1.99099448E-09  2.98927705E-09  4.01740374E-09
+ -4.76813207E-11  1.97632815E-07 -6.90266830E-08  2.37283317E-07  1.00231057E-09
+ -2.33578179E-09  3.32538974E-08 -2.82358343E-07  3.19204190E-07  6.10780407E-05
+  1.16585970E-05 -6.58140436E-07  5.72356065E-08  2.09420409E-06  3.35528938E-07
+  7.60314833E-08 -7.69914986E-05  2.31511891E-04 -4.96301709E-07  3.15968727E-08
+  1.53057428E-10 -2.01594002E-11 -2.39216114E-09 -4.12738821E-08 -1.79923654E-06
+  1.66293415E-08 -1.38102607E-09 -7.94963373E-10  7.36340641E-11  3.53096080E-10
+  2.77789042E-07  7.81626781E-08 -4.50162296E-10  3.57415941E-09
+
+>SPECTRA FREQ=2.880E+02 ROTSPEC=0 BW=9.600E+01 AVGT=379 // 49
+  4.83657274E-08  3.59201096E-08 -7.29046690E-09  1.23940788E-06 -2.80609743E-06
+  3.59514836E-08  2.47264538E-08 -4.64733008E-09  4.46614282E-08 -9.54583346E-09
+  1.98810972E-06 -2.77659933E-06  2.63789683E-08  6.62920298E-08  3.33196248E-09
+ -5.41198686E-09  4.32842199E-07  4.41772954E-07  2.39921434E-07 -6.00080652E-09
+ -2.86685253E-09 -6.89438053E-08 -8.52197672E-07  6.32025081E-07  2.19856272E-04
+ -1.84273755E-04  1.01042895E-06  1.81962480E-06  4.22828180E-06  1.52178586E-06
+ -6.59768830E-07  9.50032315E-05  3.72802082E-04 -2.30165188E-06 -2.29079183E-06
+ -7.39286687E-10  8.89206272E-10 -4.99152053E-10 -1.21379600E-07 -1.73064541E-06
+  3.42624986E-08  7.76607617E-08 -5.21406784E-09  4.74383699E-10  7.02073644E-09
+  8.31757916E-07 -9.01606199E-07 -2.57352295E-09  4.15102761E-08
+>END 
+
+
+
