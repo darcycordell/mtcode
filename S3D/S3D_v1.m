@@ -383,10 +383,11 @@ while menu1 == 1
         while menu3 == 1
             
             data_main_menu = menu('Data/Response Menu','Plot Rho / Phase Curves','Plot Impedance Curves','Plot Tipper Curves','Plot Rho / Phase Interpolated Map','Plot Induction Vector Map','Plot Rho / Phase Pseudo','Plot Tipper Pseudo','Misfit Statistics','Compare to another data response','K-S test with a third data response','Residuals cross-plot with a third data response','Return');
-
+            
+            s = detailed_statistics(dobs,dpred); % new 4/2020
+            
             if data_main_menu == 1 || data_main_menu == 2 || data_main_menu == 3 %If you want to plot data as curves------
-                
-                    s = detailed_statistics(dobs,dpred); % new 4/2020
+
                     plot_data(dobs,data_main_menu,dpred,s);
       
             elseif data_main_menu == 4 || data_main_menu == 5 %Plot Data in Map View-------------------------------
@@ -415,7 +416,10 @@ while menu1 == 1
                             print_figure(['compare_responses_map_',dpred.niter],['Observed','_',num2str(dobs.T(ip))]); %Save figure
                             plot_rho_pha_map(dpred,ip);
                             print_figure(['compare_responses_map_',dpred.niter],['Modelled','_',num2str(dpred.T(ip))]); %Save figure
-                            plot_misfit_percent_diff_map(dobs,dpred,ip)
+                            plot_misfit_percent_diff_map(dobs,dpred,ip,s)
+                            print_figure(['compare_responses_map_',dpred.niter],['Percent_Diff_',num2str(dobs.T(ip))]); %Save figure
+                            plot_misfit_residual_map(dobs,dpred,ip,s)
+                            print_figure(['compare_responses_map_',dpred.niter],['Residuals_',num2str(dobs.T(ip))]); %Save figure
                         elseif data_main_menu == 5 %Plot induction vectors in map view
                             close all
                             if ~all(isnan(dobs.tip(:))) %If there is tipper data
@@ -423,6 +427,7 @@ while menu1 == 1
                                 plot_induction_vector_map(dpred,ip,'k')
                                 plot_geoboundaries(L);
                                 figure_name = 'induction_vector';
+                                h = gcf; axes(h.Children(2));
                                 manual_legend('Observed Data','-r','Modelled Data','-k');
                                 title(['Induction Vectors for T = ',num2str(dobs.T(ip))])
                                 print_figure(['compare_responses_map_',dpred.niter],[figure_name,'_',num2str(dobs.T(ip))]); %Save figure
