@@ -61,7 +61,9 @@ for ang = Angles
       set(hObj,'string','S','VerticalAlignment','Top');
    otherwise
       k = k + 1;
-      hObjToDelete(k) = hObj;
+      if ~isempty(hObj)
+        hObjToDelete(k) = hObj;
+      end
    end
 end
 delete( hObjToDelete(hObjToDelete~=0) );
