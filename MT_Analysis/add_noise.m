@@ -175,7 +175,7 @@ if flag == 1
     %Save Matfile d structure
     datafile = [strtok(d.name,'.'),'_',num2str(GN),'_noise.mat'];
     d = dn;
-    d.name = [d.name,'_noise']
+    d.name = [d.name,'_noise'];
     save(datafile,'d');
 elseif flag == 2
     prompt={'File Name','Data Mode (1 = TM; 2 = TE)'};
