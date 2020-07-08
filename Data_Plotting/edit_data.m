@@ -983,10 +983,13 @@ elseif main_menu == 12 %SAVE DATA-------------------------------------------
         
             prompt={'New Data Filename'};
             dlg_title='Filename';
-            def={d.name,'_edited.data'};
+            def={[strtok(d.name,'.'),'_edited.data']};
             num_lines=1;
             dinp = inputdlg(prompt,dlg_title,num_lines,def);
-            write_data_modem(dinp{1},d)
+            
+            if ~isempty(dinp)
+                write_data_modem(dinp{1},d);
+            end
             
         else
             
