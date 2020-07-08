@@ -47,13 +47,9 @@ end
 %Add noise to impedance----------------------------------------------------
   
 %Noise must be independent between real and imaginary components
-if d.nr == 6 % full impedance and tipper
-    alpha = randn(d.nf,4,d.ns); %random Gaussian matrix for real components
-    beta = randn(d.nf,4,d.ns); %random Gaussian matrix for imaginary components
-else
-    alpha = randn(d.nf,d.nr,d.ns); %random Gaussian matrix for real components
-    beta = randn(d.nf,d.nr,d.ns); %random Gaussian matrix for imaginary components
-end
+alpha = randn(d.nf,4,d.ns); %random Gaussian matrix for real components
+beta = randn(d.nf,4,d.ns); %random Gaussian matrix for imaginary components
+
 
 
 option = menu('','Percent of |Z_xy| (DEFAULT)','Percent of |Z_ij|','Percent of sqrt(Zxy*Zyx)');
