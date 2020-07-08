@@ -63,8 +63,13 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Alpha ')
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+else
+    title('Alpha ')
+end
+
+ylabel ('Log10 Period (s)')
 % axis([x_sort(1),x_sort(N), min(log10(d.T))-0.5 ,max(log10(d.T))])
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 hcb = colorbar;
@@ -79,8 +84,13 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Beta ')
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+else
+    title('Beta ')
+end
+
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 caxis(u.phase_tensor_beta_colim)
 hcb = colorbar;
@@ -95,8 +105,13 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Minimum Phase Tensor Ellipse Axis')
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+else
+    title('Minimum Phase Tensor Ellipse Axis')
+end
+
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 hcb = colorbar;
 hcb.Label.String = 'Length of Ellipse Axis';
@@ -110,8 +125,13 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Maximum Phase Tensor Ellipse Axis')
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+else
+    title('Maximum Phase Tensor Ellipse Axis')
+end
+
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 hcb = colorbar;
 hcb.Label.String = 'Length of Ellipse Axis';
@@ -125,8 +145,13 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Phase Tensor Eccentricity')
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+else
+    title('Phase Tensor Eccentricity')
+end
+
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 hcb = colorbar;
 hcb.Label.String = 'Eccentricity';
@@ -140,8 +165,13 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Geoelectric Strike')
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+else % station names and title overlap. if station name shown, quanitity still shown in colorbar label
+    title('Geoelectric Strike')
+end
+
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 hcb = colorbar;
 hcb.Label.String = 'Strike Angle';

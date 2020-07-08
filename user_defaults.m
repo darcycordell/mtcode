@@ -15,7 +15,7 @@ function [u] = user_defaults
 
 %GENERAL OPTIONS-----------------------------------------------------------
 
-u.output_figure = {'png','eps'}; %Select file format to save figures.
+u.output_figure = 'none'; %Select file format to save figures.
                    % 'none' no figure is saved
                    % 'jpg' JPG is saved
                    % 'png' PNG is saved
@@ -143,7 +143,8 @@ u.rotate_data_to_azimuth = 0; % set to 1 to rotate data, or 0 to not rotate data
                               % You may want to allow data rotation when using MTplot and exploring the data at different azimuths.
                               % You should disable data rotation when
                               % viewing inversion results so that you are always viewing data in the inversion reference frame.
-
+u.station_names = false; % true to plot station names vertically on pseudo sections. false to not plot station names
+u.station_names_angle = 90; % angle in degrees. 90 deg is default (vertical text). 0 deg is horizontal
 
 u.tplot = [0.1 10 100]; %Periods to plot for plot_polar_distorted.m (must be length 3)
 

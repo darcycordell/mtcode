@@ -57,13 +57,18 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')  %%%%changed
-title('Real Z_{xy} ')
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('Real Z_{xy} ')
+end
+
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 colormap(gca,flipud(u.cmap))
 caxis(u.residual_lim)
 hcb = colorbar;
-hcb.Label.String = 'Z residual';
+hcb.Label.String = 'Real Z_{xy}  residual';
 set(gca,'Layer','top')
 
 %========================================================================
@@ -74,14 +79,19 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Imag Z_{xy} ')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('Imag Z_{xy} ')
+end
+
 xlabel('Distance (km)')
-ylabel ('Period (s)')
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 colormap(gca,flipud(u.cmap))
 caxis(u.residual_lim)
 hcb = colorbar;
-hcb.Label.String = 'Z residual';
+hcb.Label.String = 'Imag Z_{xy}  residual';
 set(gca,'Layer','top')
 
 %========================================================================
@@ -92,13 +102,18 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Real Z_{yx} ')   
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('Real Z_{yx} ')  
+end
+ 
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 colormap(gca,flipud(u.cmap))
 caxis(u.residual_lim)
 hcb = colorbar;
-hcb.Label.String = 'Z residual';
+hcb.Label.String = 'Real Z_{yx}  residual';
 set(gca,'Layer','top')
 
 %========================================================================
@@ -109,14 +124,19 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Imag Z_{yx} ')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('Imag Z_{yx} ')
+end
+
 xlabel('Distance (km)')
-ylabel ('Period (s)')
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 colormap(gca,flipud(u.cmap))
 caxis(u.residual_lim)
 hcb = colorbar;
-hcb.Label.String = 'Z residual';
+hcb.Label.String = 'Imag Z_{yx}  residual';
 set(gca,'Layer','top')
 
 annotation('textbox', [0 0.92 1 0.08], ...
@@ -136,13 +156,18 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')  %%%%changed
-title('Real Z_{xx} ')
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('Real Z_{xx} ')
+end
+
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 colormap(gca,flipud(u.cmap))
 caxis(u.residual_lim)
 hcb = colorbar;
-hcb.Label.String = 'Z residual';
+hcb.Label.String = 'Real Z_{xx}  residual';
 set(gca,'Layer','top')
 
 %========================================================================
@@ -153,14 +178,19 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Imag Z_{xx} ')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('Imag Z_{xx} ')
+end
+
 xlabel('Distance (km)')
-ylabel ('Period (s)')
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 colormap(gca,flipud(u.cmap))
 caxis(u.residual_lim)
 hcb = colorbar;
-hcb.Label.String = 'Z residual';
+hcb.Label.String = 'Imag Z_{xx}  residual';
 set(gca,'Layer','top')
 
 %========================================================================
@@ -171,13 +201,18 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Real Z_{yy} ')    
-ylabel ('Period (s)')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('Real Z_{yy} ')  
+end
+  
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 colormap(gca,flipud(u.cmap))
 caxis(u.residual_lim)
 hcb = colorbar;
-hcb.Label.String = 'Z residual';
+hcb.Label.String = 'Real Z_{yy}  residual';
 set(gca,'Layer','top')
 
 %========================================================================
@@ -188,14 +223,19 @@ pcolor(hp,vp,C)
 hold on; axis ij
 shading 'flat'
 plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')
-title('Imag Z_{yy} ')
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('Imag Z_{yy} ')
+end
+
 xlabel('Distance (km)')
-ylabel ('Period (s)')
+ylabel ('Log10 Period (s)')
 axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
 colormap(gca,flipud(u.cmap))
 caxis(u.residual_lim)
 hcb = colorbar;
-hcb.Label.String = 'Z residual';
+hcb.Label.String = 'Imag Z_{yy}  residual';
 set(gca,'Layer','top')
 
 annotation('textbox', [0 0.92 1 0.08], ...
@@ -217,13 +257,18 @@ if ~all(all(all(isnan(s.residuals.tip)))) % tipper data were inverted
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')  %%%%changed
-    title('Real T_{zx} ')
-    ylabel ('Period (s)')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    else
+        title('Real T_{zx} ')
+    end
+    
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,flipud(u.cmap))
     caxis(u.residual_lim)
     hcb = colorbar;
-    hcb.Label.String = 'Tipper residual';
+    hcb.Label.String = 'Real T_{zx}  residual';
     set(gca,'Layer','top')
     
     %========================================================================
@@ -234,17 +279,20 @@ if ~all(all(all(isnan(s.residuals.tip)))) % tipper data were inverted
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')  %%%%changed
-    title('Imag T_{zx} ')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    else
+        title('Imag T_{zx} ')
+    end
+    
     xlabel('Distance (km)')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,flipud(u.cmap))
     caxis(u.residual_lim)
     hcb = colorbar;
-    hcb.Label.String = 'Tipper residual';
+    hcb.Label.String = 'Imag T_{zx}  residual';
     set(gca,'Layer','top')
-%     text(x_sort(1),log10(dobs.T(1))-0.6,strrep(dobs.site(index(1)),'_','\_'),'rotation',90)
-%     text(x_sort(end),log10(dobs.T(1))-0.6,strrep(dobs.site(index(end)),'_','\_'),'rotation',90)
     
     %========================================================================
     %Plot Real Tzy residuals
@@ -254,13 +302,18 @@ if ~all(all(all(isnan(s.residuals.tip)))) % tipper data were inverted
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')  %%%%changed
-    title('Real T_{zy} ')
-    ylabel ('Period (s)')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    else
+        title('Real T_{zy} ')
+    end
+    
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,flipud(u.cmap))
     caxis(u.residual_lim)
     hcb = colorbar;
-    hcb.Label.String = 'Tipper residual';
+    hcb.Label.String = 'Real T_{zy}  residual';
     set(gca,'Layer','top')
     
     %========================================================================
@@ -271,17 +324,20 @@ if ~all(all(all(isnan(s.residuals.tip)))) % tipper data were inverted
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')  %%%%changed
-    title('Imag T_{zy} ')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    else
+        title('Imag T_{zy} ')
+    end
+    
     xlabel('Distance (km)')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,flipud(u.cmap))
     caxis(u.residual_lim)
     hcb = colorbar;
-    hcb.Label.String = 'Tipper residual';
+    hcb.Label.String = 'Imag T_{zy}  residual';
     set(gca,'Layer','top')
-%     text(x_sort(1),log10(dobs.T(1))-0.6,strrep(dobs.site(index(1)),'_','\_'),'rotation',90)
-%     text(x_sort(end),log10(dobs.T(1))-0.6,strrep(dobs.site(index(end)),'_','\_'),'rotation',90)
     
     annotation('textbox', [0 0.92 1 0.08], ...
     'String', ['Tipper residuals | Profile azimuth = ',num2str(azimuth),char(176),' | Data rotated to ',num2str(unique(dobs.zrot)),char(176)], ...

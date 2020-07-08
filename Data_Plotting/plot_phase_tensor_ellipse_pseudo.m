@@ -99,7 +99,7 @@ dx = 0.05*(x_sort(end) - x_sort(1));
 axis ij
 plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
 
-title('Phase Tensor Pseudo Section')
+
 ylabel('Log(Period (s))')
 xlabel('Distance Along Profile (km)');
 if dx ==0
@@ -107,6 +107,13 @@ if dx ==0
 else
     axis([x_sort(1)-dx,x_sort(N)+dx, min(log10(d.T))-0.5 ,max(log10(d.T))])
 end
+
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(log10(d.T))-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('Phase Tensor Pseudo Section')
+end
+
 set(gca,'Layer','top');
 
 if strcmp(u.phase_tensor_ellipse_fill,'phimin')

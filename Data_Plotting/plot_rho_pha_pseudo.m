@@ -67,8 +67,11 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')  %%%%changed
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    end
     title('\rho_{xy} ')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,u.cmap);
     caxis(log10(u.rholim))
@@ -83,8 +86,11 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    end
     title('\rho_{yx} ')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,u.cmap);
     caxis(log10(u.rholim))
@@ -99,9 +105,12 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    end
     title('\phi_{xy} ')
     xlabel('Distance (km)')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,flipud(u.cmap))
     caxis(u.phalim)
@@ -117,9 +126,12 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    end
     title('\phi_{yx} ')
     xlabel('Distance (km)')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,flipud(u.cmap))
     caxis(u.phalim)
@@ -152,8 +164,11 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')  %%%%changed
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    end
     title('\rho_{xx} ')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,u.cmap);
     caxis(log10(u.rholimdiag))
@@ -168,8 +183,11 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    end
     title('\rho_{yy} ')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,u.cmap);
     caxis(log10(u.rholimdiag))
@@ -184,9 +202,12 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    end
     title('\phi_{xx} ')
     xlabel('Distance (km)')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,flipud(u.cmap))
     caxis(u.phalimdiag)
@@ -202,9 +223,12 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    end
     title('\phi_{yy} ')
     xlabel('Distance (km)')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(gca,flipud(u.cmap))
     caxis(u.phalimdiag)

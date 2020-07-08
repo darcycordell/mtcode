@@ -63,13 +63,18 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-    title('Real T_{zx}')
-    ylabel ('Period (s)')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+    else % station names and title overlap. if station name shown, quanitity still shown in colorbar label
+        title('Real T_{zx}')
+    end
+    
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     colormap(flipud(u.cmap)) % make large positive values red
     caxis(u.tiplim)
     hcb = colorbar;
-    hcb.Label.String = 'Real Tipper';
+    hcb.Label.String = 'Real T_{zx}';
     set(gca,'Layer','top')
     
     %========================================================================
@@ -80,12 +85,17 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-    title('Real T_{zy}')
-    ylabel ('Period (s)')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+    else % station names and title overlap. if station name shown, quanitity still shown in colorbar label
+        title('Real T_{zy}')
+    end 
+    
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     caxis(u.tiplim)
     hcb = colorbar;
-    hcb.Label.String = 'Real Tipper';
+    hcb.Label.String = 'Real T_{zy}';
     set(gca,'Layer','top')
         
     %========================================================================
@@ -96,13 +106,18 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-    title('Imag T_{zx}')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+    else % station names and title overlap. if station name shown, quanitity still shown in colorbar label
+        title('Imag T_{zx}')
+    end 
+    
     xlabel('Distance (km)')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     caxis(u.tiplim)
     hcb = colorbar;
-    hcb.Label.String = 'Imag Tipper';
+    hcb.Label.String = 'Imag T_{zx}';
     set(gca,'Layer','top')
        
     %========================================================================
@@ -113,13 +128,18 @@ while irun == 1  % Loop over azimuth
     hold on; axis ij
     shading 'flat'
     plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-    title('Imag T_{zy}')
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(vp)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none','fontsize',8);
+    else % station names and title overlap. if station name shown, quanitity still shown in colorbar label
+        title('Imag T_{zy}')
+    end 
+    
     xlabel('Distance (km)')
-    ylabel ('Period (s)')
+    ylabel ('Log10 Period (s)')
     axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
     caxis(u.tiplim)
     hcb = colorbar;
-    hcb.Label.String = 'Imag Tipper';
+    hcb.Label.String = 'Imag T_{zy}';
     set(gca,'Layer','top')
 
     annotation('textbox', [0 0.92 1 0.08], ...
