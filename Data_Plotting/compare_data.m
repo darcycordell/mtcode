@@ -14,6 +14,8 @@ function compare_data(d,dpred1,dpred2)
 %
 % (C) 2020 Unsworth Research Group (University of Alberta, Edmonton, Canada)
 %%
+%
+% Darcy Test
 G = load_geoboundary_file_list;
 
 is = 1; check = 0;
