@@ -73,5 +73,5 @@ p = geopoint(d.loc(:,1),d.loc(:,2));
 geoshow(p,'Marker','o','MarkerFaceColor','r','MarkerEdgeColor','k','MarkerSize',8); hold on
 plot_geoboundaries_geoshow(L);
 for i = 1:d.ns
-    textm(d.loc(i,1),d.loc(i,2),d.site{i});
+    textm(d.loc(i,1),d.loc(i,2),strrep(d.site{i},'_','\_')); % correct underscores
 end
