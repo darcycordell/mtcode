@@ -42,10 +42,9 @@ if exist('is','var')
 end
 plot([0,dobs.ns+1],[s.rms, s.rms],'-r')
 xlabel('Site Number')
-ylabel('Root Mean Square Misfit')
+ylabel('Overall Root Mean Square Misfit')
 axis([0 dobs.ns+1 0 max(s.rms_site)+1])
-text(((max(dobs.ns)/2)+2),0.5,num2str(s.rms,'%.2f'),'Fontsize',10);
-text(2,0.5,'Overall R.M.S. misfit:','Fontsize',10);
+title(['Overall RMS = ', num2str(s.rms,'%.2f'),'. IMP RMS = ',num2str(s.rms_imp,'%.2f'),'. TIP RMS = ',num2str(s.rms_tip,'%.2f')])
 box on
 
 if exist('is','var')

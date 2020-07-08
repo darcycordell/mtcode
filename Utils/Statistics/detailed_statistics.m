@@ -41,6 +41,10 @@ function [s] = detailed_statistics(dobs,dpred,alpha)
 %
 %     rms_fr - a nf x nr matrix of rms misfit values (sums over stations)
 %
+%     rms_imp - rms of impedance components only
+%
+%     rms_tip - rms misfit of tipper components only
+%
 %     ONLY IF INPUT CONTAINS ALPHA:
 %
 %     alpha - the input confidence interval
@@ -75,6 +79,20 @@ s.r = stats.r;
 s.L2norm = stats.L2norm;
 s.rms = stats.rms;
 s.chisquare = stats.chisquare;
+
+
+obs_vec = mv(real(dobs.Z),imag(dobs.Z));
+pred_vec = mv(real(dpred.Z),imag(dpred.Z));
+err_vec = mv(real(dobs.Zerr),imag(dobs.Zerr));
+stats = statistics(obs_vec, pred_vec, err_vec);
+s.rms_imp = stats.rms;
+
+obs_vec = mv(real(dobs.tip),imag(dobs.tip));
+pred_vec = mv(real(dpred.tip),imag(dpred.tip));
+err_vec = mv(real(dobs.tiperr),imag(dobs.tiperr));
+stats = statistics(obs_vec, pred_vec, err_vec);
+s.rms_tip = stats.rms;
+
 
 s.rms_site = zeros(dobs.ns,1); s.rms_sf = zeros(dobs.ns,dobs.nf);
 for i = 1:dobs.ns
@@ -139,8 +157,6 @@ for i = 1:4
 
         s.rms_fr(i,j) = rms;
     end
-
-
 end
 
 for i = 1:2
@@ -162,5 +178,6 @@ for i = 1:2
     end
 
 end
+
 
 end
