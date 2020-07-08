@@ -15,7 +15,7 @@ function [u] = user_defaults
 
 %GENERAL OPTIONS-----------------------------------------------------------
 
-u.output_figure = 'png'; %Select file format to save figures.
+u.output_figure = {'png','eps'}; %Select file format to save figures.
                    % 'none' no figure is saved
                    % 'jpg' JPG is saved
                    % 'png' PNG is saved
