@@ -147,10 +147,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ====================================================================================================
 License for Utils/Mapping/read_hgt/dem.m:
+			Utils/Mapping/read_hgt/readhgt.m:
+			Utils/Mapping/read_hgt/landcolor.m:
+			Utils/Mapping/read_hgt/seacolor.m:
 
-https://www.mathworks.com/matlabcentral/fileexchange/36380-dem-shaded-relief-image-plot-digital-elevation-model
+https://www.mathworks.com/matlabcentral/fileexchange/36379-readhgt-import-download-nasa-srtm-data-files-hgt
 
-Copyright (c) 2019, François Beauducel
+Copyright (c) 2020, François Beauducel
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
