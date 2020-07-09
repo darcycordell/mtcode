@@ -23,7 +23,7 @@ function M3_load_modem_mod(hObject, ~, ~)
     H.XX = m.dx;
     H.YY = m.dy;
     H.Z = m.dz;
-    H.AA = round(m.A);
+    H.AA = m.A;
     H.lay = 1; % just set view to first layer
 
     %now set the model variables so they match the generated model variables
