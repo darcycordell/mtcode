@@ -63,10 +63,10 @@ d0 = sqrt((invlog.rms).^2+(invlog.m2).^2);
 d1 = sqrt((invlog.rms-1).^2+(invlog.m2).^2);
 [~,id1] = min(d1);
 
-plot([0 invlog.rms(id0)],[0 invlog.m2(id0)],'--b')
-plot([1 invlog.rms(id1)],[0 invlog.m2(id1)],'--b')
-plot(invlog.rms(id1),invlog.m2(id1),'*r')
-text(max(invlog.rms)*0.75,max(invlog.m2)*0.75,['"Best" Iteration = #',num2str(id1),'. (RMS = ',num2str(invlog.rms(id1)),')']);
+%plot([0 invlog.rms(id0)],[0 invlog.m2(id0)],'--b')
+%plot([1 invlog.rms(id1)],[0 invlog.m2(id1)],'--b')
+%plot(invlog.rms(id1),invlog.m2(id1),'*r')
+%text(max(invlog.rms)*0.75,max(invlog.m2)*0.75,['"Best" Iteration = #',num2str(id1),'. (RMS = ',num2str(invlog.rms(id1)),')']);
 
 title('"L Curve"')
 
