@@ -22,10 +22,17 @@ function M3_delete_layers(hObject, ~, ~)
         disp('No layers selected. Returning to Main Menu')
 
     else % layers selected to be deleted
-
+        
+        flag = 0;
         for i = 1:length(sel) % check for stations in selected layers
             if sum(H.d.z./1000 >= H.Z(sel(i))) > 0 && sum(H.d.z./1000 <= H.Z(sel(i)+1)) > 0 % if a station is in a selected layer
-                warndlg(sprintf('Some stations are located in selected layers\n No layers deleted'),'Warning')
+                flag = 1;
+            end
+        end
+        
+        if flag
+            answer = questdlg('WARNING: Some stations are located in layers to be deleted. Stations elevations will be moved. Proceed?','WARNING','Yes','No','No');
+            if ~strcmp(answer,'Yes')
                 return
             end
         end
