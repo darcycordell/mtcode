@@ -11,7 +11,6 @@ function compare_data(d,dpred1,dpred2)
 %
 % Figures saved as PNG, EPS, JPG etc (depending on user_defaults setting).
 %
-%test
 %
 % (C) 2020 Unsworth Research Group (University of Alberta, Edmonton, Canada)
 %%
