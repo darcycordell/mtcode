@@ -24,7 +24,7 @@ u.output_figure = 'none'; %Select file format to save figures.
                    %EPS files are quite large so it is recommended to only
                    %use 'eps' option when producing figures you want to use
                    %in presentations or publications.
-u.geofile = 'geoboundfiles.txt'; %Default is 'none', put your geofile text file here if you want it.
+u.geofile = 'none'; %Default is 'none', put your geofile text file here if you want it.
 u.projection = 'mercator'; %Projection used for map plotting
     %Options include: 'mercator', 'lambert conformal conic', 'Albers Equal-Area Conic'
         %'Stereographic', 'UTM', etc. See m_map
@@ -59,7 +59,7 @@ u.clabel = 'linear'; % type of colorbar labels for resistivity plot. for example
                     %note that in both cases the colorbar is logarithmic; only the labels are changed
 
 %Contours
-u.plot_contours = false; %"true" to plot contours, "false" to not
+u.plot_contours = true; %"true" to plot contours, "false" to not
 u.contours = [-6 1 6]; %contours to plot on log10(resistivity) slices
 u.contour_text = 'off'; %"on" to plot contour labels, "off" to not
 
@@ -143,7 +143,8 @@ u.rotate_data_to_azimuth = 0; % set to 1 to rotate data, or 0 to not rotate data
                               % You may want to allow data rotation when using MTplot and exploring the data at different azimuths.
                               % You should disable data rotation when
                               % viewing inversion results so that you are always viewing data in the inversion reference frame.
-
+u.station_names = false; % true to plot station names vertically on pseudo sections. false to not plot station names
+u.station_names_angle = 90; % angle in degrees. 90 deg is default (vertical text). 0 deg is horizontal
 
 u.tplot = [0.1 10 100]; %Periods to plot for plot_polar_distorted.m (must be length 3)
 
