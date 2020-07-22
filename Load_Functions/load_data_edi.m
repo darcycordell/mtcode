@@ -133,7 +133,7 @@ while 1
             ind2=strfind(tline,'//')-2;
             if strcmp(tline(ind1:ind2),'NORTH')
                 zrot=zeros(nfreq); %if the rotation is north, then zrot=0
-            elseif strcmp(tline(ind1:ind2),'ZROT')
+            elseif strcmp(strtrim(tline(ind1:ind2)),'ZROT')
                 %don't do anything because ZROT should already be defined
                 if ~exist('zrot','var')
                     error('zrot dosn''t appear to be defined, but is used!')
@@ -182,7 +182,7 @@ while 1
         nfreq=find_nfreq(tline);
         Zvar(2,2,1:nfreq)=fscanf(fid,'%f',nfreq);
     end
-    if strncmp(strtrim(tline),'>TROT.EXP',9)
+    if strncmp(strtrim(tline),'>TROT.EXP',9) || strncmp(strtrim(tline),'>TROT',5)
         nfreq=find_nfreq(tline);
         trot=fscanf(fid,'%f',nfreq);
     end
@@ -200,7 +200,7 @@ while 1
                 else
                     trot=zeros(nfreq); %if the rotation is north, then zrot=0
                 end
-            elseif strcmp(tline(ind1:ind2),'TROT')
+            elseif strcmp(strtrim(tline(ind1:ind2)),'TROT')
                 %don't do anything because TROT should already be defined
                 if ~exist('trot','var')
                     error('trot dosn''t appear to be defined, but is used!')
