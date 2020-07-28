@@ -207,7 +207,7 @@ else
 
     %EW first (xint: dealing with known east-west points)
     int=[];
-    for k=1:m.ny;
+    for k=1:m.ny
         xint=s*m.cy(k)+b; %slope formula to find intersections with known x
         if m.cy(k)>=min(yp) && m.cy(k)<=max(yp)
             int=[int; [m.cy(k) xint]];
@@ -215,7 +215,7 @@ else
     end
 
     %NS second (xint: dealing with known north-south points)
-    for k=1:m.nx;
+    for k=1:m.nx
         yint=(m.cx(k)-b)/s; %slope formula to find intersections with known y
         if m.cx(k)>=min(xp) && m.cx(k)<=max(xp)
             int=[int; [yint m.cx(k)]];
@@ -341,7 +341,7 @@ if ~strcmp(d.site,'None') %If data exists then determine which sites should be p
     %profile
 
     k=0; id = []; d_elev = [];
-    for i = 1:length(d.idx);
+    for i = 1:length(d.idx)
         for j = 1:length(ind_lean)
 
             %Find the distance between the sites and the profile
@@ -380,23 +380,18 @@ zind = 1:nearestpoint(u.zmax*1000,m.cz);
 
 %Plot section
 figure(2);
-pcolor(dist/1000,m.cz(zind)/1000,log10(res_plot(zind,:))); axis ij; shading flat; hold on
-colormap(u.cmap); caxis(u.colim);
-add_rho_colorbar(u);
+plot_cross_section(dist/1000,m.cz(zind)/1000,res_plot(zind,:)'); % transpose to negate transpose in this function...
 
 xlabel(['Kilometers from (',num2str(xp(1)/1000),' NS, ',num2str(yp(1)/1000),' EW) to (',num2str(xp(2)/1000),' NS, ',num2str(yp(2)/1000),' EW)']);
-ylabel('Depth (km)');
-axis([min(dist/1000) max(dist/1000) u.zmin u.zmax]);
+ylabel('Depth Below Sealevel (km)')
 title('Diagonal Slice Through Model');
-set(gca,'DataAspectRatio',[u.ve 1 1])
-set(gca,'Layer','top')
 
 %Plot geoboundary file on diagonal section (not yet implemented properly)
 plot_geoboundaries_diagonal_section(d,ew_locations,ns_locations)
 
 
 if ~strcmp(d.site,'None') %If data exists plot them
-    if ~isempty(d_elev);
+    if ~isempty(d_elev)
         figure(2);
         elev = m.Z(sub2ind(size(m.Z),d_elev(:,1),d_elev(:,2)));
         plot(d_site/1000,elev/1000 -u.zoff,'vk','MarkerFaceColor','k'); hold on

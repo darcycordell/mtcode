@@ -214,7 +214,7 @@ else
 
     %EW first (xint: dealing with known east-west points)
     int=[];
-    for k=1:m.ny;
+    for k=1:m.ny
         xint=s*m.cy(k)+b; %slope formula to find intersections with known x
         if m.cy(k)>=min(yp) && m.cy(k)<=max(yp)
             int=[int; [m.cy(k) xint]];
@@ -222,7 +222,7 @@ else
     end
 
     %NS second (xint: dealing with known north-south points)
-    for k=1:m.nx;
+    for k=1:m.nx
         yint=(m.cx(k)-b)/s; %slope formula to find intersections with known y
         if m.cx(k)>=min(xp) && m.cx(k)<=max(xp)
             int=[int; [yint m.cx(k)]];
@@ -256,7 +256,7 @@ else
 
     %Get lengths and midpoints of line segments
     L=zeros(length(int(:,1))-1,1);L_mid=zeros(length(L),2); L_d = zeros(size(L));
-    for k=1:length(int)-1; %loops over all grid intersections
+    for k=1:length(int)-1 %loops over all grid intersections
         L_set=sqrt((int(k+1,1)-int(k,1))^2+(int(k+1,2)-int(k,2))^2);
         L(k)=L_set;
         L_mid_set=(int(k+1,:)+int(k,:))./2;
@@ -280,8 +280,8 @@ else
 %     plot(m.cy(y_grid(1))/1000,m.cx(x_grid(1))/1000,'xr','MarkerSize',12)
 %%
     res_plot=zeros(m.nz,length(L));
-    for j=1:length(L);
-        res_plot(:,j)=log10(m.A(x_grid(j),y_grid(j),:)); %pulls slice model cells from A matrix
+    for j=1:length(L)
+        res_plot(:,j) = m.A(x_grid(j),y_grid(j),:); %pulls slice model cells from A matrix
     end
         
     if strcmp(u.diagonal_section_mode,'interp')
@@ -299,7 +299,7 @@ else
         %Project sites within the tolerance distance from the profile onto the
         %profile
         k=0; id = []; d_elev = [];
-        for i = 1:length(d.idx);
+        for i = 1:length(d.idx)
             
 
                 %Find the minimum distance between the site and the profile cell
@@ -327,28 +327,16 @@ else
     end
     
     zind = 1:nearestpoint(u.zmax*1000,m.cz);
-    
-    %set_figure_size(2);
+
     %Plot section
     figure(2);
-    pcolor(dist/1000,m.cz(zind)/1000,res_plot(zind,:)); axis ij; shading flat; hold on
-    colormap(u.cmap); caxis(u.colim);
-    add_rho_colorbar(u);
-    xlabel(['Kilometers from (',num2str(xp(1)/1000),' NS, ',num2str(yp(1)/1000),' EW) to (',num2str(xp(2)/1000),' NS, ',num2str(yp(2)/1000),' EW)']);
-    ylabel('Depth (km)');
-    axis([min(dist/1000) max(dist/1000) u.zmin u.zmax]);
-    title('Diagonal Slice Through Model');
-    set(gca,'DataAspectRatio',[u.ve 1 1])
-    set(gca,'Layer','top')
+   
+    plot_cross_section(dist/1000,m.cz(zind)/1000,res_plot(zind,:)'); % transpose to negate transpose in this function...
     
-%     figure(2)
-%     colorbar; axis equal
-%     colormap(jet)
-%     caxis([6 8.5])
-%     %axis([100 450 -10 75])
-%     axis([0 275 -10 75])
+    xlabel(['Kilometers from (',num2str(xp(1)/1000),' NS, ',num2str(yp(1)/1000),' EW) to (',num2str(xp(2)/1000),' NS, ',num2str(yp(2)/1000),' EW)']);
+    ylabel('Depth Below Sealevel (km)')
+    title('Diagonal Slice Through Model');
 
-%     contour(dist/1000,m.cz(zind)/1000,res_plot(zind,:),[5:0.25:9],'-k','ShowText','off');
     %%
 %     seisy = dist/1000;
 %     seisz = m.cz(zind)/1000;
