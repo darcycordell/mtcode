@@ -206,11 +206,11 @@ if u.plot_input_model
     model_to_plot = m0; %Model to plot is the input model
 else
     %Get the inversion iteration number (different for WSINV vs. ModEM)
-    if inversion_algorithm_menu == 1
+%     if inversion_algorithm_menu == 1
         niter=basefile((length(basefile)-2):end); 
-    elseif inversion_algorithm_menu == 2
-        niter=['0',basefile((length(basefile)-1):end)];
-    end
+%     elseif inversion_algorithm_menu == 2
+%         niter=['0',basefile((length(basefile)-1):end)];
+%     end
     
     dobs.niter = niter; dpred.niter = niter;
     m.niter = niter;
