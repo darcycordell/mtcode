@@ -657,7 +657,7 @@ elseif main_menu == 8 %EDIT DATA-------------------------------------------
             elseif clickedAx==ax(3) %user clicked phaxx axis
 
                 dist1=sqrt(((log10(d.T(:,1)))-log10((X))).^2+(log10(d.pha(:,1,is))-log10(Y)).^2);
-                dist2=sqrt(((log10(d.T(:,1)))-log10((X))).^2+(log10(d.pha(:,4,is)+180)-log10(Y)).^2);
+                dist2=sqrt(((log10(d.T(:,1)))-log10((X))).^2+(log10(d.pha(:,4,is))-log10(Y)).^2);
                 [val(1), id(1)]=min(dist1);%index of closest point to mouse click
                 [val(2), id(2)]=min(dist2);%index of closest point to mouse click
                 [~,idx] = min(val);
