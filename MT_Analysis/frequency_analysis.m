@@ -1,4 +1,4 @@
-function frequency_analysis
+function T = frequency_analysis
 %Function which takes a set of EDI files in the current directory and determines 
 %the frequency content of those EDIs. 
 %It outputs two figures: 
@@ -9,6 +9,8 @@ function frequency_analysis
 % Usage: frequency_analysis
 %
 % Inputs: None
+%
+% Outputs: Outputs the frequency list
 %
 % Option to look at the raw frequencies of the EDIs or interpolate and then
 % look at the frequencies. Note that the histograms for both raw and
@@ -54,19 +56,22 @@ if iopt == 1 %Option to load all EDI raw data------------------------------
     
     T_all = T; %All frequencies present
     
-    tol = 10^-3; %Logarithmic tolerance to determine if a frequency is "unique"
+    tol = 10^-5; %Logarithmic tolerance to determine if a frequency is "unique"
     T = 10.^(uniquetol(log10(T),tol)); %Determine unique frequency within tolerance
     uniqueT = T;
     
     %Determine which sites have which frequencies
     freq = zeros(length(T),length(d));
     for is = 1:length(d)
-        for ifreq = 1:length(T);
+        for ifreq = 1:length(T)
             %If a particular site has a particular frequency then the
             %difference is less than the tolerance
+            [freqa] = nearestpoint(log10(T(ifreq)),log10(d(is).T));
             [inda] = min(abs(log10(T(ifreq))-log10(d(is).T)))<=tol;
             if inda
-                freq(ifreq,is) = inda; %Add this to the frequency matrix
+                if ~all(isnan(d(is).Z(freqa,:,1)))
+                    freq(ifreq,is) = inda; %Add this to the frequency matrix
+                end
             end
         end
     end
@@ -115,13 +120,15 @@ if iopt == 2 || iopt == 3
 end
 
 
-freq(:,ns+1) = NaN;
+freq(:,ns+1) = 1;
+
+[X,Y] = meshgrid(1:ns+1,log10(1./T));
   
 %Plot a pcolor figure where black squares denote data present and white
 %denotes not data present
 set_figure_size(1);
-pcolor(1:ns+1,log10(1./T),freq); hold on; c = colormap('gray'); colormap(gca,flipud(c));
-axis([1,ns,min(log10(1./T)),max(log10(1./T))+1])
+pcolor(X,Y,freq); hold on; c = colormap('gray'); colormap(gca,flipud(c));
+axis([1,ns+1,min(log10(1./T)),max(log10(1./T))+1])
 
 for i=1:ns
  h = text(i,max(log10(1./T))+0.5,site{i});
@@ -130,7 +137,7 @@ end
 
 ylabel('log10(Frequency)')
 xlabel('Station Number')
-title(['Frequency Analysis: ',num2str(length(uniqueT)),' distinct frequencies found'])
+title(['Frequency Analysis: ',num2str(length(uniqueT)),' distinct frequencies found. Max Freq = ',num2str(max(1./T)),'. Min Freq = ',num2str(min(1./T))])
 set(gca,'Layer','top')
 print_figure('.', 'Frequency_Analysis')
 
