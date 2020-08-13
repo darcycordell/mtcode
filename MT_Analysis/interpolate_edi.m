@@ -207,7 +207,7 @@ if choice == 1
     while 1
         
         set_figure_size(1);
-        d_orig(is).Zerr = nan(size(d_orig(is).Zerr));
+        d.Zerr = nan(size(d.Zerr));
         plot_impedance(d_orig(is),1);
         plot_impedance(d,is);
 
@@ -284,30 +284,42 @@ function [dnew] = interpolate_impedance(d,Tnew)
 %from the new set of periods (Tnew)
 T_orig = Tnew;
 
-dT = diff(log10(d.T)); %Find difference in logarithmic periods
+dT = diff(log10(Tnew)); %Find difference in logarithmic periods
+nindx = nearestpoint(1,cumsum(dT)); %Find the difference in indices for one logarithmic period
 
-indgaps = find(dT>1); %Find gaps >1 (more than one decade)
-if ~isempty(indgaps)
-    ind1 = nearestpoint(d.T(indgaps),Tnew); %Find index of start of gap
-    ind2 = nearestpoint(d.T(indgaps+1),Tnew); %Find index of end of gap
-    
-    indout = [];
-    for i = 1:length(ind1) %If there is more than one gap, then we need to loop over gaps
-        indout = [indout ind1(i):ind2(i)]; %Find indices to be excluded
-    end
-    indin = setdiff(1:length(Tnew),indout); %Find indices to be included
-
-    Tnew(indout)=[]; %Erase the excluded indices from the new period vector
-end
-
-dnew.T=Tnew;
 
 %%
+nindx = 10;
+Z = nan(length(T_orig),4,d.ns);
+Z = Z + 1i*Z;
+Zerr = nan(size(Z));
+Zerr = Zerr + 1i*Zerr;
+tip = nan(length(T_orig),2,d.ns);
+tip = tip + 1i*tip;
+tiperr = nan(size(tip));
+tiperr = tiperr + 1i*tiperr;
 
 %Do the interpolation
 for is = 1:d.ns
     for ic=1:4 %this loop interpolates the impedance(z) and error(dz) data onto the 'TT' array (for all 4 impedance elements, and 2 tipper elements)
         ind=find(~isnan(real(d.Z(:,ic,is))));
+        Tnew = T_orig;
+        indgaps = find(diff(ind)>nindx);
+        if ~isempty(indgaps)
+            ind1 = nearestpoint(d.T(ind(indgaps)),Tnew);
+            ind2 = nearestpoint(d.T(ind(indgaps+1)),Tnew);
+            
+            indout = [];
+            for i = 1:length(ind1)
+                indout = [indout ind1(i):ind2(i)];
+            end
+            indin = setdiff(1:length(Tnew),indout);
+            
+            Tnew(indout) = [];
+        else
+            indin = 1:length(Tnew);
+        end
+        
         if ~isempty(ind) && ~all(real(d.Z(:,ic,is))==0)
             dnew.Z(:,ic,is)=10.^interp1(log10(d.T(ind)),log10(real(d.Z(ind,ic,is))),log10(Tnew),'spline',NaN)+1i*10.^interp1(log10(d.T(ind)),log10(imag(d.Z(ind,ic,is))),log10(Tnew),'spline',NaN);
             clear ind
@@ -322,49 +334,64 @@ for is = 1:d.ns
             dnew.Z(:,ic,is)=zeros(length(Tnew),1);
             dnew.Zerr(:,ic,is)=zeros(length(Tnew),1);
         end
+
+        Z(indin,ic,is) = dnew.Z(:,ic); %Add the interpolated data into the holding variable at the correct indices
+        Zerr(indin,ic,is) = dnew.Zerr(:,ic);
         
-        if ic<3
-            ind=find(~isnan(real(d.tip(:,ic,is))));
-            if ~isempty(ind) && ~all(real(d.tip(:,ic,is))==0)
-                dnew.tip(:,ic,is)=interp1(log10(d.T(ind)),real(d.tip(ind,ic,is)),log10(Tnew),'spline',NaN)+1i*interp1(log10(d.T(ind)),imag(d.tip(ind,ic,is)),log10(Tnew),'spline',NaN);
-                clear ind
-                ind=find(~isnan(real(d.tiperr(:,ic,is))));
-                dnew.tiperr(:,ic,is)=interp1(log10(d.T(ind)),real(d.tiperr(ind,ic,is)),log10(Tnew),'linear',NaN); %error is not complex
-                dnew.tiperr(:,ic,is) = dnew.tiperr(:,ic,is)+1i*dnew.tiperr(:,ic,is);
-                clear ind
-            elseif isempty(ind) && ~all(real(d.tip(:,ic,is))==0) % if ind is empty, it means there is no data in z_hz, therefore we need to define ZZint_hz and EEint_hz as NaN
-                dnew.tip(:,ic,is)=NaN(length(Tnew),1)+1i.*NaN(length(Tnew),1);
-                dnew.tiperr(:,ic,is)=NaN(length(Tnew),1)+1i.*NaN(length(Tnew),1);
-            elseif all(real(d.tip(:,ic,is))==0)
-                dnew.tip(:,ic,is)=zeros(length(Tnew),1);
-                dnew.tiperr(:,ic,is)=zeros(length(Tnew),1);
-            end
-        end
     end
 end
-%%
-if ~isempty(indgaps) %If there are gaps then we need to do some book keeping to ensure
-    %that the output data structure is the same size as all the other EDIs
-    %that are being interpolated
+
+for is = 1:d.ns
+    for ic = 1:2
+        ind=find(~isnan(real(d.tip(:,ic,is))));
+        
+        Tnew = T_orig;
+        indgaps = find(diff(ind)>nindx);
+        if ~isempty(indgaps)
+            ind1 = nearestpoint(d.T(indgaps),Tnew);
+            ind2 = nearestpoint(d.T(indgaps+1),Tnew);
+            
+            indout = [];
+            for i = 1:length(ind1)
+                indout = [indout ind1(i):ind2(i)];
+            end
+            indin = setdiff(1:length(Tnew),indout);
+            
+            Tnew(indout) = [];
+        else
+            indin =1:length(Tnew);
+        end
+        
+        if ~isempty(ind) && ~all(real(d.tip(:,ic,is))==0)
+            dnew.tip(:,ic,is)=interp1(log10(d.T(ind)),real(d.tip(ind,ic,is)),log10(Tnew),'spline',NaN)+1i*interp1(log10(d.T(ind)),imag(d.tip(ind,ic,is)),log10(Tnew),'spline',NaN);
+            clear ind
+            ind=find(~isnan(real(d.tiperr(:,ic,is))));
+            dnew.tiperr(:,ic,is)=interp1(log10(d.T(ind)),real(d.tiperr(ind,ic,is)),log10(Tnew),'linear',NaN); %error is not complex
+            dnew.tiperr(:,ic,is) = dnew.tiperr(:,ic,is)+1i*dnew.tiperr(:,ic,is);
+            clear ind
+        elseif isempty(ind) && ~all(real(d.tip(:,ic,is))==0) % if ind is empty, it means there is no data in z_hz, therefore we need to define ZZint_hz and EEint_hz as NaN
+            dnew.tip(:,ic,is)=NaN(length(Tnew),1)+1i.*NaN(length(Tnew),1);
+            dnew.tiperr(:,ic,is)=NaN(length(Tnew),1)+1i.*NaN(length(Tnew),1);
+        elseif all(real(d.tip(:,ic,is))==0)
+            dnew.tip(:,ic,is)=zeros(length(Tnew),1);
+            dnew.tiperr(:,ic,is)=zeros(length(Tnew),1);
+        end
+
+        tip(indin,ic,is) = dnew.tip(:,ic); %Add the interpolated data into the holding variable at the correct indices
+        tiperr(indin,ic,is) = dnew.tiperr(:,ic);
+
+    end
+end
+
+
     dnew.T = T_orig; %Return the period vector to its original size
-
-    %Set up holding variables which have the same size as the full dataset
-    Z = nan(length(T_orig),4);
-    Zerr = nan(size(Z));
-    tip = nan(length(T_orig),2);
-    tiperr = nan(size(tip));
-
-    Z(indin,:) = dnew.Z; %Add the interpolated data into the holding variable at the correct indices
-    Zerr(indin,:) = dnew.Zerr;
-    tip(indin,:) = dnew.tip;
-    tiperr(indin,:) = dnew.tiperr;
 
     %Replace variables in the data structure
     dnew.Z = Z;
     dnew.Zerr = Zerr;
     dnew.tip = tip;
     dnew.tiperr = tiperr;
-end
+    
 
 end% end of function interpolate_impedance
 
