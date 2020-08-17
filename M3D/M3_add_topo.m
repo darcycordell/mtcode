@@ -47,7 +47,8 @@ function M3_add_topo(hObject, ~, ~)
         %If you want to include bathymetry in your model, normal SRTM data
         %is not sufficient. 
         %
-        % NOAA: https://maps.ngdc.noaa.gov/viewers/wcs-client/
+        % For global datasets, one option is NOAA: 
+        % https://maps.ngdc.noaa.gov/viewers/wcs-client/
         %   Select region you want
         %   Select Output Format as GMT NetCDF
         %   Download and put into your current directory
@@ -66,6 +67,23 @@ function M3_add_topo(hObject, ~, ~)
         H.topo_lon = temp.lon;
         H.topo_lat = temp.lat;
         H.topo_z = temp.z; % this is in m a.s.l. this is a matrix
+    end
+    
+    if length(H.topo_lon)*length(H.topo_lat)>10^7
+       
+       size_menu = menu('Elevation matrix is very large and may be very slow and/or crash MATLAB. Downsample?','Yes','No');
+       
+       if size_menu
+           
+           %Find the optimal number of indices to skip in the lat and lon
+           %vectors: sqrt(n*m/10^8)
+            indskip = ceil(sqrt(length(H.topo_lon)*length(H.topo_lat)/10^7));
+            
+            H.topo_lon = H.topo_lon(1:indskip:end); H.topo_lat = H.topo_lat(1:indskip:end);
+            H.topo_z = H.topo_z(1:indskip:end,1:indskip:end);
+       end
+           
+        
     end
             
     % convert topography to mesh coords in km       
@@ -156,30 +174,38 @@ function M3_add_topo(hObject, ~, ~)
         H.topo_x = reshape(topo_rot(2,:),size(H.topo_x));        
     end
     
+    
     if topo_source_menu ~= 4 % if using station elevations, topo not in matrix form yet
-        figure % figure to show final topo region and mesh boundaries
-        pcolor(H.topo_y,H.topo_x,H.topo_z)
-        hold on; plot(H.d.y./1000,H.d.x./1000,'ro','markersize',4)
-        shading flat; axis equal
         
-%         if H.mesh_rot ~= 0 % mesh rotated to align with strike
-%             c = cosd(-H.mesh_rot);    s = sind(-H.mesh_rot); % stations get rotated opposite direction of the data
-%             R=[c s;-s c];
-%             lim_rot = R*[[min(H.XX) min(H.XX) max(H.XX) max(H.XX)]; [min(H.YY) max(H.YY) max(H.YY) min(H.YY)]];
-%             plot([lim_rot(1,:) lim_rot(1,1)],[lim_rot(2,:) lim_rot(2,1)],'k-')
-%         else       
-            rectangle('position',[min(H.YY) min(H.XX) max(H.YY)-min(H.YY) max(H.XX)-min(H.XX)])
-%         end
+        plot_menu = menu('Plot Grid Interpolation?','Yes','No');
         
-        set(gca,'dataaspectratio',[1 1 1])
-        title(['UTM After merging - rotated to ',num2str(H.mesh_rot),' degrees'])
+        if plot_menu
         
-        figure(100)
-        [LON, LAT] = meshgrid(H.topo_lon,H.topo_lat);
-        pcolor(LON,LAT,H.topo_z); hold on
-        plot(H.d.loc(:,2),H.d.loc(:,1),'or'); axis equal
-        shading flat
-        title('Topo in True Geographic Coordinates')
+            figure % figure to show final topo region and mesh boundaries
+            pcolor(H.topo_y,H.topo_x,H.topo_z)
+            hold on; plot(H.d.y./1000,H.d.x./1000,'ro','markersize',4)
+            shading flat; axis equal
+
+    %         if H.mesh_rot ~= 0 % mesh rotated to align with strike
+    %             c = cosd(-H.mesh_rot);    s = sind(-H.mesh_rot); % stations get rotated opposite direction of the data
+    %             R=[c s;-s c];
+    %             lim_rot = R*[[min(H.XX) min(H.XX) max(H.XX) max(H.XX)]; [min(H.YY) max(H.YY) max(H.YY) min(H.YY)]];
+    %             plot([lim_rot(1,:) lim_rot(1,1)],[lim_rot(2,:) lim_rot(2,1)],'k-')
+    %         else       
+                rectangle('position',[min(H.YY) min(H.XX) max(H.YY)-min(H.YY) max(H.XX)-min(H.XX)])
+    %         end
+
+            set(gca,'dataaspectratio',[1 1 1])
+            title(['UTM After merging - rotated to ',num2str(H.mesh_rot),' degrees'])
+
+            figure(100)
+            [LON, LAT] = meshgrid(H.topo_lon,H.topo_lat);
+            pcolor(LON,LAT,H.topo_z); hold on
+            plot(H.d.loc(:,2),H.d.loc(:,1),'or'); axis equal
+            shading flat
+            title('Topo in True Geographic Coordinates')
+        
+        end
     end
         
 %     figure % figure to compare to original lat/long coords
