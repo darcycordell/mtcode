@@ -146,19 +146,26 @@ while irun == 1
 
             % Plot simple figure to check data
             [~] = set_figure_size(1);
-            subplot(221); plot(1:d.ns,d.zrot(1,:),'ob'); title('Rotations')
-            xlabel('Station number'); ylabel('Azimuth Rotation (deg)')
+            %Not sure if its really useful to plot rotations, probably more
+            %useful to plot phase
+%             subplot(221); plot(1:d.ns,d.zrot(1,:),'ob'); title('Rotations')
+%             xlabel('Station number'); ylabel('Azimuth Rotation (deg)')
 
             for idxs=1:d.ns
-                subplot(222); title('Apparent Resistivity')
-                loglog(d.T,abs(d.rho(:,2,idxs)),'r'); hold on; loglog(d.T,abs(d.rho(:,3,idxs)),'b');
+                subplot(221); title('Apparent Resistivity')
+                loglog(d.T,d.rho(:,2,idxs),'r'); hold on; loglog(d.T,d.rho(:,3,idxs),'b');
+                
+                subplot(223); title('Phase')
+                semilogx(d.T,d.pha(:,2,idxs),'r'); hold on; semilogx(d.T,d.pha(:,3,idxs)+180,'b');
+                xlabel('Period (s)');
 
                 subplot(224); title('Tipper')
                 semilogx(d.T,abs(d.tip(:,1,idxs)),'r'); hold on; semilogx(d.T,abs(d.tip(:,2,idxs)),'b');
+                xlabel('Period (s)');
             end
-            xlabel('Period (s)');
+            
 
-            subplot(223);
+            subplot(222);
             plot(1:d.ns,d.loc(:,3),'ob');
             title('Station Elevations')
             ylabel('Elevation (m)')
