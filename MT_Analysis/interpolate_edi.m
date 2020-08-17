@@ -302,26 +302,28 @@ tiperr = tiperr + 1i*tiperr;
 %Do the interpolation
 for is = 1:d.ns
     for ic=1:4 %this loop interpolates the impedance(z) and error(dz) data onto the 'TT' array (for all 4 impedance elements, and 2 tipper elements)
-        ind=find(~isnan(real(d.Z(:,ic,is))));
-        Tnew = T_orig;
-        indgaps = find(diff(ind)>nindx);
+        ind=find(~isnan(real(d.Z(:,ic,is)))); %Find the nan indices
+        Tnew = T_orig; %Reset the new period vector to the original
+        indgaps = find(diff(ind)>nindx); %Find any gaps in the data > 1 decade
         if ~isempty(indgaps)
+            %Find the indices in the new period vector which correspond to
+            %the gaps
             ind1 = nearestpoint(d.T(ind(indgaps)),Tnew);
             ind2 = nearestpoint(d.T(ind(indgaps+1)),Tnew);
             
             indout = [];
-            for i = 1:length(ind1)
-                indout = [indout ind1(i):ind2(i)];
+            for i = 1:length(ind1) %If there is more than one gap, then loop over gaps
+                indout = [indout ind1(i):ind2(i)]; %Indices in gaps
             end
-            indin = setdiff(1:length(Tnew),indout);
+            indin = setdiff(1:length(Tnew),indout); %Indices not in gaps
             
-            Tnew(indout) = [];
+            Tnew(indout) = []; %Remove the gaps from the new period vector (i.e. the interpolation query points)
         else
             indin = 1:length(Tnew);
         end
         
         if ~isempty(ind) && ~all(real(d.Z(:,ic,is))==0)
-            dnew.Z(:,ic,is)=10.^interp1(log10(d.T(ind)),log10(real(d.Z(ind,ic,is))),log10(Tnew),'spline',NaN)+1i*10.^interp1(log10(d.T(ind)),log10(imag(d.Z(ind,ic,is))),log10(Tnew),'spline',NaN);
+            dnew.Z(:,ic,is)=10.^interp1(log10(d.T(ind)),log10(real(d.Z(ind,ic,is))),log10(Tnew),'pchip',NaN)+1i*10.^interp1(log10(d.T(ind)),log10(imag(d.Z(ind,ic,is))),log10(Tnew),'pchip',NaN);
             clear ind
             ind=find(~isnan(real(d.Zerr(:,ic,is))));
             dnew.Zerr(:,ic,is)=10.^interp1(log10(d.T(ind)),log10(real(d.Zerr(ind,ic,is))),log10(Tnew),'linear',NaN); %error is not complex
@@ -343,13 +345,12 @@ end
 
 for is = 1:d.ns
     for ic = 1:2
-        ind=find(~isnan(real(d.tip(:,ic,is))));
-        
+        ind=find(~isnan(real(d.tip(:,ic,is))));       
         Tnew = T_orig;
         indgaps = find(diff(ind)>nindx);
         if ~isempty(indgaps)
-            ind1 = nearestpoint(d.T(indgaps),Tnew);
-            ind2 = nearestpoint(d.T(indgaps+1),Tnew);
+            ind1 = nearestpoint(d.T(ind(indgaps)),Tnew);
+            ind2 = nearestpoint(d.T(ind(indgaps+1)),Tnew);
             
             indout = [];
             for i = 1:length(ind1)
@@ -363,7 +364,7 @@ for is = 1:d.ns
         end
         
         if ~isempty(ind) && ~all(real(d.tip(:,ic,is))==0)
-            dnew.tip(:,ic,is)=interp1(log10(d.T(ind)),real(d.tip(ind,ic,is)),log10(Tnew),'spline',NaN)+1i*interp1(log10(d.T(ind)),imag(d.tip(ind,ic,is)),log10(Tnew),'spline',NaN);
+            dnew.tip(:,ic,is)=interp1(log10(d.T(ind)),real(d.tip(ind,ic,is)),log10(Tnew),'pchip',NaN)+1i*interp1(log10(d.T(ind)),imag(d.tip(ind,ic,is)),log10(Tnew),'pchip',NaN);
             clear ind
             ind=find(~isnan(real(d.tiperr(:,ic,is))));
             dnew.tiperr(:,ic,is)=interp1(log10(d.T(ind)),real(d.tiperr(ind,ic,is)),log10(Tnew),'linear',NaN); %error is not complex
