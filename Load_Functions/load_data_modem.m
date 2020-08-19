@@ -74,11 +74,15 @@ while 1
    
     line = fgetl(fid);
     
+    if isempty(line)
+        line = ' ';
+    end
+    
     if line==-1
         break
     end
     
-    if ~isempty(str2num(line(1)));
+    if ~isempty(str2num(line(1)))
         nlines = nlines+1;
         data = textscan(line,'%f %s %f %f %f %f %f %s %f %f %f');
         
@@ -98,26 +102,26 @@ while 1
         
        
     else
-        hc = hc+1;
         % read the header info
-        tmp = textscan(fid,'# %s',1,'delimiter','\n');
+        tmp = textscan(fid,'> %s',6,'delimiter','\n');
         tmp = char(tmp{1});
-        header{hc} = tmp;
-        % read the block header
-        textscan(fid,'# %s',1,'delimiter','\n');
-        blockid(hc).info = textscan(fid,'> %s',6,'delimiter','\n');
-        blockid(hc).info = char(blockid(hc).info{1});
-        dataType{hc} = blockid(hc).info(1,:);
-        signstr{hc}  = blockid(hc).info(2,:);
-        if strfind(signstr{hc},'-')
-            isign(hc) = -1;
-        else
-            isign(hc) = +1;
+          
+        if ~isempty(tmp)
+            hc = hc+1;
+            header{hc} = tmp;
+            % read the block header
+            dataType{hc} = strtrim(header{hc}(1,:));
+            signstr{hc}  = header{hc}(2,:);
+            if strfind(signstr{hc},'-')
+                isign(hc) = -1;
+            else
+                isign(hc) = +1;
+            end
+            units{hc} = strtrim(header{hc}(3,:));
+            rotation(hc) = sscanf(header{hc}(4,:),'%f',1);
+            origin(hc,:) = sscanf(header{hc}(5,:),'%f',2);
+            nfns{hc}  = sscanf(header{hc}(6,:),'%d',2);
         end
-        units{hc} = strtrim(blockid(hc).info(3,:));
-        rotation(hc) = sscanf(blockid(hc).info(4,:),'%f',1);
-        origin(hc,:) = sscanf(blockid(hc).info(5,:),'%f',2);
-        nfns{hc}  = sscanf(blockid(hc).info(6,:),'%d',2);
         
     end
    
