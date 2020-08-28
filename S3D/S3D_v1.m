@@ -423,10 +423,16 @@ while menu1 == 1
                         elseif data_main_menu == 5 %Plot induction vectors in map view
                             close all
                             if ~all(isnan(dobs.tip(:))) %If there is tipper data
-                                plot_induction_vector_map(dobs,ip,'r')
-                                plot_induction_vector_map(dpred,ip,'k')
-                                plot_geoboundaries(L);
                                 figure_name = 'induction_vector';
+                                plot_induction_vector_map(dpred,ip,'k')
+                                print_figure(['iv_map_response_',dpred.niter],[figure_name,'_',num2str(dobs.T(ip))]); %Save figure
+                                close(gcf)
+                                plot_induction_vector_map(dobs,ip,'r')
+                                print_figure(['iv_map_observed_',dpred.niter],[figure_name,'_',num2str(dobs.T(ip))]); %Save figure
+                                plot_induction_vector_map(dpred,ip,'k')
+                                
+%                                 plot_geoboundaries(L);
+                                
                                 h = gcf; axes(h.Children(2));
                                 manual_legend('Observed Data','-r','Modelled Data','-k');
                                 title(['Induction Vectors for T = ',num2str(dobs.T(ip))])
@@ -458,7 +464,7 @@ while menu1 == 1
 
             elseif data_main_menu == 8 %Misfit Statistics----------------------------------------------
 
-                misfit_menu = menu('','Residual Histograms','Misfit By Period','Misfit Map','Misfit Map (By Period)','Misfit Pseudo','Misfit By Inversion Iteration');
+                misfit_menu = menu('','Residual Histograms','Misfit By Period','Misfit Map','Misfit Map (By Period)','Residual Pseudo','Misfit By Inversion Iteration');
 
                 s = detailed_statistics(dobs,dpred); % new 4/2020
                 if misfit_menu == 1 %Residual histograms-------------------

@@ -71,36 +71,49 @@ function M3D_v1_OpeningFcn
     comp_p = [panel_p(3) panel_p(4) panel_p(3) panel_p(4)];
     uipanel_model = uipanel('Title','2. MAKE MODEL','FontSize',8,'units','normalized','Position',panel_p.*mp);
        
-        uicontrol('Parent',uipanel_model,'style','text','string','Spacing in X (km)','units','normalized','Position',[8 132 116 16]./comp_p);
-        uicontrol('Parent',uipanel_model,'style','text','string','Number of padding in X','units','normalized','Position',[8 108 116 16]./comp_p);
-        uicontrol('Parent',uipanel_model,'style','text','string','Increase by in X','units','normalized','Position',[8 84 116 16]./comp_p);
+        uicontrol('Parent',uipanel_model,'style','text','string','Cell width (km)','units','normalized','Position',[8 132 80 16]./comp_p);
+        uicontrol('Parent',uipanel_model,'style','text','string','Number of padding cells','units','normalized','Position',[8 108 80 16]./comp_p);
+        uicontrol('Parent',uipanel_model,'style','text','string','Padding factor','units','normalized','Position',[8 84 80 16]./comp_p);
+        uicontrol('Parent',uipanel_model,'style','text','string','X','units','normalized','Position',[111 155 16 16]./comp_p);
+        uicontrol('Parent',uipanel_model,'style','text','string','Y','units','normalized','Position',[141 155 16 16]./comp_p);
         
-        uicontrol('Parent',uipanel_model,'style','text','string','Spacing in Y (km)','units','normalized','Position',[188 132 116 16]./comp_p);
-        uicontrol('Parent',uipanel_model,'style','text','string','Number of padding in Y','units','normalized','Position',[188 108 116 16]./comp_p);
-        uicontrol('Parent',uipanel_model,'style','text','string','Increase by in Y','units','normalized','Position',[188 84 116 16]./comp_p);
+%         uicontrol('Parent',uipanel_model,'style','text','string','Spacing in Y (km)','units','normalized','Position',[188 132 116 16]./comp_p);
+%         uicontrol('Parent',uipanel_model,'style','text','string','Number of padding in Y','units','normalized','Position',[188 108 116 16]./comp_p);
+%         uicontrol('Parent',uipanel_model,'style','text','string','Increase by in Y','units','normalized','Position',[188 84 116 16]./comp_p);
         
-        uicontrol('Parent',uipanel_model,'style','text','string','First thickness (m)','units','normalized','Position',[8 50 116 16]./comp_p);
-        uicontrol('Parent',uipanel_model,'style','text','string','Increase thickness by','units','normalized','Position',[8 26 116 16]./comp_p);
-        uicontrol('Parent',uipanel_model,'style','text','string','Number of Layers','units','normalized','Position',[188 50 116 16]./comp_p);       
-        uicontrol('Parent',uipanel_model,'style','text','string','Air cell thickness (m)','units','normalized','Position',[188 26 116 16]./comp_p);
+        uicontrol('Parent',uipanel_model,'style','text','string','First thickness (m)','units','normalized','Position',[188 132 116 16]./comp_p);
+        uicontrol('Parent',uipanel_model,'style','text','string','Increase thickness by','units','normalized','Position',[188 108 116 16]./comp_p);
+        uicontrol('Parent',uipanel_model,'style','text','string','Number of Layers','units','normalized','Position',[188 84 116 16]./comp_p);            
         
-        H.xspacing = uicontrol('Parent',uipanel_model,'style','edit','string','5','backgroundcolor','white','tooltip',sprintf('Enter cell size in core mesh.'),'units','normalized','Position',[127 132 30 22]./comp_p,'Callback',@xspacing_Callback);
-        H.yspacing = uicontrol('Parent',uipanel_model,'style','edit','string','5','backgroundcolor','white','units','normalized','Position',[307 132 30 22]./comp_p,'Callback',@yspacing_Callback); 
-        H.moutcX = uicontrol('Parent',uipanel_model,'style','edit','string','8','backgroundcolor','white','units','normalized','Position',[127 108 30 22]./comp_p,'Callback',@moutcX_Callback);
-        H.moutcY = uicontrol('Parent',uipanel_model,'style','edit','string','8','backgroundcolor','white','units','normalized','Position',[307 108 30 22]./comp_p,'Callback',@moutcY_Callback);
-        H.Xinc = uicontrol('Parent',uipanel_model,'style','edit','string','1.3','backgroundcolor','white','units','normalized','Position',[127 84 30 22]./comp_p,'Callback',@Xinc_Callback);                         
-        H.Yinc = uicontrol('Parent',uipanel_model,'style','edit','string','1.3','backgroundcolor','white','units','normalized','Position',[307 84 30 22]./comp_p,'Callback',@Yinc_Callback);
+        H.xspacing = uicontrol('Parent',uipanel_model,'style','edit','string','5','backgroundcolor','white','tooltip',sprintf('Enter cell size in core mesh.'),'units','normalized','Position',[107 132 24 22]./comp_p,'Callback',@xspacing_Callback);
+        H.yspacing = uicontrol('Parent',uipanel_model,'style','edit','string','5','backgroundcolor','white','units','normalized','Position',[137 132 24 22]./comp_p,'Callback',@yspacing_Callback); 
+        H.moutcX = uicontrol('Parent',uipanel_model,'style','edit','string','8','backgroundcolor','white','units','normalized','Position',[107 108 24 22]./comp_p,'Callback',@moutcX_Callback);
+        H.moutcY = uicontrol('Parent',uipanel_model,'style','edit','string','8','backgroundcolor','white','units','normalized','Position',[137 108 24 22]./comp_p,'Callback',@moutcY_Callback);
+        H.Xinc = uicontrol('Parent',uipanel_model,'style','edit','string','1.3','backgroundcolor','white','units','normalized','Position',[107 84 24 22]./comp_p,'Callback',@Xinc_Callback);                         
+        H.Yinc = uicontrol('Parent',uipanel_model,'style','edit','string','1.3','backgroundcolor','white','units','normalized','Position',[137 84 24 22]./comp_p,'Callback',@Yinc_Callback);
         
-        H.firstthick = uicontrol('Parent',uipanel_model,'style','edit','string','100','backgroundcolor','white','units','normalized','Position',[127 50 30 22]./comp_p,'Callback',@firstthick_Callback);
-        H.nl = uicontrol('Parent',uipanel_model,'style','edit','string','33','backgroundcolor','white','units','normalized','Position',[307 50 30 22]./comp_p,'Callback',@nl_Callback);       
-        H.Zinc = uicontrol('Parent',uipanel_model,'style','edit','string','1.3','backgroundcolor','white','units','normalized','Position',[127 26 30 22]./comp_p,'Callback',@Zinc_Callback);       
-        H.airspacing = uicontrol('Parent',uipanel_model,'style','edit','string','20','backgroundcolor','white','units','normalized','Position',[307 26 30 22]./comp_p,'Callback',@airspacing_Callback);
+        H.firstthick = uicontrol('Parent',uipanel_model,'style','edit','string','100','backgroundcolor','white','units','normalized','Position',[307 132 30 22]./comp_p,'Callback',@firstthick_Callback);
+        H.Zinc = uicontrol('Parent',uipanel_model,'style','edit','string','1.3','backgroundcolor','white','units','normalized','Position',[307 108 30 22]./comp_p,'Callback',@Zinc_Callback);       
+        H.nl = uicontrol('Parent',uipanel_model,'style','edit','string','33','backgroundcolor','white','units','normalized','Position',[307 84 30 22]./comp_p,'Callback',@nl_Callback);       
+                         
+        uicontrol('Parent',uipanel_model,'style','text','string','Model Resistivity (Ohm-m)','units','normalized','Position',[5 50 100 21]./comp_p)
+        H.res = uicontrol('Parent',uipanel_model,'style','edit','string','100','units','normalized','Position',[100 55 31 21]./comp_p,'Callback',@res_Callback);  
         
-        uicontrol('Parent',uipanel_model,'style','pushbutton','string','Generate Model','units','normalized','Position',[5 2 88 22]./comp_p,'Callback',@M3_generate_model);
-        uicontrol('Parent',uipanel_model,'style','pushbutton','string','View Model','units','normalized','Position',[98 2 70 22]./comp_p,'Callback',@M3_view_model);
+        uicontrol('Parent',uipanel_model,'style','pushbutton','string','Generate Model','units','normalized','Position',[20 26 88 22]./comp_p,'Callback',@M3_generate_model);
+        uicontrol('Parent',uipanel_model,'style','pushbutton','string','View Model','units','normalized','Position',[20 2 88 22]./comp_p,'Callback',@M3_view_model);
 
-        uicontrol('Parent',uipanel_model,'style','pushbutton','string','Add Topo','units','normalized','Position',[242 2 70 22]./comp_p,'Callback',@M3_add_topo);
-%%  EDIT MODEL PANEL     
+        subpanel_rot = uipanel('parent',uipanel_model,'Title','Rotation','FontSize',8,'units','normalized','Position',[0.4 0 0.3 0.45]);
+            uicontrol('Parent',subpanel_rot,'style','text','string','Rotation Angle','tooltip','Enter strike angle, positive = clockwise from north','units','normalized','Position',[0 0.575 0.8 0.25])
+            H.rotang = uicontrol('Parent',subpanel_rot,'style','edit','string','0','tooltip','Enter strike angle, positive = clockwise from north','units','normalized','Position',[0.75 0.55 0.2 0.3],'Callback',@rotang_Callback);  
+            uicontrol('Parent',subpanel_rot,'style','pushbutton','string','ROTATE STATIONS & DATA','tooltip',sprintf('Enter angle, positive = clockwise from north\nData are rotated to this angle\nMesh x-direction (North) will be aligned to this angle'),'units','normalized','Position',[0.04 0.1 0.92 0.35],'Callback',@M3_set_rot);
+
+        
+        subpanel_topo = uipanel('parent',uipanel_model,'Title','Add Topography','FontSize',8,'units','normalized','Position',[0.7 0 0.3 0.45]);
+            uicontrol('Parent',subpanel_topo,'style','text','string','Air cell thickness (m)','units','normalized','Position',[0 0.6 0.8 0.2]);
+            H.airspacing = uicontrol('Parent',subpanel_topo,'style','edit','string','20','backgroundcolor','white','units','normalized','Position',[0.75 0.55 0.2 0.3],'Callback',@airspacing_Callback);
+            uicontrol('Parent',subpanel_topo,'style','pushbutton','string','Add Topo','units','normalized','Position',[0.1 0.1 0.8 0.35],'Callback',@M3_add_topo);
+        
+        %%  EDIT MODEL PANEL     
 % This panel involves editing the model.  
 
     panel_p = [734 355 380 116];
@@ -151,19 +164,23 @@ function M3D_v1_OpeningFcn
 %%  SAVE PANEL
 % This panel involves saving data, model, and convariance files.
 
-    panel_p = [834 6 280 144];
+    panel_p = [834 100 280 144];
     comp_p = [panel_p(3) panel_p(4) panel_p(3) panel_p(4)];
     uipanel_save_menu = uipanel('Title','5. SAVE FILES','FontSize',8,'units','normalized','Position',panel_p.*mp);
     
-        uicontrol('Parent',uipanel_save_menu,'style','pushbutton','string','Save ModEM Data','units','normalized','Position',[5 116 124 22]./comp_p,'Callback',@M3_save_modem_data);
-        uicontrol('Parent',uipanel_save_menu,'style','pushbutton','string','Save wsinv3dmt Data','units','normalized','Position',[5 92 124 22]./comp_p,'Callback',@M3_save_ws_data);
-
-        uicontrol('Parent',uipanel_save_menu,'style','pushbutton','string','Save ModEM Model','units','normalized','Position',[150 116 124 22]./comp_p,'Callback',@M3_save_modem_mod);
-        uicontrol('Parent',uipanel_save_menu,'style','pushbutton','string','Save wsinv3dmt Model','units','normalized','Position',[150 92 124 22]./comp_p,'Callback',@M3_save_ws_mod);
-
-        uicontrol('Parent',uipanel_save_menu,'String','Save ModEM cov File','units','normalized','Position',[72 58 140 22]./comp_p,'Callback',@M3_make_modem_cov);
-        uicontrol('Parent',uipanel_save_menu,'String','Save WS Startup File','units','normalized','Position',[72 34 140 22]./comp_p,'Callback',@M3_make_ws_startup);
-        uicontrol('Parent',uipanel_save_menu,'String','Save M3D Parameter File','units','normalized','Position',[72 10 140 22]./comp_p,'Callback',@M3_make_param);                  
+    uipanel_save_wsinv = uipanel('parent',uipanel_save_menu,'title','WSINV3DMT','FontSize',8,'units','normalized','Position',[0.52 0.2 0.46 0.8]);
+            
+        uicontrol('Parent',uipanel_save_wsinv,'style','pushbutton','string','Save wsinv3dmt Data','units','normalized','Position',[0.1 0.7 0.8 0.25],'Callback',@M3_save_ws_data);      
+        uicontrol('Parent',uipanel_save_wsinv,'style','pushbutton','string','Save wsinv3dmt Model','units','normalized','Position',[0.1 0.4 0.8 0.25],'Callback',@M3_save_ws_mod);
+        uicontrol('Parent',uipanel_save_wsinv,'String','Save WS Startup File','units','normalized','Position',[0.1 0.1 0.8 0.25],'Callback',@M3_make_ws_startup);
+     
+    uipanel_save_modem = uipanel('parent',uipanel_save_menu,'title','ModEM','FontSize',8,'units','normalized','Position',[0.02 0.2 0.46 0.8]);  
+    
+        uicontrol('Parent',uipanel_save_modem,'style','pushbutton','string','Save ModEM Data','units','normalized','Position',[0.1 0.7 0.8 0.25],'Callback',@M3_save_modem_data);
+        uicontrol('Parent',uipanel_save_modem,'style','pushbutton','string','Save ModEM Model','units','normalized','Position',[0.1 0.4 0.8 0.25],'Callback',@M3_save_modem_mod);
+        uicontrol('Parent',uipanel_save_modem,'String','Save ModEM cov File','units','normalized','Position',[0.1 0.1 0.8 0.25],'Callback',@M3_make_modem_cov);
+        
+        uicontrol('Parent',uipanel_save_menu,'String','Save M3D Parameter File','units','normalized','Position',[72 4 140 22]./comp_p,'Callback',@M3_make_param);                  
         
 %%  OCEAN PANEL
 % This panel is not currently used and may be removed in the future.
@@ -174,7 +191,27 @@ function M3D_v1_OpeningFcn
     H.fix_ocean = uicontrol('Parent',uipanel_ocean_model,'style','checkbox','string','Fix Ocean','Position',[10 6 68 17],'Callback',@fix_ocean_Callback);
         
     uicontrol('Parent',uipanel_ocean_model,'style','text','string','Ocean Resistivity','Position',[35 28 85 16]);
-%%  MISC UICONTROL COMPONENTS
+
+%% VIEW OPTIONS PANEL
+
+    panel_p = [834 20 280 78];
+    comp_p = [panel_p(3) panel_p(4) panel_p(3) panel_p(4)];
+    uipanel_view_options = uipanel('Title','VIEW OPTIONS','FontSize',8,'units','normalized','Position',panel_p.*mp);
+        
+        uicontrol('Parent',uipanel_view_options,'style','text','string','Resistivity','units','normalized','Position',[0.1 0.7 0.2 0.2])
+        uicontrol('Parent',uipanel_view_options,'style','text','string','Min','units','normalized','Position',[0.08 0.45 0.1 0.2])
+        uicontrol('Parent',uipanel_view_options,'style','text','string','Max','units','normalized','Position',[0.22 0.45 0.1 0.2])   
+        H.min_res = uicontrol('Parent',uipanel_view_options,'style','edit','string','1','backgroundcolor','white','units','normalized','Position',[0.08 0.1 0.1 0.3],'Callback',@M3_min_res);
+        H.max_res = uicontrol('Parent',uipanel_view_options,'style','edit','string','1000','backgroundcolor','white','units','normalized','Position',[0.22 0.1 0.1 0.3],'Callback',@M3_max_res);        
+          
+
+%         uicontrol('Parent',uipanel_view_options,'style','text','string','Plot Buffer (km)','units','normalized','Position',[0.5 0.65 0.2 0.2])
+%         stat_tol = uicontrol('Parent',uipanel_view_options,'style','edit','string','4','units','normalized','Position',[0.75 0.65 0.1 0.3],'Callback',@stat_tol_Callback);     
+           
+        H.gridlines = uicontrol('Parent',uipanel_view_options,'style','checkbox','string','No Grid','units','normalized','Position',[0.5 0.45 0.2 0.2],'Callback',@gridlines_Callback);
+        H.station_names = uicontrol('Parent',uipanel_view_options,'style','checkbox','string','Station Names','units','normalized','Position',[0.5 0.1 0.4 0.2],'Callback',@station_names_Callback);
+    
+    %%  MISC UICONTROL COMPONENTS
 % Note: the positions of these components is relative to the figure size
 
     H.model_text = uicontrol('style','text','string','Mesh info','FontSize',10,'units','normalized','Position',[120 685 280 80].*mp);
@@ -183,30 +220,10 @@ function M3D_v1_OpeningFcn
     uicontrol('String','Restart','units','normalized','Position',[12 740 60 22].*mp,'Callback',@restart_button_Callback);
     uicontrol('String','Exit','units','normalized','Position',[12 716 60 22].*mp,'Callback',@exit_Callback);
 
-    uicontrol('style','text','string','Resistivity','units','normalized','Position',[763 50 53 15].*mp)
-    uicontrol('style','text','string','Min','units','normalized','Position',[760 29 28 15].*mp)
-    uicontrol('style','text','string','Max','units','normalized','Position',[792 29 28 15].*mp)   
-    H.min_res = uicontrol('style','edit','string','1','backgroundcolor','white','units','normalized','Position',[760 8 28 21].*mp,'Callback',@M3_min_res);
-    H.max_res = uicontrol('style','edit','string','1000','backgroundcolor','white','units','normalized','Position',[790 8 31 21].*mp,'Callback',@M3_max_res);        
-  
-    H.gridlines = uicontrol('style','checkbox','string','No Grid','units','normalized','Position',[854 220 60 17].*mp,'Callback',@gridlines_Callback);
-    H.station_names = uicontrol('style','checkbox','string','Station Names','units','normalized','Position',[854 200 90 17].*mp,'Callback',@station_names_Callback);
-       
-    uicontrol('style','text','string','Plot Buffer (km)','units','normalized','Position',[824 174 100 21].*mp)
-    stat_tol = uicontrol('style','edit','string','4','units','normalized','Position',[924 176 31 21].*mp,'Callback',@stat_tol_Callback);
-    
-    uicontrol('style','text','string','Default Resistivity','units','normalized','Position',[824 152 100 21].*mp)
-    H.res = uicontrol('style','edit','string','100','units','normalized','Position',[924 152 31 21].*mp,'Callback',@res_Callback);       
-    
-    uicontrol('style','text','string','Rotation Angle','tooltip','Enter strike angle, positive = clockwise from north','units','normalized','Position',[970 212 100 21].*mp)
-    H.rotang = uicontrol('style','edit','string','0','tooltip','Enter strike angle, positive = clockwise from north','units','normalized','Position',[1072 216 31 21].*mp,'Callback',@rotang_Callback);
-    
-    uicontrol('style','pushbutton','string','ROTATE STATIONS & DATA','tooltip',sprintf('Enter angle, positive = clockwise from north\nData are rotated to this angle\nMesh x-direction (North) will be aligned to this angle'),'units','normalized','Position',[968 180 148 32].*mp,'Callback',@M3_set_rot);
-
 %%   
     % Update H structure, provide default values
     H.axes1 = axes1;
-    H.stat_tol = get(stat_tol,'string');
+%     H.stat_tol = get(stat_tol,'string');
     
     H.NR = 8;
     H.per = [];

@@ -71,10 +71,10 @@ if u.plot_inset_iv %Plot inset if user wants
 
 end
 
-if get(gcf,'number') == 888 % if only plotting IVs, print figure 
-    print_figure('iv_map',['iv_map_',num2str(ip,'%03.0f'),'_',num2str(d.T(ip)),'s']); %Save figure
-    pause(0.1)
-end
+% if get(gcf,'number') == 888 % if only plotting IVs, print figure 
+%     print_figure('iv_map',['iv_map_',num2str(ip,'%03.0f'),'_',d.name,'_',num2str(d.T(ip)),'s']); %Save figure
+%     pause(0.1)
+% end
     
 
 

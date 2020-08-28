@@ -498,9 +498,9 @@ while irun == 1
             for ip = 1:u.nskip:d.nf
                 set_figure_size(1);
                 plot_induction_vector_map(d,ip,'k');
-%                 title(['Induction Vectors for Period: ',num2str(d.T(ip)),' s'])
-%                 print_figure('iv_map',['iv_map_',num2str(ip,'%03.0f'),'_',num2str(d.T(ip))]); %Save figure
-%                 pause(0.1)
+                title(['Induction Vectors for Period: ',num2str(d.T(ip)),' s'])
+                print_figure('iv_map',['iv_map_',num2str(ip,'%03.0f'),'_',num2str(d.T(ip))]); %Save figure
+                pause(0.1)
             end
             
         elseif hz_menu == 3 %Real and Imag Induction Vector Pseudo Section
