@@ -205,8 +205,8 @@ function M3D_v1_OpeningFcn
         H.max_res = uicontrol('Parent',uipanel_view_options,'style','edit','string','1000','backgroundcolor','white','units','normalized','Position',[0.22 0.1 0.1 0.3],'Callback',@M3_max_res);        
           
 
-%         uicontrol('Parent',uipanel_view_options,'style','text','string','Plot Buffer (km)','units','normalized','Position',[0.5 0.65 0.2 0.2])
-%         stat_tol = uicontrol('Parent',uipanel_view_options,'style','edit','string','4','units','normalized','Position',[0.75 0.65 0.1 0.3],'Callback',@stat_tol_Callback);     
+        uicontrol('Parent',uipanel_view_options,'style','text','string','Plot Buffer (km)','units','normalized','Position',[0.5 0.65 0.2 0.2])
+        stat_tol = uicontrol('Parent',uipanel_view_options,'style','edit','string','4','units','normalized','Position',[0.75 0.65 0.1 0.3],'Callback',@stat_tol_Callback);     
            
         H.gridlines = uicontrol('Parent',uipanel_view_options,'style','checkbox','string','No Grid','units','normalized','Position',[0.5 0.45 0.2 0.2],'Callback',@gridlines_Callback);
         H.station_names = uicontrol('Parent',uipanel_view_options,'style','checkbox','string','Station Names','units','normalized','Position',[0.5 0.1 0.4 0.2],'Callback',@station_names_Callback);
@@ -223,7 +223,7 @@ function M3D_v1_OpeningFcn
 %%   
     % Update H structure, provide default values
     H.axes1 = axes1;
-%     H.stat_tol = get(stat_tol,'string');
+    H.stat_tol = get(stat_tol,'string');
     
     H.NR = 8;
     H.per = [];
