@@ -150,8 +150,9 @@ else % data has been loaded
     per_range = sum(isnan(ZZZ),3);
     perplot = unique(per_range,'rows');
     if size(perplot,1) ~= 1
-        disp('Warning: some periods have NaN and non-NaN Z components. These should not be mixed!')
-        return
+        disp('Warning: 1 or sites has an empty impedance tensor element (e.g. Zxx is missing but the other tensor elements are present). This type of dataset has not been thoroughly tested.')
+        perplot = max(perplot,[],1);
+        %return
     end
     figure
     bar(log10(T),numel(site)-perplot,0.6);
