@@ -179,7 +179,7 @@ function M3_add_topo(hObject, ~, ~)
         
         plot_menu = menu('Plot Grid Interpolation?','Yes','No');
         
-        if plot_menu
+        if plot_menu == 1
         
             figure % figure to show final topo region and mesh boundaries
             pcolor(H.topo_y,H.topo_x,H.topo_z)
