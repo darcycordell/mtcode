@@ -1,5 +1,7 @@
 function convert_edi_spectra_imp
 %
+% If loading spectra EDI file, use load_data_edi_spectra.m
+
 % Function which converts EDI files from Phoenix spectra format to impedance format
 % Calls routine readEDI_spectra.m provided by Christina Walter
 % All EDI files in folder are converted and placed in new folder edi_imp

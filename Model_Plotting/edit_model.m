@@ -56,12 +56,13 @@ plot_slice(m,indz,d);
 me = m; %"me" is the model_to_edit structure. Keep "m" in memory to start over.
 
 %Some necessary defaults
-north = 1; south = -1; east = 1; west = -1; top = 0; bottom = 5;
+north = 1; south = -1; east = 1; west = -1; top = 0; bottom = 5; % defaults for model coords
+north_ll = -20; south_ll = -30; east_ll = -67; west_ll = -68; % defaults for lat/lon
 %%
 while 1
 
 % Main Menu
-main_menu=menu('','View Model','Jump to Layer','Add a Cube with NS, EW, Depth range','Add an irregular polygon by clicking','Manually edit point by point','Replace Sections/Layers','Load Indices to Replace','Start Over','Save Model','Save Edited Indices','Quit');
+main_menu=menu('','View Model','Jump to Layer','Add a Rectangular Prism with NS, EW, Depth range in km','Add a Rectangular Prism with Lat, Lon, Depth range','Add an irregular polygon by clicking','Manually edit point by point','Replace Sections/Layers','Load Indices to Replace','Start Over','Save Model','Save Edited Indices','Quit');
 
 if main_menu == 1 %VIEW MODEL----------------------------------------------
     %Loops through the model slice by slice
@@ -83,7 +84,7 @@ elseif main_menu == 2 %JUMP TO LAYER--------------------------------------
     set_figure_size(1);
     plot_slice(me,indz,d);
     
-elseif main_menu == 3 %ADD CUBE--------------------------------------------
+elseif main_menu == 3 %ADD RECTANGULAR PRISM WITH NS EW DEPTH RANGES IN KM-
     
     %Pick slices manually by entering x-y distances. This is useful for repeatability. Once
     %you have clicked around your conductors in the first option, you can
@@ -129,7 +130,67 @@ elseif main_menu == 3 %ADD CUBE--------------------------------------------
     
     end
     
-elseif main_menu == 4 %ADD POLYGON-----------------------------------------
+elseif main_menu == 4 %ADD RECTANGULAR PRISM WITH LAT LON DEPTH------------
+    
+    if ~unique(d.origin) % if no d structure loaded, d.origin = [0 0] from make_nan_data
+        disp('No data structure loaded, so latitude and longitude of model are unknown! Load a data structure or edit in model coordinates')
+        continue     
+    end
+    %Pick slices manually by entering lat-lon ranges. Lat-lon are converted
+    %to x-y using d.origin
+    prompt={'Lat. max (decimal degrees)','Lat. min (decimal degrees)','Lon. max (decimal degrees)','Lon. min (decimal degrees)','Top (km)','Bottom (km)'};
+    dlg_title='Edit Block with latitude and longitude ranges (decimal degrees), Top and Bottom in km';
+    def={num2str(north_ll),num2str(south_ll),num2str(east_ll),num2str(west_ll),num2str(top),num2str(bottom)};
+    num_lines=1;
+    dinp = inputdlg(prompt,dlg_title,num_lines,def);
+    
+    if ~isempty(dinp)
+
+        %Pull out min and max ranges entered
+        north=str2double(dinp{1});
+        south=str2double(dinp{2});
+        east=str2double(dinp{3});
+        west=str2double(dinp{4});
+        top=str2double(dinp{5});
+        bottom=str2double(dinp{6});
+
+        if north<=south || east<=west || bottom<=top %Check that user inputs are ok
+            disp('Error: One of your ranges is incorrect')
+            disp('Note: When entering NS, EW and top/bottom ranges, enter in model coordinates. North > south, east > west, bottom > top.')
+        else
+                    
+            lon = [west east east west];
+            lat = [north north south south];
+            [y,x] = geo2utm(lon,lat,d.origin(2),d.origin(1)); % follow model convention of y and x
+            y = y - 500000;
+            west = mean([y(1) y(4)]); % keep edges parallel by taking the mean of the 2 vertices on each edge
+            east = mean([y(2) y(3)]);
+            south = mean([x(3) x(4)]);
+            north = mean([x(1) x(2)]); % these are in m
+            
+            key = 'nearest';
+            %Get max and min indices of the block to add
+            iminy = nearestpoint(west,me.cy,key);
+            imaxy = nearestpoint(east,me.cy,key);
+            iminx = nearestpoint(south,me.cx,key);
+            imaxx = nearestpoint(north,me.cx,key);
+            iminz = nearestpoint(top*1000,me.z,key); % this is still km hence the 1000 factor
+            imaxz = nearestpoint(bottom*1000,me.z,key)-1;
+
+            %Edit either conductors, resistors or replace box directly
+            [me.A,R]=edit_block(R,iminx,imaxx,iminy,imaxy,iminz,imaxz,me.A);
+
+            set_figure_size(1);
+            plot_slice(me,iminz,d);
+            
+            indz = iminz;
+
+        end
+    
+    end
+    
+    
+elseif main_menu == 5 %ADD POLYGON-----------------------------------------
     
     %Add a polygon by clicking on a given slice and specifying the z range that you want to add the polygon   
     
@@ -231,7 +292,7 @@ elseif main_menu == 4 %ADD POLYGON-----------------------------------------
     
     end
 
-elseif main_menu==5 %MANUAL EDIT-------------------------------------------
+elseif main_menu==6 %MANUAL EDIT-------------------------------------------
     
     %Manually edit model point-by-point by clicking
     
@@ -315,7 +376,7 @@ elseif main_menu==5 %MANUAL EDIT-------------------------------------------
     
     end
     
-elseif main_menu == 6 %REPLACE SECTIONS OR LAYERS------------------------------
+elseif main_menu == 7 %REPLACE SECTIONS OR LAYERS------------------------------
     
     replace_menu = menu('Replace:','NS Section','EW Section','Layer','Halfspace below','Back');
     
@@ -497,7 +558,7 @@ elseif main_menu == 6 %REPLACE SECTIONS OR LAYERS------------------------------
         
     end
     
-elseif main_menu == 7 %LOAD INDICES AND REPLACE----------------------------
+elseif main_menu == 8 %LOAD INDICES AND REPLACE----------------------------
     %Anytime you save a model, it also outputs the x,y,z,rho indices that
     %were replaced. For repeatability, you can load those indices into the
     %a different model and do the same replacements.
@@ -551,7 +612,7 @@ elseif main_menu == 7 %LOAD INDICES AND REPLACE----------------------------
     
     end
     
-elseif main_menu == 8 %START OVER------------------------------------------
+elseif main_menu == 9 %START OVER------------------------------------------
     %%
     %Resets the model back to the original model
     
@@ -562,7 +623,7 @@ elseif main_menu == 8 %START OVER------------------------------------------
     set_figure_size(1);
     plot_slice(m,indz,d);
     
-elseif main_menu == 9 %SAVE MODEL------------------------------------------
+elseif main_menu == 10 %SAVE MODEL------------------------------------------
     %Save model as WSINV or ModEM format
     curdir = pwd;
     outputfile = ['edit_',num2str(save_count),'_',me.name];
@@ -591,7 +652,7 @@ elseif main_menu == 9 %SAVE MODEL------------------------------------------
         cd(curdir)
     
     end
-elseif main_menu == 10 %SAVE EDITED INDICES
+elseif main_menu == 11 %SAVE EDITED INDICES
     
     [ixr,iyr,izr] = ind2sub(size(me.A),find(R(:,1)==1));
 
