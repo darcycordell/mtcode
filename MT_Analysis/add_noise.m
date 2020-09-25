@@ -33,9 +33,10 @@ dn = d;
 
 %Add NOISE level. This is the amount of "scatter" you want to add to the
 %data (Gaussian noise)
-noise_level={'0.05'};
-gn=char(inputdlg({'Enter noise level'},'Noise',1,noise_level));
-GN = str2double(gn); %Gaussian noise to be added to data.
+noise_level={'0.05','0.02'};
+gn=char(inputdlg({'Impedance noise level','Tipper noise level'},'Noise',1,noise_level));
+GN = str2double(gn(1,:)); %Gaussian noise to be added to impedance data.
+GN_tip = str2double(gn(2,:));
 
 %GN = 0.02;
 if isnan(GN)
@@ -155,8 +156,8 @@ dn.Zerr = dn.Zerr+1i*dn.Zerr;
 alpha = randn(d.nf,2,d.ns); %random Gaussian matrix for real components
 beta = randn(d.nf,2,d.ns); %random Gaussian matrix for imaginary components
 
-%snr = GN*abs(d.tip); %signal to noise ratio using relative noise
-snr = GN*ones(size(d.tip)); %signal to noise ratio using absolute noise
+%snr = GN_tip*abs(d.tip); %signal to noise ratio using relative noise
+snr = GN_tip*ones(size(d.tip)); %signal to noise ratio using absolute noise
 dn.tip = real(d.tip)+alpha.*snr + 1i*(imag(d.tip)+beta.*snr); %noisy tipper
 dn.tiperr = snr+1i*snr; %Errors as % of |T|
 
