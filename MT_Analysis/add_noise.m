@@ -155,7 +155,8 @@ dn.Zerr = dn.Zerr+1i*dn.Zerr;
 alpha = randn(d.nf,2,d.ns); %random Gaussian matrix for real components
 beta = randn(d.nf,2,d.ns); %random Gaussian matrix for imaginary components
 
-snr = GN*abs(d.tip); %signal to noise ratio
+%snr = GN*abs(d.tip); %signal to noise ratio using relative noise
+snr = GN*ones(size(d.tip)); %signal to noise ratio using absolute noise
 dn.tip = real(d.tip)+alpha.*snr + 1i*(imag(d.tip)+beta.*snr); %noisy tipper
 dn.tiperr = snr+1i*snr; %Errors as % of |T|
 
