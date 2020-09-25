@@ -13,7 +13,7 @@ function M3_next_layer(hObject,~,~)
             H.lay=H.lay+1;
         else
             warndlg('Invalid layer number.')
-            H.lay=1;
+            H.lay=H.nz-1;
         end
         M3_update_model_plot(H)
         set(H.axes1,'XLim',newXLim)

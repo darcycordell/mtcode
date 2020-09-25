@@ -19,7 +19,7 @@ function M3_update_model_plot(H)
     pcolor(H.axes1,H.YY,H.XX,log10(aa)); hold on; 
     plot(H.d.y./1000,H.d.x./1000,'vk','markerfacecolor','b'); hold off
     axis equal; axis tight
-    title(['Layer = ',num2str(H.lay),', Depth = ',num2str(H.Z(H.lay)),' km']);
+    title(['Layer = ',num2str(H.lay),', Depth = ',num2str(H.Z(H.lay)),' to ',num2str(H.Z(H.lay+1)),' km']);
     xlabel('Y (km)'); ylabel('X (km)')
     caxis(colim); colormap(cmap);
     hcb=colorbar('ver','position',[0.7 0.1 0.02309 0.1977]);

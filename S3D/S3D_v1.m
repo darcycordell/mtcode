@@ -293,7 +293,7 @@ while menu1 == 1
                 for i=1:length(slices)
                     close all
                     plot_slice_map(model_to_plot,slices(i),dobs);                    
-                    title(['Depth = ',num2str(model_to_plot.cz(slices(i))/1000),' km b.s.l.']);
+%                     title(['Depth = ',num2str(model_to_plot.cz(slices(i))/1000),' km b.s.l.']);
                     print_figure(['horizontal_slices_geo_',model_to_plot.niter],['slice_',num2str(slices(i),'%03.0f')]) 
                 end
                 
@@ -307,7 +307,7 @@ while menu1 == 1
                 for i=1:length(slices)
                     close all
                     plot_slice(model_to_plot,slices(i),dobs);                    
-                    title(['Depth = ',num2str(model_to_plot.z(slices(i))/1000),' km b.s.l.']);
+%                     title(['Depth = ',num2str(model_to_plot.z(slices(i))/1000),' km b.s.l.']);
                     print_figure(['horizontal_slices_xy_',model_to_plot.niter],['slice_',num2str(slices(i),'%03.0f')]) 
                 end
 
