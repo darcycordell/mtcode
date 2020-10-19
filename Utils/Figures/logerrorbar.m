@@ -1,4 +1,4 @@
-function h = logerrorbar(X,Y,dY,linetype1,linetype2) 
+function [h,g] = logerrorbar(X,Y,dY,linetype1,linetype2) 
 %Function to plot error bars on log-log plot and avoid negative numbers
 %
 % Usage: h = logerrorbar(X,Y,dY,linetype1,linetype2)
@@ -14,7 +14,7 @@ h = loglog(X,Y,linetype1); hold on
 
 lower = Y-dY;
 lower(lower<=0) = 10^-40; 
-plot([X X]',[lower Y+dY]',linetype2); hold on %Plot vertical error bar
+g = plot([X X]',[lower Y+dY]',linetype2); hold on %Plot vertical error bar
 
 
 set(gca, 'YScale', 'log')
