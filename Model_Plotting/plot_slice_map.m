@@ -8,6 +8,11 @@ function plot_slice_map(m,id,d)
 % "id" is the index of the slice to plot
 % "d" is the data structure and must be included in this function
 
+if id > m.nz
+    warning('Layer index greater than number of layers! Plotting bottom layer.')
+    id = m.nz;
+end
+
 u = user_defaults;
 [L] = load_geoboundary_file_list;
 [d] = set_map_projection(d);
@@ -31,6 +36,6 @@ end
 
 colormap(u.cmap); caxis(u.colim);
 add_rho_colorbar(u);
-
+title(['Layer ',num2str(id),' | Depth = ',num2str(m.z(id)/1000),' to ',num2str(m.z(id+1)/1000),' km b.s.l.']);
 
 end

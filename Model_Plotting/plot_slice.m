@@ -7,6 +7,10 @@ function plot_slice(m,id,d)
 % "m" is the model structure
 % "id" is the index of the slice to be plotted
 % "d" is an OPTIONAL data structure to plot site locations on the slice
+if id > m.nz
+    warning('Layer index greater than number of layers! Plotting bottom layer.')
+    id = m.nz;
+end
 
 u = user_defaults;
 [L] = load_geoboundary_file_list;
@@ -49,8 +53,6 @@ axis([sort([m.y(min(yind)) m.y(max(yind))]) sort([m.x(min(xind)) m.x(max(xind))]
 set(gca,'Layer','top')
 xlabel('Distance East-West (km)')
 ylabel('Distance North-South (km)')
-title(['Depth = ',num2str(m.z(id)/1000),' km b.s.l.']);
-
-
+title(['Layer ',num2str(id),' | Depth = ',num2str(m.z(id)/1000),' to ',num2str(m.z(id+1)/1000),' km b.s.l.']);
 
 end

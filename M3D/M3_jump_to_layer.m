@@ -11,7 +11,7 @@ function M3_jump_to_layer(hObject,~,~)
         
         if str2double(get(H.lay_num,'String')) < 1 || str2double(get(H.lay_num,'String')) > H.nz -1
             warndlg('Enter a valid layer number.')
-            set(H.lay_num,'String','1')
+%             set(H.lay_num,'String','1')
             return
         else
         H.lay = str2double(get(H.lay_num,'String'));
