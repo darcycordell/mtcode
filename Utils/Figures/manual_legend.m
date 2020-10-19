@@ -24,7 +24,13 @@ h = zeros(numel,1); legend_string = {};
 for i = 1:numel
     legend_string{i} = varargin{i*2-1};
 
-    h(i) = plot(NaN,NaN,varargin{i*2});
+    if ischar(varargin{i*2})
+        h(i) = plot(NaN,NaN,varargin{i*2}); hold on
+    elseif isnumeric(varargin{i*2}) && length(varargin{i*2})==3
+        h(i) = plot(NaN,NaN,'.','Color',varargin{i*2}); hold on
+    else
+        error('You must input either a MATLAB-recognized string specifying the color/linetype (e.g. -k) or a 3x1 vector of colors (e.g. [0 0.5 0.2])')
+    end
 end
 
 legend(h, legend_string,'AutoUpdate','off');
