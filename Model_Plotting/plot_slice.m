@@ -17,8 +17,8 @@ u = user_defaults;
 
 %Set plotting limits
 if length(u.xylims)==4 %If xy limits were specified in user_defaults
-    xind = nearestpoint(u.xylims(1),m.x/1000):nearestpoint(u.xylims(2),m.x/1000);
-    yind = nearestpoint(u.xylims(3),m.y/1000):nearestpoint(u.xylims(4),m.y/1000);
+    xind = nearestpoint(u.xylims(1),m.cx/1000):nearestpoint(u.xylims(2),m.cx/1000);
+    yind = nearestpoint(u.xylims(3),m.cy/1000):nearestpoint(u.xylims(4),m.cy/1000);
     
 else %If the limits specified are not a vector of numbers with length 4 then just take non-padding cells
     xind = m.npad(1)+1:m.nx-m.npad(1);
