@@ -33,6 +33,10 @@ end
 if override
     u.output_figure = 'png';
 end
+
+if isempty(folder)
+    folder = '.';
+end
     
 % output = string(u.output_figure); % put all input file types in a string array but only works in 2016b and later...
 output = cellstr(u.output_figure); % this is a cell array 
