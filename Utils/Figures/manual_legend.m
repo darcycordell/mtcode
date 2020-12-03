@@ -6,12 +6,23 @@ function h = manual_legend(varargin)
 % Usage: manual_legend(varargin)
 %
 % Inputs: varargin is a list of linetype and label pairs as strings
+%       OR a list of linecolor RGB triples and label strings.
 %
-% Example:
+% Example #1:
 %   manual_legend('Data #1','or','Data #2','-k','Data #3','*m')
 %
 %   This will produce a legend which shows red circles, black lines, and
 %   magenta stars with their corresponding labels.
+%
+% Example #2:
+%   manual_legend('Data #1',[1 0 0 ],'Data #2',[0.2 1 0.5])
+%
+%   This will produce a legend which shows red dots, and green-blue dots.
+%   Note this option will always show the legend with dots as the linetype
+%
+%   
+%
+
 %
 
 numel = length(varargin)/2;
