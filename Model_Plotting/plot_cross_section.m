@@ -10,9 +10,7 @@ function [x,z,rho] = plot_cross_section(x,z,rho)
 u = user_defaults;
 
 %Create meshgrid of x and z values and plot as logarithmic resistivity
-[X, Z] = meshgrid(x,z);
-pcolor(X,Z,squeeze(log10(rho))'); shading flat; hold on; axis ij
-axis([min(x) max(x) u.zmin u.zmax])
+pcolor(x,z,rho); hold on; axis ij
 
 xlabel('Distance Along Profile (km)')
 ylabel('Depth Below Sealevel (km)')
@@ -25,5 +23,5 @@ set(gca,'Box','on');
 %set(gca,'YScale','log')
 
 if u.plot_contours
-    contour(X,Z,squeeze(log10(rho))',u.contours,'-k','ShowText',u.contour_text);
+    contour(x,z,rho,u.contours,'-k','ShowText',u.contour_text);
 end

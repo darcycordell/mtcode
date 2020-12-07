@@ -168,7 +168,6 @@ if size(A) == size(B) %If A ~= B, something has gone wrong with interpolation!
     cla(ax2);
     plot_slice(a,iz,da);
     title(['Model #1: Depth=',num2str(cz(iz)./1000),' km. Slice #',num2str(iz) ]);
-    shading flat
     
     %Plot Model #2
     ax3 = subplot(1,3,2);
@@ -176,7 +175,7 @@ if size(A) == size(B) %If A ~= B, something has gone wrong with interpolation!
     plot_slice(b,iz,db);
     
     title(['Model #2: Depth=',num2str(cz(iz)./1000),' km. Slice #',num2str(iz)]);
-    shading flat
+
     
     %Linearize models into a single vector
     Avec = A(:);

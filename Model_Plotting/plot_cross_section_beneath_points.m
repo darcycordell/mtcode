@@ -113,6 +113,7 @@ for i = 2:length(px)
 end
 
 dist = cumsum(dist);
+dist_mid = (dist(1:end-1)+dist(2:end))/2;
     
 
 zind = 1:nearestpoint(u.zmax*1000,m.cz);
@@ -120,12 +121,17 @@ zind = 1:nearestpoint(u.zmax*1000,m.cz);
 res_plot = zeros(length(px),length(zind));
 for iz=zind
  slice = m.A(:,:,iz);
- res_plot(:,iz) =interp2(m.X/1000,m.Y/1000,slice,py,px);
+ res_plot(:,iz) =interp2(m.Xc/1000,m.Yc/1000,slice,py,px);
 end
 
 
 figure(2)  
-pcolor(dist,m.cz(zind)/1000,log10(res_plot)'); axis ij; shading flat; hold on
+pcolor(dist,m.cz(zind)/1000,log10(res_plot)'); axis ij; hold on
+
+if strcmp(u.gridlines,'off')
+    shading flat
+end
+
 colormap(u.cmap); caxis(u.colim);
 add_rho_colorbar(u)
 
@@ -138,7 +144,7 @@ tstr = [d.site{ind(1)},'_to_',d.site{ind(end)},'_',num2str(numel(ind)),'_station
 title(strrep(['Slice Through Model at Sites ',tstr],'_','\_'));
 set(gca,'DataAspectRatio',[u.ve 1 1])
 
-plot([dist(1:nseg:end); dist(end)],d.z(ind)/1000 -u.zoff,'vk','MarkerFaceColor','k')
+plot([dist_mid(1:nseg:end); dist_mid(end)],d.z(ind)/1000 -u.zoff,'vk','MarkerFaceColor','k')
 
 print_figure(['diagonal_slices_',m.niter],['slice_through_sites_',tstr]) 
 

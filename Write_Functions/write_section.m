@@ -33,7 +33,7 @@ str=['text_files\section_',num2str(lonmin),'_EW_',num2str(latmin),'_NS.dat'];
 fid=fopen(str,'w+');
 for iz=1:length(z)
   for i=1:length(x)
-      fprintf(fid,'%10.4f %10.4f %10.4f %10.4f \n',[lon(i),lat(i),z(iz),rho(i,iz)]);
+      fprintf(fid,'%10.4f %10.4f %10.4f %10.4f \n',[lon(i),lat(i),z(iz),rho(iz,i)]);
   end
 end
 toc

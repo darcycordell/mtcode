@@ -106,17 +106,17 @@ elseif main_menu == 3 %ADD RECTANGULAR PRISM WITH NS EW DEPTH RANGES IN KM-
         bottom=str2double(dinp{6});
 
         if north<=south || east<=west || bottom<=top %Check that user inputs are ok
-            disp('Error: One of your ranges is incorrect')
-            disp('Note: When entering NS, EW and top/bottom ranges, enter in model coordinates. North > south, east > west, bottom > top.')
+            disp('One of your ranges is incorrect')
+            error('When entering NS, EW and top/bottom ranges, enter in model coordinates. North > south, east > west, bottom > top.')
         else
-            key = 'nearest';
+            
             %Get max and min indices of the block to add
-            iminy = nearestpoint(west*1000,me.cy,key);
-            imaxy = nearestpoint(east*1000,me.cy,key);
-            iminx = nearestpoint(south*1000,me.cx,key);
-            imaxx = nearestpoint(north*1000,me.cx,key);
-            iminz = nearestpoint(top*1000,me.z,key);
-            imaxz = nearestpoint(bottom*1000,me.z,key)-1;
+            iminy = nearestpoint(west*1000,me.y,'next');
+            imaxy = nearestpoint(east*1000,me.y,'previous');
+            iminx = nearestpoint(south*1000,me.x,'next');
+            imaxx = nearestpoint(north*1000,me.x,'previous');
+            iminz = nearestpoint(top*1000,me.z,'next');
+            imaxz = nearestpoint(bottom*1000,me.z,'previous')-1;
 
             %Edit either conductors, resistors or replace box directly
             [me.A,R]=edit_block(R,iminx,imaxx,iminy,imaxy,iminz,imaxz,me.A);
@@ -155,8 +155,8 @@ elseif main_menu == 4 %ADD RECTANGULAR PRISM WITH LAT LON DEPTH------------
         bottom=str2double(dinp{6});
 
         if north<=south || east<=west || bottom<=top %Check that user inputs are ok
-            disp('Error: One of your ranges is incorrect')
-            disp('Note: When entering NS, EW and top/bottom ranges, enter in model coordinates. North > south, east > west, bottom > top.')
+            disp('One of your ranges is incorrect')
+            error('When entering NS, EW and top/bottom ranges, enter in model coordinates. North > south, east > west, bottom > top.')
         else
                     
             lon = [west east east west];
@@ -168,14 +168,14 @@ elseif main_menu == 4 %ADD RECTANGULAR PRISM WITH LAT LON DEPTH------------
             south = mean([x(3) x(4)]);
             north = mean([x(1) x(2)]); % these are in m
             
-            key = 'nearest';
+            
             %Get max and min indices of the block to add
-            iminy = nearestpoint(west,me.cy,key);
-            imaxy = nearestpoint(east,me.cy,key);
-            iminx = nearestpoint(south,me.cx,key);
-            imaxx = nearestpoint(north,me.cx,key);
-            iminz = nearestpoint(top*1000,me.z,key); % this is still km hence the 1000 factor
-            imaxz = nearestpoint(bottom*1000,me.z,key)-1;
+            iminy = nearestpoint(west,me.y,'next');
+            imaxy = nearestpoint(east,me.y,'previous');
+            iminx = nearestpoint(south,me.x,'next');
+            imaxx = nearestpoint(north,me.x,'previous');
+            iminz = nearestpoint(top*1000,me.z,'next'); % this is still km hence the 1000 factor
+            imaxz = nearestpoint(bottom*1000,me.z,'previous')-1;
 
             %Edit either conductors, resistors or replace box directly
             [me.A,R]=edit_block(R,iminx,imaxx,iminy,imaxy,iminz,imaxz,me.A);
@@ -221,11 +221,9 @@ elseif main_menu == 5 %ADD POLYGON-----------------------------------------
             disp('Error: Polygon must be defined by at least 3 points!')
 
         else
-
-            [Xc,Yc] = meshgrid(me.cy,me.cx);
             
             %Get the row and column indices of the polygon
-            [in, on] = inpolygon(Xc/1000,Yc/1000,hx,hy);
+            [in, on] = inpolygon(m.Xc/1000,m.Yc/1000,hx,hy);
             [col, row]=find(in==1);
 
             if ~all(on) %If on ~=0, then one of the points clicked is EXACTLY on a mesh vertex.

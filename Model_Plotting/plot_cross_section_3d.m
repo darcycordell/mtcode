@@ -47,10 +47,14 @@ if strcmp(flag,'NS')
     %Plot the sites that will be projected onto the section with a tolerance
     %distance of u.tol (see user_defaults.m)
     if exist('d','var') %Only if a data structure is supplied
-        site_disty = abs(d.idy-idy);
-        plot(d.y(site_disty<=u.tol)/1000,d.x(site_disty<=u.tol)/1000,'m.','markersize',15)
-        plot([m.cy(idy)/1000 m.cy(idy)/1000]+u.tol,[-10^8 10^8],'-m')
-        plot([m.cy(idy)/1000 m.cy(idy)/1000]-u.tol,[-10^8 10^8],'-m')
+        if isfield(d,'idy')
+            site_disty = abs(d.idy-idy);
+            plot(d.y(site_disty<=u.tol)/1000,d.x(site_disty<=u.tol)/1000,'m.','markersize',15)
+            plot([m.cy(idy)/1000 m.cy(idy)/1000]+u.tol,[-10^8 10^8],'-m')
+            plot([m.cy(idy)/1000 m.cy(idy)/1000]-u.tol,[-10^8 10^8],'-m')
+        else
+           disp('Link geographic and model coordinates to plot station locations on cross-section. See link_model_data.m')
+        end
     end
 
 
@@ -63,10 +67,14 @@ elseif strcmp(flag,'EW')
     %Plot the sites that will be projected onto the section with a tolerance
     %distance of u.tol (see user_defaults.m)
     if exist('d','var') %Only if a data structure is supplied
-        site_distx = abs(d.idx-idx);
-        plot(d.y(site_distx<=u.tol)/1000,d.x(site_distx<=u.tol)/1000,'r.','markersize',15)
-        plot([-10^8 10^8],[m.cx(idx)/1000 m.cx(idx)/1000]+u.tol,'-r')
-        plot([-10^8 10^8],[m.cx(idx)/1000 m.cx(idx)/1000]-u.tol,'-r')
+        if isfield(d,'idx')
+            site_distx = abs(d.idx-idx);
+            plot(d.y(site_distx<=u.tol)/1000,d.x(site_distx<=u.tol)/1000,'r.','markersize',15)
+            plot([-10^8 10^8],[m.cx(idx)/1000 m.cx(idx)/1000]+u.tol,'-r')
+            plot([-10^8 10^8],[m.cx(idx)/1000 m.cx(idx)/1000]-u.tol,'-r')
+        else
+            disp('Link geographic and model coordinates to plot station locations on cross-section. See link_model_data.m')
+        end
     end
     
     
@@ -83,18 +91,40 @@ if strcmp(flag,'NS')
     
     if length(u.xylims) ~= 4
         xind = m.npad(1)+1:m.nx-m.npad(1);
+        axlims = [sort([m.x(min(xind)) m.x(max(xind))])/1000 u.zmin u.zmax];
     else
-        xind = nearestpoint(u.xylims(1)*1000,m.cx):nearestpoint(u.xylims(2)*1000,m.cx);
+        xind = nearestpoint(u.xylims(1)*1000,m.cx,'previous'):nearestpoint(u.xylims(2)*1000,m.cx,'next');
+        axlims = [u.xylims(1) u.xylims(2) u.zmin u.zmax];
     end
     
-    zind = 1:nearestpoint(u.zmax*1000,m.cz);
+    if any(isnan(xind))
+        xind = 1:m.nx;
+    end
+    
+    zind = 1:nearestpoint(u.zmax*1000,m.cz,'next');
+    
+    if any(isnan(zind))
+        zind = 1:m.nz;
+    end
+    
+    x = [m.x(xind); m.x(xind(end)+1)]/1000;
+    z = [m.z(zind); m.z(zind(end)+1)]/1000;
+    C = squeeze(log10(m.A(xind,idy,zind)))';
+    C = horzcat(C,C(:,end));
+    C = vertcat(C,C(end,:));
+    
     figure(2); hold on
-    [x,z,rho] = plot_cross_section(m.cx(xind)/1000,m.cz(zind)/1000,m.A(xind,idy,zind));
+    [x,z,rho] = plot_cross_section(x,z,C);
+    axis(axlims)
     title(['North-South Section @ ',num2str(m.cy(idy)/1000),' km (EW)']);
     set(gca,'Layer','top')
     
+    if strcmp(u.gridlines,'off')
+        shading flat
+    end
+    
     %If a data structure exists, project the nearby sites onto the section
-    if exist('d','var')
+    if exist('d','var') && isfield(d,'idx')
         plot(d.x(site_disty<=u.tol)/1000,m.Z(d.idx(site_disty<=u.tol),idy)/1000 -u.zoff,'vk','MarkerFaceColor','k')
     end
     print_figure(['vertical_profiles_',m.niter],['N-S_at_slice_',num2str(idy,'%03.0f')]);
@@ -112,18 +142,40 @@ elseif strcmp(flag,'EW')
     %Set the ranges to be plotted on the cross-section
     if length(u.xylims) ~= 4
         yind = m.npad(2)+1:m.ny-m.npad(2);
+        axlims = [sort([m.y(min(yind)) m.y(max(yind))])/1000 u.zmin u.zmax];
     else
-        yind = nearestpoint(u.xylims(3)*1000,m.cy):nearestpoint(u.xylims(4)*1000,m.cy);
+        yind = nearestpoint(u.xylims(3)*1000,m.cy,'previous'):nearestpoint(u.xylims(4)*1000,m.cy,'next');
+        axlims = [u.xylims(3) u.xylims(4) u.zmin u.zmax];
+    end
+    
+    if any(isnan(yind))
+        yind = 1:m.ny;
     end
     
     zind = 1:nearestpoint(u.zmax*1000,m.cz);
+    
+    if any(isnan(zind))
+        zind = 1:m.nz;
+    end
+    
+    y = [m.y(yind); m.y(yind(end)+1)]/1000;
+    z = [m.z(zind); m.z(zind(end)+1)]/1000;
+    C = squeeze(log10(m.A(idx,yind,zind)))';
+    C = horzcat(C,C(:,end));
+    C = vertcat(C,C(end,:));
+    
     figure(2);hold on
-    [y,z,rho] = plot_cross_section(m.cy(yind)/1000,m.cz(zind)/1000,m.A(idx,yind,zind));
+    [y,z,rho] = plot_cross_section(y,z,C);
+    axis(axlims)
     title(['East-West Section @ ',num2str(m.cx(idx)/1000),' km (NS)']);
     set(gca,'Layer','top')
     
+    if strcmp(u.gridlines,'off')
+        shading flat
+    end
+    
     %If a data structure exists, project the nearby sites onto the section
-    if exist('d','var')
+    if exist('d','var') && isfield(d,'idy')
         plot(d.y(site_distx<=u.tol)/1000,m.Z(idx,d.idy(site_distx<=u.tol))/1000 -u.zoff,'vk','MarkerFaceColor','k')
     end
     print_figure(['vertical_profiles_',m.niter],['E-W_at_slice_',num2str(idx,'%03.0f')]);

@@ -79,7 +79,7 @@ elseif main_menu == 2 % enter X/Y end points manually
     
     prompt={sprintf('Enter in km\n\nNS 1'),'EW 1','NS 2','EW 2'}; 
     dlg_title='Kilometers';
-    def={'110','-405','-10.789','63.8'}; %default is office to Tim's
+    def={'0','-5','5','10'};
     num_lines=1;
     dinp = inputdlg(prompt,dlg_title,num_lines,def);
 
@@ -136,7 +136,7 @@ elseif main_menu == 4 %Option to enter lat/long pair manually
         
         prompt={'NS 1','EW 1','NS 2','EW 2'}; 
         dlg_title='Kilometers';
-        def={'0','0','0','0'}; %default is office to Tim's
+        def={'110','0','0','0'}; %default is office to Tim's
         num_lines=1;
         dinp = inputdlg(prompt,dlg_title,num_lines,def);
 
@@ -187,7 +187,7 @@ end
 yp = yp(id);
 
 if max(xp)>max(m.cx) || min(xp)<min(m.cx) || max(yp)>max(m.cy) || min(yp)<min(m.cy)
-    disp('Error: Your lat/long ranges are outside the model space')
+    disp('Note: Your lat/long ranges are outside the model space')
 else
 
     %Step 1: Find the slope of the line and intercept of the line between the
@@ -197,9 +197,16 @@ else
     b=xp(1)-s*yp(1); %intercept
 
     if isinf(s)
-        disp('The diagonal selection does not work for NS-profiles.');
+        disp('The smooth diagonal selection does not work for NS-profiles. In S3, choose "NS slice"');
         return;
     end
+    
+    if s==0
+        disp('The smooth diagonal selection does not work for EW profiles. In S3, choose "EW Slice"')
+        return
+    end
+    
+    
 
 
     %Step 2: Find the intersections between the line and the grid edges in NS
@@ -207,18 +214,18 @@ else
 
     %EW first (xint: dealing with known east-west points)
     int=[];
-    for k=1:m.ny
-        xint=s*m.cy(k)+b; %slope formula to find intersections with known x
-        if m.cy(k)>=min(yp) && m.cy(k)<=max(yp)
-            int=[int; [m.cy(k) xint]];
+    for k=1:m.ny+1
+        xint=s*m.y(k)+b; %slope formula to find intersections with known x
+        if m.y(k)>=min(yp) && m.y(k)<=max(yp) && ~isnan(xint)
+            int=[int; [m.y(k) xint]];
         end
     end
 
     %NS second (xint: dealing with known north-south points)
-    for k=1:m.nx
-        yint=(m.cx(k)-b)/s; %slope formula to find intersections with known y
-        if m.cx(k)>=min(xp) && m.cx(k)<=max(xp)
-            int=[int; [yint m.cx(k)]];
+    for k=1:m.nx+1
+        yint=(m.x(k)-b)/s; %slope formula to find intersections with known y
+        if m.x(k)>=min(xp) && m.x(k)<=max(xp) && ~isnan(yint)
+            int=[int; [yint m.x(k)]];
         end
     end
 
@@ -258,15 +265,15 @@ if length(unique(ns_ind))>length(unique(ew_ind))  %If the section is >45 degrees
             end
 
             res_plot(:,i)=squeeze(res_sum)./(length(ind_temp));
-            ew_locations(i)=m.cy(ew_ind(ind_temp(1)));
-            ns_locations(i)=mean(m.cx(ns_ind(ind_temp)));
+            ew_locations(i)=m.y(ew_ind(ind_temp(1)));
+            ns_locations(i)=mean(m.x(ns_ind(ind_temp)));
             
 
         else
 
             res_plot(:,i)=squeeze(m.A(ns_ind(ind_temp),ew_ind(ind_temp),:));
-            ew_locations(i)=m.cy(ew_ind(ind_temp));
-            ns_locations(i)=m.cx(ns_ind(ind_temp));
+            ew_locations(i)=m.y(ew_ind(ind_temp));
+            ns_locations(i)=m.x(ns_ind(ind_temp));
            
         end       
     end   
@@ -283,7 +290,7 @@ else %If the section is less than 45 degrees slope
     ns_ind_A = ns_ind(ia);
     ew_ind_A = ew_ind(ia);
     
-    res_plot=nan(m.nz,length(ind_lean));
+    res_plot=nan(length(m.cz),length(ind_lean));
     
     ew_locations = zeros(length(ind_lean),1);
     ns_locations = zeros(length(ind_lean),1);
@@ -380,11 +387,15 @@ zind = 1:nearestpoint(u.zmax*1000,m.cz);
 
 %Plot section
 figure(2);
-plot_cross_section(dist/1000,m.cz(zind)/1000,res_plot(zind,:)'); % transpose to negate transpose in this function...
+plot_cross_section(dist/1000,m.cz(zind)/1000,log10(res_plot(zind,:))); % transpose to negate transpose in this function...
 
 xlabel(['Kilometers from (',num2str(xp(1)/1000),' NS, ',num2str(yp(1)/1000),' EW) to (',num2str(xp(2)/1000),' NS, ',num2str(yp(2)/1000),' EW)']);
 ylabel('Depth Below Sealevel (km)')
 title('Diagonal Slice Through Model');
+
+if strcmp(u.gridlines,'off')
+    shading flat
+end
 
 %Plot geoboundary file on diagonal section (not yet implemented properly)
 plot_geoboundaries_diagonal_section(d,ew_locations,ns_locations)

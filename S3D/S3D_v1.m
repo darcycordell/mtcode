@@ -248,6 +248,8 @@ while menu1 == 1
                         if strcmp(u.diagonal_section_mode,'line') || strcmp(u.diagonal_section_mode,'interp')
                             %This version takes line segment distances, no
                             %smoothing. Darcy's version.
+                            %This is option with interpolation is
+                            %recommended
                             [x,y,z,rho] = plot_diagonal_section(model_to_plot,dobs);
                         elseif strcmp(u.diagonal_section_mode,'smooth')
                             %This version averages across the line segment and

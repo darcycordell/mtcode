@@ -34,6 +34,10 @@ if ~exist('d','var')
     [d] = make_nan_data;
 end
 
+if ~isfield(d,'idx')
+    error('You must link the model coordinates and data coordinates first. Use link_model_data.m')
+end
+
         
 %------------------Plot a Slice to Choose Diagonal Section------------------
 id = round(m.nz/2); %index to plot a slice (arbitrary)
@@ -86,9 +90,13 @@ elseif main_menu == 2 % enter X/Y end points manually
     
     prompt={sprintf('Enter in km\n\nNS 1'),'EW 1','NS 2','EW 2'}; 
     dlg_title='Kilometers';
-    def={'110','-405','-10.789','63.8'}; %default is office to Tim's
+    def={'-10','10','10','-10'};
     num_lines=1;
     dinp = inputdlg(prompt,dlg_title,num_lines,def);
+    
+    if isempty(dinp)
+        return
+    end
 
     xp=[str2double(dinp{1});str2double(dinp{3})]; 
     yp=[str2double(dinp{2});str2double(dinp{4})];
@@ -130,7 +138,7 @@ elseif main_menu == 4 %Option to enter lat/long pair manually
     if ~strcmp(d.site,'None') %If a data structure was supplied, then get the points in latitude and longitude
         prompt={'Latitude 1','Longitude 1','Latitude 2','Longitude 2'}; 
         dlg_title='Decimal Degrees';
-        def={num2str(d.origin(1)),num2str(d.origin(2)),num2str(d.origin(1)),num2str(d.origin(2))}; %default is office to Tim's
+        def={num2str(d.origin(1)),num2str(d.origin(2)),num2str(d.origin(1)),num2str(d.origin(2))};
         num_lines=1;
         dinp = inputdlg(prompt,dlg_title,num_lines,def);
 
@@ -208,7 +216,8 @@ s=(xp(2)-xp(1))/(yp(2)-yp(1)); %slope
 b=xp(1)-s*yp(1); %intercept
 
 if isinf(s)
-    disp('The diagonal selection does not work for NS-profiles. Choose to plot NS section in S3 instead');
+    disp('The diagonal selection does not work for NS-profiles. In S3, choose to plot NS section instead');
+    x = NaN; y = NaN; z = NaN; rho = NaN;
     return;
 end
 
@@ -218,17 +227,17 @@ end
 
 %EW first (xint: dealing with known east-west points)
 int=[];
-for k=1:m.ny
-    xint=s*m.cy(k)+b; %slope formula to find intersections with known x
-    if m.cy(k)>=min(yp) && m.cy(k)<=max(yp)
-        int=[int; [m.cy(k) xint]];
+for k=1:m.ny+1
+    xint=s*m.y(k)+b; %slope formula to find intersections with known x
+    if m.y(k)>=min(yp) && m.y(k)<=max(yp) && ~isnan(xint)
+        int=[int; [m.y(k) xint]];
     end
 end
 
 %NS second (xint: dealing with known north-south points)
-for k=1:m.nx
-    yint=(m.cx(k)-b)/s; %slope formula to find intersections with known y
-    if m.cx(k)>=min(xp) && m.cx(k)<=max(xp)
+for k=1:m.nx+1
+    yint=(m.x(k)-b)/s; %slope formula to find intersections with known y
+    if m.x(k)>=min(xp) && m.x(k)<=max(xp) && ~isnan(yint)
         int=[int; [yint m.cx(k)]];
     end
 end
@@ -259,18 +268,15 @@ end
 %Step 3: Find the distance and midpoint of each line segment through each grid cell
 
 %Get lengths and midpoints of line segments
-L=zeros(length(int(:,1))-1,1);L_mid=zeros(length(L),2); L_d = zeros(size(L));
+L=zeros(length(int(:,1))-1,1);L_mid=zeros(length(L),2);
 for k=1:length(int)-1 %loops over all grid intersections
     L_set=sqrt((int(k+1,1)-int(k,1))^2+(int(k+1,2)-int(k,2))^2);
     L(k)=L_set;
-    L_mid_set=(int(k+1,:)+int(k,:))./2;
-    L_mid(k,:)=L_mid_set;
-
-    L_d(k) = L_set;
-
+    L_mid(k,:)=(int(k+1,:)+int(k,:))./2;
 end
 
-dist=cumsum(L_d);
+dist=[0; cumsum(L)];
+dist_mid = (dist(1:end-1)+dist(2:end))/2;
 
 %Step 4: Find which cell the midpoint belongs in
 x_grid = zeros(length(L),1); y_grid = zeros(length(L),1);
@@ -283,20 +289,23 @@ end
 %     plot(m.cy(y_grid)/1000,m.cx(x_grid)/1000,'xk')
 %     plot(m.cy(y_grid(1))/1000,m.cx(x_grid(1))/1000,'xr','MarkerSize',12)
 %%
-res_plot=zeros(m.nz,length(L));
+res_plot=zeros(m.nz,length(L)+1);
 for j=1:length(L)
     res_plot(:,j) = m.A(x_grid(j),y_grid(j),:); %pulls slice model cells from A matrix
 end
 
+res_plot(:,end) = res_plot(:,end-1);
+
 if strcmp(u.diagonal_section_mode,'interp')
     ind = find(isnan(res_plot));
     res_plot = inpaint_nans(res_plot);
-    px = cumsum(ones(length(L),1)*sum(L)/(length(L)));
+    px = [0; cumsum(ones(length(L),1)*sum(L)/(length(L)))];
     [D,Zorig] = meshgrid(dist,m.cz);
     [P,Z] = meshgrid(px,m.cz);
     res_plot =interp2(D,Zorig,res_plot,P,Z);
     res_plot(ind) = NaN;
     dist = px;
+    dist_mid = (dist(1:end-1)+dist(2:end))/2;
 end
 %%
 if ~strcmp(d.site,'None')
@@ -306,9 +315,9 @@ if ~strcmp(d.site,'None')
     for i = 1:length(d.idx)
 
 
-            %Find the minimum distance between the site and the profile cell
-            %centers. This is the cell center which the site will be
-            %projected to
+            %Find the minimum distance between the site and the profile
+            %line segment mid-points
+            %This is the cell center which the site will be projected to
             [d_site, ind] = min(sqrt((m.cx(d.idx(i))-L_mid(:,2)).^2+(m.cy(d.idy(i))-L_mid(:,1)).^2));
 
             if d_site<u.tol*1000 %if station is less than tolerance (km) from profile then include it on the profile plot
@@ -317,7 +326,7 @@ if ~strcmp(d.site,'None')
 
                 %d_elev includes the model indices of the projected
                 %site and the distance the site is along the profile
-                d_elev(k,:) = [x_grid(ind) y_grid(ind) dist(ind)];
+                d_elev(k,:) = [x_grid(ind) y_grid(ind) dist_mid(ind)];
             end
 
     end
@@ -329,17 +338,32 @@ if ~strcmp(d.site,'None')
     %plot(m.cy(d_elev(:,2))/1000,m.cx(d_elev(:,1))/1000,'xr')
 
 end
+%%
+zind = 1:nearestpoint(u.zmax*1000,m.cz,'next');
 
-zind = 1:nearestpoint(u.zmax*1000,m.cz);
+if any(isnan(zind))
+    zind = 1:m.nz;
+end
+
+z = [m.z(zind); m.z(zind(end)+1)]/1000;
+x = dist/1000;
+C = log10(res_plot(zind,:));
+%C = horzcat(C,C(:,end));
+C = vertcat(C,C(end,:));
 
 %Plot section
 figure(2);
 
-plot_cross_section(dist/1000,m.cz(zind)/1000,res_plot(zind,:)'); % transpose to negate transpose in this function...
+plot_cross_section(x,z,C);
+
+if strcmp(u.gridlines,'off')
+    shading flat
+end
 
 xlabel(['Kilometers from (',num2str(xp(1)/1000),' NS, ',num2str(yp(1)/1000),' EW) to (',num2str(xp(2)/1000),' NS, ',num2str(yp(2)/1000),' EW)']);
 ylabel('Depth Below Sealevel (km)')
 title('Diagonal Slice Through Model');
+axis([dist(1)/1000 dist(end)/1000 u.zmin u.zmax])
 
 %%
 %     seisy = dist/1000;

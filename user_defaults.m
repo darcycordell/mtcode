@@ -39,6 +39,8 @@ u.topo_file = 'none'; %If u.plot_topo = true but no topo_file is specified, then
 u.topo_transparency = 0.5; %Set transparency for topography plots (1 = opaque; 0 = transparent)
 u.elev_colim = [0 3000]; %Set topography colorbar axis when plotting topography on a map
 
+u.gridlines = 'on'; %turn grid lines on or off
+
 %MODEL PLOTTING INFO------------------------------------------------------------
 
 %General Model Inputs

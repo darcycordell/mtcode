@@ -19,16 +19,35 @@ u = user_defaults;
 
 %Set plotting limits
 if length(u.xylims)==4 %If xy limits were specified in user_defaults
-    xind = nearestpoint(u.xylims(1),m.cx/1000):nearestpoint(u.xylims(2),m.cx/1000);
-    yind = nearestpoint(u.xylims(3),m.cy/1000):nearestpoint(u.xylims(4),m.cy/1000);
+    xind = nearestpoint(u.xylims(1),m.cx/1000,'previous'):nearestpoint(u.xylims(2),m.cx/1000,'next');
+    yind = nearestpoint(u.xylims(3),m.cy/1000,'previous'):nearestpoint(u.xylims(4),m.cy/1000,'next');
+    axlims = [u.xylims(3) u.xylims(4) u.xylims(1) u.xylims(2)];
     
 else %If the limits specified are not a vector of numbers with length 4 then just take non-padding cells
     xind = m.npad(1)+1:m.nx-m.npad(1);
     yind = m.npad(2)+1:m.ny-m.npad(2);
+    axlims = [sort([m.y(min(yind)) m.y(max(yind))]) sort([m.x(min(xind)) m.x(max(xind))])]/1000;
+end
+
+if any(isnan(xind))
+    xind = 1:m.nx;
+end
+
+if any(isnan(yind))
+    yind = 1:m.ny;
 end
 
 %PLOT MODEL
-pcolor(m.X(xind,yind)/1000,m.Y(xind,yind)/1000,-m.Z(xind,yind)); shading flat; hold on
+y = [m.y(yind); m.y(yind(end)+1)]/1000;
+x = [m.x(xind); m.x(xind(end)+1)]/1000;
+C = m.Z(xind,yind);
+C = horzcat(C,C(:,end));
+C = vertcat(C,C(end,:));
+pcolor(y,x,C); hold on;
+
+if strcmp(u.gridlines,'off')
+    shading flat
+end
 
 %If data exists, plot site locations
 if exist('d','var')

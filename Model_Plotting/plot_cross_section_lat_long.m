@@ -12,7 +12,7 @@ function plot_cross_section_lat_long
 % outputting the file correctly.
 %
 % This has not been thoroughly debugged.
-
+%%
     u = user_defaults;
 
     curdir = pwd;
@@ -30,13 +30,18 @@ function plot_cross_section_lat_long
 
     plot(section(:,1),section(:,2),'.k')
 
-    res_plot = reshape(section(:,4),ndist,nz);
+    res_plot = reshape(section(:,4),ndist,nz)';
 
     res_plot(res_plot==10^9)=NaN;
 
     figure(1);
     subplot(1,2,1)
-    pcolor(1:ndist,z,log10(res_plot')); axis ij; shading flat; hold on
+    pcolor(1:ndist,z,res_plot); axis ij; hold on; axis equal
+    
+    if strcmp(u.gridlines,'off')
+        shading flat
+    end
+    
     colormap(u.cmap); caxis(u.colim);
     add_rho_colorbar(u);
         

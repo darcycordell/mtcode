@@ -84,7 +84,8 @@ m.cy = (m.y(1:end-1)+m.y(2:end))/2;
 m.cz = (m.z(1:end-1)+m.z(2:end))/2;
 
 %Create a meshgrid of cell edges
-[m.X,m.Y]=meshgrid(m.y(1:end-1),m.x(1:end-1));
+[m.X,m.Y]=meshgrid(m.y,m.x);
+[m.Xc,m.Yc] = meshgrid(m.cy,m.cx);
 
 
 m.nx = length(m.cx);
@@ -106,7 +107,7 @@ for i = 1:m.nx
             ind = m.nz-1;
         end
         
-        m.Z(i,j) = m.cz(ind+1);
+        m.Z(i,j) = m.z(ind+1);
         
     end
 end
