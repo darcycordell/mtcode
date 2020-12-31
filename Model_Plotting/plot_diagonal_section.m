@@ -234,11 +234,11 @@ for k=1:m.ny+1
     end
 end
 
-%NS second (xint: dealing with known north-south points)
+%NS second (yint: dealing with known north-south points)
 for k=1:m.nx+1
     yint=(m.x(k)-b)/s; %slope formula to find intersections with known y
     if m.x(k)>=min(xp) && m.x(k)<=max(xp) && ~isnan(yint)
-        int=[int; [yint m.cx(k)]];
+        int=[int; [yint m.x(k)]];
     end
 end
 
@@ -307,6 +307,18 @@ if strcmp(u.diagonal_section_mode,'interp')
     dist = px;
     dist_mid = (dist(1:end-1)+dist(2:end))/2;
 end
+
+%Sometimes (usually in models with lots of topography), the
+%interpolation option results in negative resistivities which are
+%non-physical. In this case the values are replaced with the old values in
+%the original matrix
+ind_neg = find(res_plot<=0);
+[ix,iy] = ind2sub(size(res_plot),ind_neg);
+for i = 1:length(ind_neg)
+    res_plot(ix(i),iy(i)) = m.A(x_grid(iy(i)),y_grid(iy(i)),ix(i));
+end
+
+res_plot(res_plot<=0)=NaN;
 %%
 if ~strcmp(d.site,'None')
     %Project sites within the tolerance distance from the profile onto the
