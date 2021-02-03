@@ -102,6 +102,19 @@ elseif profile_menu == 2 || profile_menu == 3
 
             midpoint = [min(long) + (max(long)-min(long))/2, min(lat) + (max(lat)-min(lat))/2];
             azimuth = -atan2d(lat(2)-lat(1),long(2)-long(1)); % range [-180, 180] with positive degrees clockwise from North
+            
+            save_coords = menu('Save coordinates to text file?','Yes','No');
+            if save_coords == 1 % save to file
+                curdir = pwd;
+                file_default_name = ['endpoints_for_profile_', num2str(midpoint(1)), '_', num2str(midpoint(2)), '_azimuth_', num2str(azimuth), '.txt'];
+                [output_profile_file, output_profile_path] = uiputfile('*.txt','Save profile endpoints file as',file_default_name);       
+                cd(output_profile_path)
+                fid = fopen(output_profile_file,'w');
+                fprintf(fid,'%.4f %.4f\n',lat(1),long(1));
+                fprintf(fid,'%.4f %.4f\n',lat(2),long(2));
+                fclose(fid);
+                cd(curdir)
+            end
 
         else % load endpoints from text file
 
@@ -124,7 +137,7 @@ elseif profile_menu == 2 || profile_menu == 3
 
             midpoint = [min(long) + (max(long)-min(long))/2, min(lat) + (max(lat)-min(lat))/2];
             azimuth = -atan2d(lat(2)-lat(1),long(2)-long(1)); % range [-180, 180] with positive degrees clockwise from North
-        end
+        end                
         
     else % no locations exist in d structure
         disp('No geographic coordinates detected in data structure. Using default profile.')
