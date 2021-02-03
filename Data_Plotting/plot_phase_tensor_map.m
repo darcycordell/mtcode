@@ -35,11 +35,12 @@ strike = nan(d.ns,1);
 for ifreq = 1:u.nskip:d.nf  % Loop over frequencies
    %%
     h = set_figure_size(777); % this number is important! plot_induction_vector_map needs to know whether or not to make new figure
-    plot_geoboundaries(L);
     m_grid('box','fancy','tickdir','in','xlabeldir','end'); 
+    plot_geoboundaries(L);
+    
     
     hold on  
-    m_plot(d.loc(:,2), d.loc(:,1),'k.'); hold on; %Plot station locations
+    
     for is = 1:u.sskip:d.ns  % Loop over stations
 
         [p] = calc_phase_tensor(d.Z(ifreq,:,is)); %Calculate phase tensors and put in "p" structure
@@ -66,6 +67,8 @@ for ifreq = 1:u.nskip:d.nf  % Loop over frequencies
         %m_text(d.loc(is,2),d.loc(is,1)+0.0016,num2str(strike(ifreq,is),2))    % debugging 
     end
     
+    m_plot(d.loc(:,2), d.loc(:,1),'k.'); hold on; %Plot station locations
+    
     colormap(flipud(u.cmap));
     if strcmp(u.phase_tensor_ellipse_fill,'phimin')
         caxis(gca,u.phase_tensor_phimin_colim);
@@ -76,6 +79,8 @@ for ifreq = 1:u.nskip:d.nf  % Loop over frequencies
         hcb = colorbar;
         hcb.Label.String = 'Beta Skew Angle (degrees)';
     end  
+    
+    set(gca,'SortMethod','childorder') % make sure phase tensors and stations plot ON TOP of the geoboundaries
       
     if d.T(ifreq) > 1
         title(['T = ',num2str(d.T(ifreq)),' s'])
