@@ -1,11 +1,14 @@
 function plot_misfit_residual_pseudo(dobs,dpred)
 %
-% Function which plots apparent resistivity and phase pseudosections for xy
-% and yx mdoes
+% Function which plots pseudo sections of:
+% impedance residuals
+% tipper residuals
+% rms misfit
 %
-% Usage: plot_rho_pha_pseudo(d)
+% Usage: plot_misfit_residual_pseudo(dobs,dpred)
 %
-% "d" is an MT data structure
+% "dobs" is an MT data structure of observed data
+% "dpred" is an MT data structure of predicted data
 %%
 u = user_defaults;
 
@@ -347,6 +350,28 @@ if ~all(all(all(isnan(s.residuals.tip)))) % tipper data were inverted
     print_figure(['misfit_stats_',dpred.niter],'tipper_residual_pseudo'); %Save figure
     
 end
+
+% misfit pseudo
+set_figure_size(4);
+[hp,vp,C] = fix_pcolor(x_sort,log10(dobs.T),s.rms_sf(index,:)');
+
+pcolor(hp,vp,C)
+hold on; axis ij
+shading 'flat'
+plot(x_sort,log10(dobs.T(1))-0.25,'kv','MarkerFaceColor','k')  %%%%changed
+if u.station_names
+    text(x_sort,(x_sort.*0 )+ min(vp)-0.5,dobs.site(index),'rotation',u.station_names_angle,'interpreter','none');
+else
+    title('r.m.s. misfit ')
+end
+
+ylabel ('Log10 Period (s)')
+axis([hp(1),hp(end), min(vp)-0.5 ,max(vp)])
+colormap(gca,flipud(u.cmap))
+caxis(u.rmslim)
+hcb = colorbar;
+hcb.Label.String = 'r.m.s. misfit';
+set(gca,'Layer','top')
 
 end % end function
     
