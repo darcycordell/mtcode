@@ -31,12 +31,22 @@ if ~exist('elev','var')
     elev = 0;
 end
 
+m.cz = unique(mod(:,3))-elev;
+m.lon = sort(unique(mod(:,1)),'ascend'); % match ascending order of other m loading codes
+m.lat = sort(unique(mod(:,2)),'ascend');
 
-m.lon = flipud(unique(mod(:,1)));
-m.lat = flipud(unique(mod(:,2)));
-m.cz = 1000*unique(mod(:,3))-elev;
-
-m.A = reshape(mod(:,4),length(m.lat),length(m.lon),length(m.cz));
+% place values in 3D array
+m.A = zeros(length(m.lat),length(m.lon),length(m.cz));
+count = 0;
+for iz = 1:length(m.cz)
+    for ilat = 1:length(m.lat)
+        for ilon = 1:length(m.lon)        
+            count = count+1;
+            m.A(ilat,ilon,iz) = mod(count,4);
+        end
+    end
+end
+m.A(m.A>1e8)=NaN; % assume these values are air cells
 
 [m.LON, m.LAT] = meshgrid(m.lon,m.lat);
 
@@ -72,8 +82,3 @@ m.dz = diff(m.z);
 
 m.origin = [min(m.x) min(m.y) min(m.z)];
 m.name = name;
-
-
-
-
-
