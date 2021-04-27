@@ -27,10 +27,10 @@ E = E*pi/180;  % Convert to radians
 
 if nargin > 1  
     % Following added by MJU to fill sectors
-    polar([pi/2, pi/2],[0., rmax]) % Plot vector to control radial scale
+    polar([NaN, NaN],[0., rmax]) % Plot vector to control radial scale
     set(findobj(gca,'Type','line'),'Color','k');
     hold on
-    polar([-pi/2, -pi/2],[0., rmax])
+    polar([NaN, NaN],[0., rmax])
     set(findobj(gca,'Type','line'),'Color','k');
     [tout, rout] = rose(E,nbins);
     polar(tout, rout);
