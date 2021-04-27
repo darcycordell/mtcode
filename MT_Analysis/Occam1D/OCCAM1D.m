@@ -24,7 +24,7 @@ clear all; close all
 curdir = pwd;
 % Plotting options
 reslims = [1 1000]; %resistivity limits 
-depthlims = [0 20000]; %depth limits for plotting
+depthlims = [0 10000]; %depth limits for plotting (m)
 
 get_data = '(1) Get Data';
 mesh_design = '(2) Mesh Design';
@@ -154,7 +154,7 @@ if main_menu == 1
         datatype = 'SYNTHETIC';
         prompt={'Number of Frequencies','Minimum Frequency','Maximum Frequency','Gaussian Error to Add','Depth to Top of Model Layers','Layer Resistivites'};
         dlg_title='Synthetic Data Parameters';
-        def={num2str(80),num2str(0.001),num2str(1000),num2str(0.05),'[0 150 250 5000 5500]','[100 1 50 1 10]'};
+        def={num2str(80),num2str(0.001),num2str(1000),num2str(0.02),'[0 5000 5100 6100 6600]','[100 35.44 3.6 16.253 100]'};
         %def={num2str(50),num2str(0.001),num2str(1000),num2str(0.1),'[0 2000 10000]','[100 1 1000]'};
         num_lines=1;
         dinp = inputdlg(prompt,dlg_title,num_lines,def);
@@ -245,6 +245,7 @@ if main_menu == 2 && max(track) >= 1
             D=Dinv;
         end
         thick = [D(1)/4 D(1)/2 D(1:end-1)]; %Thicknesses (from Bostick)
+        thick(isnan(thick))=[];
     end
 
     nl = length(thick)+1; %Number of layers
@@ -256,7 +257,7 @@ if main_menu == 3 && max(track) >= 2
 
     prompt={'Max Iterations','Error Floor','Desired RMS','Starting Halfspace Resistivity','Set Discontinuity (1 or 0)'};
     dlg_title='Inversion Parameters';
-    def={num2str(200),num2str(0.1),num2str(0.5),num2str(100),num2str(0)};
+    def={num2str(200),num2str(0.02),num2str(1),num2str(100),num2str(0)};
     num_lines=1;
     dinp = inputdlg(prompt,dlg_title,num_lines,def);
     
@@ -301,6 +302,19 @@ end
 if main_menu == 4 && max(track) >= 3
     track(count) = main_menu;
     inv_run = '(4) Run Inversion (DONE)';
+    
+    %Remove NaN from data
+    ind = isnan(Z);
+    Z(ind) = [];
+    dZ(ind) = [];
+    f(ind) = [];
+    floorZ(ind) = [];
+    pha(ind) = [];
+    rhoa(ind) = [];
+    T(ind) = [];
+    w(ind) = [];
+    nd = length(f);
+    
     % OCCAM INVERSION----------------------------------------------------------
 
     %Apply error floor-------------------------------
