@@ -1,4 +1,4 @@
-function profile_topo(strtpnt,endpnt,grdfile)
+function [yz] = profile_topo(strtpnt,endpnt,grdfile)
 % Function which plots a topography profile in 2-D
 %
 % Inputs:
@@ -150,6 +150,11 @@ caxis([-5000 5000])
 
 plot([lat1 lat2],[lon1 lon2],'o-')
 
+[y,indsort] = sort(newx);
+y = y-y(round(length(y)/2));
+z = -vq(indsort);
+
+yz = [1000*y' z'];
 
 
 
