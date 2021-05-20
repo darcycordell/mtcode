@@ -3,11 +3,12 @@ function plot_polar(d,polar,is)
 % Function to plot polar diagram for a single site at 9 different periods
 % pre-determined by the data
 %
-% Usage: plot_polar(d,polar)
+% Usage: plot_polar(d,polar,is)
 %
 % "d" is MT data structure
 % "polar" is a structure of polar diagram variables
 %           See calc_polar function
+% "is" is site index
 %
 rot_ang = 0;
 
@@ -26,12 +27,12 @@ for ifreq = floor(linspace(T_first,T_last,9)) %Loop over 9 periods
     subplot(3,3,n) %Will output a 3 x 3 subplot
 
     %Normalized polar diagram radius
-    r = 1.1*max([squeeze(abs(polar.x(ifreq,2,1,:))); squeeze(abs(polar.y(ifreq,2,1,:)))]);
+    r = 1.1*max([squeeze(abs(polar.x(ifreq,2,is,:))); squeeze(abs(polar.y(ifreq,2,is,:)))]);
 
     % Plot whole ellipse
-    plot(squeeze(polar.y(ifreq,2,1,:)),squeeze(polar.x(ifreq,2,1,:)),'k-') % Off-diagonal
+    plot(squeeze(polar.y(ifreq,2,is,:)),squeeze(polar.x(ifreq,2,is,:)),'k-') % Off-diagonal
     hold on
-    plot(squeeze(polar.y(ifreq,1,1,:)),squeeze(polar.x(ifreq,1,1,:)),'k:') % Diagonal
+    plot(squeeze(polar.y(ifreq,1,is,:)),squeeze(polar.x(ifreq,1,is,:)),'k:') % Diagonal
     axis equal
 
     % Now plot axis showing coordinate frame
