@@ -41,7 +41,7 @@ if main_menu == 1
     track(count) = main_menu;
     get_data = '(1) Get Data (DONE)';
     % DATA INPUT OPTIONS  ----------------------------------------------------
-    data_menu = menu('','Load EDI','Load Text File','Make Synthetic Data (default)');
+    data_menu = menu('','Load EDI','Load Text File','Load Bayesian Format','Make Synthetic Data (default)');
 
     if data_menu == 1 % DATA FROM EDI
         [edifile,edipath] = uigetfile({'*.edi'},'Pick EDI file');
@@ -149,6 +149,29 @@ if main_menu == 1
         [Z,dZ] = calc_Z(rhoa',rhoerr,pha',phaerr,T);
         
         floorZ=abs(Z);
+        
+    elseif data_menu == 3 %BAYESIAN FORMAT MAT FILE
+        [matfile,matpath] = uigetfile({'*'},'Pick text file');
+        cd(matpath)
+        load(matfile)
+        cd(curdir)
+        
+        f = MTdata.freq_array';
+        nd = length(f);
+        T = 1./f;
+        lat = 0;
+        lon = 0;
+        elev = 0;
+        rot = 0;
+
+
+        Z = MTdata.Z(1:nd)+1i*MTdata.Z(nd+1:end);
+        dZ = MTdata.Zerr(1:nd);
+        floorZ = abs(Z);
+        
+        [rhoa,pha] = calc_rho_pha(Z,dZ,T);
+        rhoa = rhoa';
+        pha = pha';
 
     else % SYNTHETIC DATA
         datatype = 'SYNTHETIC';
