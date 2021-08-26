@@ -15,9 +15,9 @@ function M3_add_topo(hObject, ~, ~)
 
     maplim = floor([min(H.d.loc(:,2)) max(H.d.loc(:,2)) min(H.d.loc(:,1)) max(H.d.loc(:,1))]);
     
-    topo_source_menu = menu('Get Topography From:','SRTM (.hgt) files (Default; No bathymetry)','Grid files (.grd) in current directory (Bathymetry)','Elevation matfile in Current Directory','Station Elevations (interpolates between)');
+    topo_source_menu = menu('Get Topography From:','SRTM (.hgt) files (Default; No bathymetry)','Grid files (.grd) in current directory (Bathymetry)','Geotiff File','Elevation matfile in Current Directory','Station Elevations (interpolates between)');
     
-    if topo_source_menu == 4 % use stations elevations
+    if topo_source_menu == 5 % use stations elevations
         %This can be done as a "last resort" if you have no other
         %topography data available. It can also be useful when doing
         %synthetics.
@@ -27,7 +27,7 @@ function M3_add_topo(hObject, ~, ~)
         H.topo_lon = H.d.loc(:,2);
         H.topo_lat = H.d.loc(:,1);
         H.topo_z = -H.d.loc(:,3); % negative sign needed to convert to m a.s.l.
-    elseif topo_source_menu == 3 % existing elevation.mat file  
+    elseif topo_source_menu == 4 % existing elevation.mat file  
         %MTplot outputs an elevation.mat file. This file will only contain
         %elevations within the array boundaries (i.e will not include
         %padding cells). This should also be used only as a last resort if
@@ -41,6 +41,22 @@ function M3_add_topo(hObject, ~, ~)
         H.topo_lon = elev.lon;
         H.topo_lat = elev.lat;
         H.topo_z = elev.z; % this is in m a.s.l.
+    elseif topo_source_menu == 3 % Geotiff file
+        %Global Geotiff elevation data can be downloaded from https://maps.ngdc.noaa.gov/viewers/bathymetry/
+        %
+        curdir = pwd;
+        [file,path] = uigetfile('*.tiff','Select GeoTiff file');
+        cd(path)
+        
+        [A,R] = readgeoraster(file);
+        
+        H.topo_lat = linspace(R.LatitudeLimits(1), R.LatitudeLimits(2), R.RasterSize(1));
+        H.topo_lon = linspace(R.LongitudeLimits(1), R.LongitudeLimits(2), R.RasterSize(2));
+        
+        H.topo_z = double(A(end:-1:1,:)); %this is the topo matrix
+        
+        cd(curdir);
+        
     elseif topo_source_menu == 2 % existing .grd files 
         %If you have a GMT format grid file, this can be loaded directly. 
         %This could be an SRTM grid file or any other grd type file
@@ -102,7 +118,7 @@ function M3_add_topo(hObject, ~, ~)
     H.topo_y = (H.topo_y./1000)-500; % these are topo coords not including entire mesh area
     H.topo_x = H.topo_x./1000;
           
-    if topo_source_menu ~= 4 % use grids for SRMT, .grd, or .mat file where topo data are in a regular grid. if data is from station locations, keep as vectors
+    if topo_source_menu ~= 5 % use grids for SRMT, .grd, .tiff or .mat file where topo data are in a regular grid. if data is from station locations, keep as vectors
         [H.topo_y,H.topo_x] = meshgrid(H.topo_y,H.topo_x); % try putting into matrices early on
     end
     
@@ -175,7 +191,7 @@ function M3_add_topo(hObject, ~, ~)
     end
     
     
-    if topo_source_menu ~= 4 % if using station elevations, topo not in matrix form yet
+    if topo_source_menu ~= 5 % if using station elevations, topo not in matrix form yet
         
         plot_menu = menu('Plot Grid Interpolation?','Yes','No');
         
