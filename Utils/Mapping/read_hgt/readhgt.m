@@ -387,12 +387,12 @@ else
                         end
                         cd(folder);
 						f(n) = unzip1([url,ff],out);
-                        cd(curdir);
 					end
 					fprintf('done.\n');
                     				catch
 					fprintf(' ** tile not found. Considering offshore.\n');
 					f{n} = '';
+                    cd(curdir);
 				end
 			end
 		end
