@@ -61,24 +61,33 @@ while 1
     'EdgeColor', 'none', ...
     'HorizontalAlignment', 'center','FontSize',12,'FontWeight','bold')
 
+    print_figure(['phase_tensor_',d.niter],['phase_tensor_site_ellipse',num2str(is,'%03.0f'),'_',d.site{is}]); %Save figure
+    
     %Plot alpha, beta skew, phimin, phimax etc.
     set_figure_size(2);
-    subplot(2,1,1)  % phase_min and phase_max
+    subplot(3,1,1)  % phase_min and phase_max
     semilogx(d.T,p.phimin,'r.') ; hold on;
     semilogx(d.T,p.phimax,'b.') ;
     xlabel ('Period (s)'); ylabel ('Phase (Degrees)');
     legend('Phi Min','Phi Max')
     title(['Phase Tensor Parameters for Site  ',d.site{is}])
 
-    % plot alpha, beta
-    subplot(2,1,2)  
+    % plot alpha and strike
+    subplot(3,1,2)  
     semilogx(d.T,p.alpha,'.r'); hold on
-    semilogx(d.T,p.beta,'.b');
     semilogx(d.T,p.alpha-p.beta,'-k','LineWidth',2);
     xlabel('Period (s)')
     ylabel('Degrees')
-    legend('Alpha','Beta','Geoelectric Strike (\alpha - \beta )')
+    legend('Alpha','Geoelectric Strike (\alpha - \beta )')
     
+    % plot beta
+    subplot(3,1,3)
+    semilogx(d.T,p.beta,'.b'); hold on
+    semilogx([d.T(1) d.T(end)],[-3 -3],'--k');
+    semilogx([d.T(1) d.T(end)],[3 3],'--k');
+    xlabel('Period (s)')
+    ylabel('Degrees')
+    legend('Beta');
     
     print_figure(['phase_tensor_',d.niter],['phase_tensor_site_',num2str(is,'%03.0f'),'_',d.site{is}]); %Save figure
     

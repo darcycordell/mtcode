@@ -35,8 +35,7 @@ strike = nan(d.ns,1);
 for ifreq = 1:u.nskip:d.nf  % Loop over frequencies
    %%
     h = set_figure_size(777); % this number is important! plot_induction_vector_map needs to know whether or not to make new figure
-    m_grid('box','fancy','tickdir','in','xlabeldir','end'); 
-    plot_geoboundaries(L);
+    m_grid('box','fancy','tickdir','in','xlabeldir','end');
     
     
     hold on  
@@ -44,7 +43,6 @@ for ifreq = 1:u.nskip:d.nf  % Loop over frequencies
     for is = 1:u.sskip:d.ns  % Loop over stations
 
         [p] = calc_phase_tensor(d.Z(ifreq,:,is)); %Calculate phase tensors and put in "p" structure
-
         strike(is) = p.strike;
         
         %Normalized radius of the ellipse
@@ -68,6 +66,8 @@ for ifreq = 1:u.nskip:d.nf  % Loop over frequencies
     end
     
     m_plot(d.loc(:,2), d.loc(:,1),'k.'); hold on; %Plot station locations
+    
+    plot_geoboundaries(L);
     
     colormap(flipud(u.cmap));
     if strcmp(u.phase_tensor_ellipse_fill,'phimin')

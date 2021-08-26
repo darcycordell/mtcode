@@ -48,7 +48,7 @@ for ifreq = 1:u.nskip:d.nf  % Loop over frequencies
 
     subplot(2,2,2)
     strike_vec = [alpha(ifreq,:) alpha(ifreq,:)+90 alpha(ifreq,:)+180 alpha(ifreq,:)+270];
-    rose_geog(strike_vec,24,20,'b')
+    rose_geog(strike_vec,24,u.rose_histogram,'b')
 
     if d.T(ifreq) > 1
       title(['\alpha : T = ',num2str(d.T(ifreq)),' s'])
@@ -64,7 +64,7 @@ for ifreq = 1:u.nskip:d.nf  % Loop over frequencies
     bar(edges,rn,'histc');
     title(['median phi ratio = ',num2str( median(ratio(ifreq,~isnan(e(ifreq,:)))))])
     xlabel('\phi_{max} / \phi_{min}'); ylabel('Number of Stations');
-    axis([1 2 0 20]);
+    axis([1 2 0 u.rose_histogram]);
 
     subplot(2,2,4)
     xint=0.5;
@@ -72,7 +72,7 @@ for ifreq = 1:u.nskip:d.nf  % Loop over frequencies
     [betan,~]=histc(abs(beta(ifreq,:)),edges);
     bar(edges,betan,'histc');
     xlabel('\beta skew'); ylabel('Number of Stations');
-    axis([0 5 0 20]);
+    axis([0 5 0 u.rose_histogram]);
     title(['median beta skew = ',num2str(median(abs(beta(ifreq,~isnan(e(ifreq,:))))))])
     
     pause(0.1)
