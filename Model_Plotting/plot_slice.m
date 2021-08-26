@@ -50,8 +50,8 @@ end
 
 %If data exists, plot site locations
 if exist('d','var')
-    
-    plot(d.y/1000,d.x/1000,'k.','markersize',12); hold on; axis equal
+    dind = d.z<=m.z(id);
+    plot(d.y(dind)/1000,d.x(dind)/1000,'k.','markersize',12); hold on; axis equal
     plot_geoboundaries(L,d.origin,0)
 
 end
@@ -59,8 +59,8 @@ end
 %If the chosen slice is all above topo (i.e. all NaN), then it is not
 %possible to plot contours
 if u.plot_contours %Plot contours if plot_contour flag is true
-    if all(all(isnan(m.A(xind,yind,id))))~=1 
-        contour(m.X(xind,yind)/1000,m.Y(xind,yind)/1000,log10(m.A(xind,yind,id)),u.contours,'-k','ShowText',u.contour_text);
+    if all(isnan(C(:)))~=1 && length(unique(C(~isnan(C))))>1
+        contour(m.X(xind,yind)/1000,m.Y(xind,yind)/1000,C(1:end-1,1:end-1),u.contours,'-k','ShowText',u.contour_text);
     end
 end
 
