@@ -9,12 +9,20 @@ function plot_phase_tensor(d)
 %
 % "d" is data input in standard format structure
 
+table(d.site);
+    
+[sel,val] = listdlg('PromptString',['Select stations (',num2str(d.ns),' total) '],'ListString',d.site,'Name','Stations','ListSize',[300 300]);
+    
+if ~val
+    disp('No sites selected, returning to main');
+    return
+end
 
 is = 1; rot_ang = 0;
 
 while 1
     
-    [p] = calc_phase_tensor(d.Z(:,:,is)); %Calculate phase tensor variables and put them in structure "p"
+    [p] = calc_phase_tensor(d.Z(:,:,sel(is))); %Calculate phase tensor variables and put them in structure "p"
         %This structure contains phimin, phimax, beta, alpha, etc.
     
     set_figure_size(1);
@@ -57,11 +65,11 @@ while 1
     end
     
     annotation('textbox', [0 0.92 1 0.08], ...
-    'String', ['Phase Tensors For Site ',d.site{is}], ...
+    'String', ['Phase Tensors For Site ',d.site{sel(is)}], ...
     'EdgeColor', 'none', ...
     'HorizontalAlignment', 'center','FontSize',12,'FontWeight','bold')
 
-    print_figure(['phase_tensor_',d.niter],['phase_tensor_site_ellipse',num2str(is,'%03.0f'),'_',d.site{is}]); %Save figure
+    print_figure(['phase_tensor_',d.niter],['phase_tensor_site_ellipse',num2str(sel(is),'%03.0f'),'_',d.site{sel(is)}]); %Save figure
     
     %Plot alpha, beta skew, phimin, phimax etc.
     set_figure_size(2);
@@ -70,7 +78,7 @@ while 1
     semilogx(d.T,p.phimax,'b.') ;
     xlabel ('Period (s)'); ylabel ('Phase (Degrees)');
     legend('Phi Min','Phi Max')
-    title(['Phase Tensor Parameters for Site  ',d.site{is}])
+    title(['Phase Tensor Parameters for Site  ',d.site{sel(is)}])
 
     % plot alpha and strike
     subplot(3,1,2)  
@@ -89,15 +97,15 @@ while 1
     ylabel('Degrees')
     legend('Beta');
     
-    print_figure(['phase_tensor_',d.niter],['phase_tensor_site_',num2str(is,'%03.0f'),'_',d.site{is}]); %Save figure
+    print_figure(['phase_tensor_',d.niter],['phase_tensor_site_',num2str(sel(is),'%03.0f'),'_',d.site{sel(is)}]); %Save figure
     
 
-    next_menu = menu('','Next Station','Previous Station','Return');
+    next_menu = menu('','Next Station in List','Previous Station in List','Return');
 
     if next_menu == 1
         is = is+1;
-        if is>d.ns
-            is = d.ns;
+        if is>length(sel)
+            is = length(sel);
         end
     elseif next_menu == 2
         is = is-1;
