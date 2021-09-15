@@ -58,6 +58,9 @@ function [d,units_code] = load_data_edi(filename)
 %
 % If/when to conjugate tipper components?
 %
+% If the EDI file contains rotations in Zrot, should we automatically
+% rotate to geographic north or leave the impedances as rotated?
+%
 %
 % (C) 2020 Unsworth Research Group (University of Alberta, Edmonton, Canada)
 %
@@ -77,10 +80,12 @@ while 1
     if strncmp(strtrim(tline),'LAT=',4)
         tline=strtrim(tline);
         lat=tline(5:length(tline));
+        if isempty(lat); clear lat; end
     end
     if strncmp(strtrim(tline),'LONG=',5)
         tline=strtrim(tline);
         long=tline(6:length(tline));
+        if isempty(long); clear long; end
     end
     if strncmp(strtrim(tline),'ELEV=',5)
         [~,tline]=strtok(tline,'=');
@@ -91,10 +96,12 @@ while 1
     if strncmp(strtrim(tline),'REFLAT=',7)
         tline=strtrim(tline);
         reflat=tline(8:length(tline));
+        if isempty(reflat); clear reflat; end
     end
     if strncmp(strtrim(tline),'REFLONG=',8)
         tline=strtrim(tline);
         reflong=tline(9:length(tline));
+        if isempty(reflong); clear reflong; end
     end
     if strncmp(strtrim(tline),'REFELEV=',8)
         [~,tline]=strtok(tline,'=');
