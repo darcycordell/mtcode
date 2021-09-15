@@ -137,7 +137,14 @@ if sum(indmask)>0
     disp('****************************************************************')
 end
 
+%%
 
+if nansum([d(:).loc])==0
+    disp('WARNING: It appears that you do not have any latitude and longitude information for your survey. You will need to add it manually')
+end
+
+
+%%
 %----------------GET NEW FREQUENCY/PERIOD DATA SET-------------------------
 
 if ~exist('Tnew','var') % make a period array based on the data, and the period tolerance defined at the top of the function
