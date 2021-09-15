@@ -42,7 +42,7 @@ x = [m.x(xind); m.x(xind(end)+1)]/1000;
 C = log10(m.A(xind,yind,id));
 C = horzcat(C,C(:,end));
 C = vertcat(C,C(end,:));
-pcolor(y,x,C); hold on;
+pcolor(y,x,C); hold on;%view(0,90)
 
 if strcmp(u.gridlines,'off')
     shading flat
