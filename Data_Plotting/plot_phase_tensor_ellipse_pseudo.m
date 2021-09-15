@@ -55,11 +55,13 @@ for is = 1:u.sskip:d.ns  % Loop over stations
     max_pt(:,is) = p.max_pt;
     ptx(:,:,is) = p.x;
     pty(:,:,is) = p.y;
+    
 
 end
 %%
 %Plot pseudo-section
 set_figure_size(1);
+betacutoff = 10^6;
 colormap(flipud(u.cmap));
 %Set vertical scaling for periods and phase tensor ellipses
 aspect_ratio = (max(x_sort)-min(x_sort))/(max(log10(d.T))-min(log10(d.T)));
@@ -70,25 +72,26 @@ end
 for ifreq = 1:u.nskip:d.nf
     for is = 1:N %Loop of stations included on profile
         
-        scale = u.pt_pseudo_scale*((max(x_sort)-min(x_sort))/length(x_sort))/max_pt(ifreq,index(is))*(((max(log10(d.T)))-min(log10(d.T)))/(d.nf));
-        if scale == 0 % 1 station
-            scale = u.pt_pseudo_scale/max_pt(ifreq,index(is))*(((max(log10(d.f)))-min(log10(d.f)))/(d.nf));
+        if abs(beta(ifreq,index(is)))<=betacutoff
+            scale = u.pt_pseudo_scale*((max(x_sort)-min(x_sort))/length(x_sort))/max_pt(ifreq,index(is))*(((max(log10(d.T)))-min(log10(d.T)))/(d.nf));
+            if scale == 0 % 1 station
+                scale = u.pt_pseudo_scale/max_pt(ifreq,index(is))*(((max(log10(d.f)))-min(log10(d.f)))/(d.nf));
+            end
+            xp = x_sort(is)+scale*pty(:,ifreq,index(is)); %X location on profile 
+            %xp = 2*is+scale*pty(:,ifreq,index(is)); %Option to plot site-by-site rather as distance
+
+            % Note the minus sign below - this is to negate the flip from axis ij later on
+            yp = log10(d.T(ifreq))-scale*ptx(:,ifreq,index(is))./aspect_ratio;  %Y location in period
+            if strcmp(u.phase_tensor_ellipse_fill,'phimin')
+                fill(xp,yp,abs(phimin(ifreq,index(is)))); hold on %Plot filled ellipses with phi min
+            elseif strcmp(u.phase_tensor_ellipse_fill,'beta')
+                fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
+            else
+                disp('Unrecognized input for u.phase_tensor_ellipse_fill. Ellipses are filled with beta skew angle values. Check your user_defaults')
+                fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
+            end
+        
         end
-        xp = x_sort(is)+scale*pty(:,ifreq,index(is)); %X location on profile 
-        %xp = 2*is+scale*pty(:,ifreq,index(is)); %Option to plot site-by-site rather as distance
-        
-        % Note the minus sign below - this is to negate the flip from axis ij later on
-        yp = log10(d.T(ifreq))-scale*ptx(:,ifreq,index(is))./aspect_ratio;  %Y location in period
-        if strcmp(u.phase_tensor_ellipse_fill,'phimin')
-            fill(xp,yp,abs(phimin(ifreq,index(is)))); hold on %Plot filled ellipses with phi min
-        elseif strcmp(u.phase_tensor_ellipse_fill,'beta')
-            fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
-        else
-            disp('Unrecognized input for u.phase_tensor_ellipse_fill. Ellipses are filled with beta skew angle values. Check your user_defaults')
-            fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
-        end
-        
-        
     end
 end
 
