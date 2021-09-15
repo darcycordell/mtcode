@@ -923,7 +923,7 @@ elseif main_menu == 9 %PLOT HISTOGRAM OF PERIODS AND DELETE PERIODS--------
     
 elseif main_menu == 10 %DELETE ENTIRE SITE----------------------------------
     %%
-    table(d.site)
+    table(d.site);
     
     [sel,val] = listdlg('PromptString',['Select stations to delete (',num2str(d.ns),' total) '],'ListString',d.site,'Name','Delete Stations','ListSize',[300 300]);
     
