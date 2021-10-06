@@ -34,8 +34,16 @@ for i = 1:sze(3) %Loop over stations
     
     %Not sure how to handle the determinant errors. This is done using
     %basic error propagation rules but I do not account for complex numbers
-    %so this is wrong.
-    detZerr(:,1,i) = sqrt((abs(a.*d).*sqrt((da./abs(a)).^2+(dd./abs(d)).^2)).^2+(abs(b.*c).*sqrt((db./abs(b)).^2+(dc./abs(c)).^2)).^2);
-    
+    %so this is wrong and results in very small errors
+    %detZerr(:,1,i) = sqrt((abs(a.*d).*sqrt((da./abs(a)).^2+(dd./abs(d)).^2)).^2+(abs(b.*c).*sqrt((db./abs(b)).^2+(dc./abs(c)).^2)).^2);
+
+    %Another option is to simply take the average of the relative errors of
+    %all the tensor components. However, this often results in
+    %disproportionately large errors from the diagonal components
+    detZerr(:,1,i) = 0.25*abs(detZ).*(da./abs(a)+db./abs(b)+dc./abs(c)+dd./abs(d));
+
+    %A third option is to take the average of the off-diagonal components
+    %only
+    detZerr(:,1,i) = 0.5*abs(detZ).*(db./abs(b)+dc./abs(c));
     
 end
