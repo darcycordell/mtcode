@@ -233,7 +233,7 @@ while irun == 1
 
                 print_figure('rho_pha',[d.site{is},'_rot_',num2str(rotation)]); %Save figure
 
-                next_menu = menu('','Next Station','Previous Station','Rotate +5 degrees','Rotate -5 degrees','D+ Fit On','D+ Fit Off','Return');
+                next_menu = menu('','Next Station','Previous Station','Jump to Station','Rotate +5 degrees','Rotate -5 degrees','D+ Fit On','D+ Fit Off','Return');
 
                 if next_menu == 1
 
@@ -248,21 +248,29 @@ while irun == 1
                         is = 1;
                     end
                     
-                elseif next_menu == 3 %Rotate 5 degrees clockwise
+                elseif next_menu == 3
+    
+                    [sel,val] = listdlg('PromptString',['Select stations (',num2str(d.ns),' total) '],'ListString',d.site,'Name','Stations','ListSize',[300 300],'SelectionMode','single');
+   
+                    if val
+                        is = sel;
+                    end
+
+                elseif next_menu == 4 %Rotate 5 degrees clockwise
                     
                     rotation = rotation + 5;
                     dr = rotate_d(dr,5);
                     
-                elseif next_menu == 4 %Rotate 5 degrees counter-clockwise
+                elseif next_menu == 5 %Rotate 5 degrees counter-clockwise
                     
                     rotation = rotation - 5;
                     dr = rotate_d(dr,-5);
                     
-                elseif next_menu == 5 %D+
+                elseif next_menu == 6 %D+
                     
                     dplus_flag = 1;
                     
-                elseif next_menu == 6
+                elseif next_menu == 7
                     
                     dplus_flag = 0;
                     
