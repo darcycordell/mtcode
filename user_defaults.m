@@ -67,7 +67,7 @@ u.contour_text = 'off'; %"on" to plot contour labels, "off" to not
 
 %Axis limits
 u.zmin = -4; %top of cross-section plots (km)
-u.zmax = 15; %maximum depth to plot cross-sections (km)
+u.zmax = 150; %maximum depth to plot cross-sections (km)
 %u.xylims = [-100 100 -500 500]; %x (NS) and y (EW) model coordinate limits to plot in kilometers
 u.xylims = 'default';
         %Example: [-15 15 -20 20]; First two coordinates are NS
@@ -95,8 +95,8 @@ u.zoff = 0; % km to move a station upward in a vertical section. this prevents s
 %DATA PLOTTING INFO--------------------------------------------------------
 
 %Axis limits
-u.Tlim = [0.0005 10000]; %Period limits in seconds
-u.rholim = [10^0 10^3]; %Apparent resistivity limits for off-diagonals
+u.Tlim = [0.0001 25000]; %Period limits in seconds
+u.rholim = [10^-2 10^3]; %Apparent resistivity limits for off-diagonals
 %u.rholimdiag = u.rholim;
 u.rholimdiag = [10^-3 10^3]; %Apparent resistivity limits for diagonals
 u.phalim = [0 90]; %Phase limits for data plotting
@@ -104,7 +104,7 @@ u.phalimdiag = [-180 180];
 u.tiplim = [-0.5 0.5]; %Tipper limits for data plotting (e.g. pseudo sections)
 u.Zlim = [10^-5 10^2]; %Impedance limits for data plotting
 u.residual_lim = [-5 5]; % limits for normalized residuals, impedance and tipper
-u.nskip = 2; %Number of periods to skip throughout
+u.nskip = 1; %Number of periods to skip throughout
 u.sskip = 1; %Number of stations to skip throughout; 1 is plot every station
 
 %RMS Map Scaling
@@ -121,16 +121,16 @@ u.dx = 0.005; %Interpolation gridding for north-south direction in latitude degr
 u.dy = 0.005; %Interpolation gridding for east-west direction in longitude degrees
 
 %Phase Tensor and Polar Diagram Scaling
-u.phase_tensor_polar_scale = 1000; %Scaling for phase tensors (usually between 1000 and 10000 depending on survey size?)
+u.phase_tensor_polar_scale = 10000; %Scaling for phase tensors (usually between 1000 and 10000 depending on survey size?)
 u.phase_tensor_ellipse_fill = 'beta'; % quantity to use to fill phase tensor ellipses. can be 'beta' or 'phimin'
 u.phase_tensor_beta_colim = [0 5]; %Phase tensor color bar limits (beta skew degrees)
 u.phase_tensor_phimin_colim = [0 60]; %Phase tensor color bar limits (phi min degrees)
-u.pt_pseudo_scale = 10; %Scaling for phase tensor pseudo sections (usually 1 is ok as default; >1 makes them bigger)
+u.pt_pseudo_scale = 5; %Scaling for phase tensor pseudo sections (usually 1 is ok as default; >1 makes them bigger)
 u.pseudo_tol_km = 100; %If a station is less than this distance from a pseudo-section line, it will not be projected on that line
                     %Units is kilometers. For example if it is 2 km, then
                     %all stations that are >2 km from the line will not be
                     %projected onto the pseudo-section
-u.rose_histogram = 30; %Maximum # of stations for rose diagram histogram
+u.rose_histogram = 200; %Maximum # of stations for rose diagram histogram
 u.inset_size = 0.4; %Inset size for rose diagrams on phase tensor and/or induction vector map
 u.plot_inset_pt = true; % Plot rose diagram inset on phase tensor map. true or false
 u.plot_inset_iv = true; % Plot rose diagram inset on induction vector map. true or false
@@ -139,6 +139,7 @@ u.inset_loc_pt = [0.1 0.6];%'NW'; % Inset location for rose diagram on phase ten
 u.inset_loc_iv = [0.6 0.6];%'NE'; % Inset location for rose diagram on induction vector map
 
 % Pseudo-section profile settings
+u.profile_distance = true; %plot profile as a function of distance (true) or equal-distance between sites (false)
 u.profile_azimuth = 0; % If you choose to plot the default profile, it will intersect the center of the station grid with this azimuth. default is 0 degrees, i.e. an E-W profile
 u.profile_stations = 'default'; % must be 'default' or a text file containing a list of station indices. default is all stations selected to plot on profile.
 u.rotate_data_to_azimuth = 0; % set to 1 to rotate data, or 0 to not rotate data.

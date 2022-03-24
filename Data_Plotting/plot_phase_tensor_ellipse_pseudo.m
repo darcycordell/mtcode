@@ -58,6 +58,7 @@ for is = 1:u.sskip:d.ns  % Loop over stations
     
 
 end
+
 %%
 %Plot pseudo-section
 set_figure_size(1);
@@ -71,8 +72,8 @@ end
 
 for ifreq = 1:u.nskip:d.nf
     for is = 1:N %Loop of stations included on profile
-        
-        if abs(beta(ifreq,index(is)))<=betacutoff
+
+        if u.profile_distance
             scale = u.pt_pseudo_scale*((max(x_sort)-min(x_sort))/length(x_sort))/max_pt(ifreq,index(is))*(((max(log10(d.T)))-min(log10(d.T)))/(d.nf));
             if scale == 0 % 1 station
                 scale = u.pt_pseudo_scale/max_pt(ifreq,index(is))*(((max(log10(d.f)))-min(log10(d.f)))/(d.nf));
@@ -80,6 +81,18 @@ for ifreq = 1:u.nskip:d.nf
             xp = x_sort(is)+scale*pty(:,ifreq,index(is)); %X location on profile 
             %xp = 2*is+scale*pty(:,ifreq,index(is)); %Option to plot site-by-site rather as distance
 
+        else
+            xref = (1/(((max(log10(d.T)))-min(log10(d.T)))/(d.nf)));
+            scale = u.pt_pseudo_scale*((max(x_sort)-min(x_sort))/length(x_sort))/max_pt(ifreq,index(is))*(1/xref);
+
+            xp = 1.2*xref*index(is) + scale*pty(:,ifreq,index(is));
+
+            xpref(is) = 1.2*xref*index(is);
+
+        end
+            
+        if abs(beta(ifreq,index(is)))<=betacutoff
+            
             % Note the minus sign below - this is to negate the flip from axis ij later on
             yp = log10(d.T(ifreq))-scale*ptx(:,ifreq,index(is))./aspect_ratio;  %Y location in period
             if strcmp(u.phase_tensor_ellipse_fill,'phimin')
@@ -96,28 +109,49 @@ for ifreq = 1:u.nskip:d.nf
 end
 
 daspect(gca,[aspect_ratio 1 1]);
-
-%Plot station locations on profile
-dx = 0.05*(x_sort(end) - x_sort(1));
 axis ij
-plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
-
-
 ylabel('Log(Period (s))')
-xlabel('Distance Along Profile (km)');
-if dx ==0
-    axis([x_sort(1)-1,x_sort(N)+1, min(log10(d.T))-0.5 ,max(log10(d.T))])
-else
-    axis([x_sort(1)-dx,x_sort(N)+dx, min(log10(d.T))-0.5 ,max(log10(d.T))])
-end
 
-if u.station_names
-    text(x_sort,(x_sort.*0 )+ min(log10(d.T))-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+
+
+if u.profile_distance
+
+    set(gca,'fontsize',20)
+    xlabel('Distance Along Profile (km)');
+
+    %Plot station locations on profile
+    dx = 0.05*(x_sort(end) - x_sort(1));
+    plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
+
+    if dx ==0
+        axis([x_sort(1)-1,x_sort(N)+1, min(log10(d.T))-0.5 ,max(log10(d.T))])
+    else
+        axis([x_sort(1)-dx,x_sort(N)+dx, min(log10(d.T))-0.5 ,max(log10(d.T))])
+    end
+
+    if u.station_names
+        text(x_sort,(x_sort.*0 )+ min(log10(d.T))-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+    else
+        title('Phase Tensor Pseudo Section')
+    end
+    
 else
-    title('Phase Tensor Pseudo Section')
+    
+    xlabel('Station Name')
+    
+    h = gca;
+    h.TickLabelInterpreter = 'none';
+    
+    xticks([xpref]);
+    set(h,'XTickLabel',d.site(index),'FontSize',12)
+    
+    axis([min(xpref)-0.75*min(xpref),max(xpref)+0.75*min(xpref), min(log10(d.T))-0.5 ,max(log10(d.T))])
+
+
 end
 
 set(gca,'Layer','top');
+
 
 if strcmp(u.phase_tensor_ellipse_fill,'phimin')
     caxis(u.phase_tensor_phimin_colim);
@@ -129,7 +163,7 @@ else
     hcb.Label.String = 'Beta Skew Angle (degrees)';
 end
 
-set(gca,'fontsize',20)
+
 
 print_figure(['phase_tensor_',d.niter],['pseudo_ellipse_',num2str(lat_mean),'_lat_',num2str(lon_mean),'_lon']); %Save figure
 

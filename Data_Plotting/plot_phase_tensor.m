@@ -39,6 +39,7 @@ while 1
     n = 1;
     for ifreq = index
         
+        ifreq = min(length(d.T),ifreq+2);
         subplot(3,3,n) %A total of 9 subplots will be plotted
 
         plot(0,0,'.'); hold on;

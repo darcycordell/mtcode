@@ -12,7 +12,7 @@ function plot_polar(d,polar,is)
 %
 rot_ang = 0;
 
-set_figure_size(1);
+set_figure_size(100);
 
 %Determine the 9 periods which will be plotted
 [~, T_first]  = max(~isnan(d.Z(:,2,:)), [], 1); %First non-NaN period
@@ -24,6 +24,7 @@ T_last = d.nf-min(T_last);
 n = 1;
 for ifreq = floor(linspace(T_first,T_last,9)) %Loop over 9 periods
 
+    ifreq = min(length(d.T),ifreq+2);
     subplot(3,3,n) %Will output a 3 x 3 subplot
 
     %Normalized polar diagram radius
