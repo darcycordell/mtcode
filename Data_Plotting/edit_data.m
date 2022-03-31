@@ -599,19 +599,28 @@ elseif main_menu == 8 %EDIT DATA-------------------------------------------
     'HorizontalAlignment', 'center','FontSize',12,'FontWeight','bold')
 
     count = 1; points=[]; %Points is a vector of clicked indices to keep track of "undo" commands
+    
     while 1 
         
         %In case the program crashes, the d data structure is saved after
         %each click to update so you don't lose your work.
         save data_editing_last_click d
         
-        [X, Y,click] = ginput(1);%get x,y points on either phase or rho axes       
+        origAx = gca;
+            
+        [X, Y,click] = ginput_editdata(1);%get x,y points on either phase or rho axes       
+        
+        clickedAx = gca;
+        
+%         if clickedAx == origAx
+%             1
+%         end
+        
         if click == 3
-            break
+           break
         end
 
         if click == 1 % left click (MASK DATA POINT)
-            clickedAx=gca; 
             if clickedAx==ax(1) || clickedAx == ax(2) || clickedAx == ax(3) || clickedAx == ax(4)
                 subplot(2,3,[3 6]); title(''); 
                 click_flag = 1;
@@ -709,6 +718,10 @@ elseif main_menu == 8 %EDIT DATA-------------------------------------------
                 dY(id,icmp,is) = NaN;
                 dYo(id,icmp,is) = NaN;
                 derr.phaerr(id,icmp,is)=NaN;
+                
+                if all(isnan(d.rho(:,:,is)))
+                    dplus_flag = 0;
+                end
                 
                 [ax] = set_ax_data(d, ax, is, don);
                              
