@@ -62,7 +62,6 @@ end
 %%
 %Plot pseudo-section
 set_figure_size(1);
-betacutoff = 10^6;
 colormap(flipud(u.cmap));
 %Set vertical scaling for periods and phase tensor ellipses
 aspect_ratio = (max(x_sort)-min(x_sort))/(max(log10(d.T))-min(log10(d.T)));
@@ -91,20 +90,18 @@ for ifreq = 1:u.nskip:d.nf
 
         end
             
-        if abs(beta(ifreq,index(is)))<=betacutoff
             
-            % Note the minus sign below - this is to negate the flip from axis ij later on
-            yp = log10(d.T(ifreq))-scale*ptx(:,ifreq,index(is))./aspect_ratio;  %Y location in period
-            if strcmp(u.phase_tensor_ellipse_fill,'phimin')
-                fill(xp,yp,abs(phimin(ifreq,index(is)))); hold on %Plot filled ellipses with phi min
-            elseif strcmp(u.phase_tensor_ellipse_fill,'beta')
-                fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
-            else
-                disp('Unrecognized input for u.phase_tensor_ellipse_fill. Ellipses are filled with beta skew angle values. Check your user_defaults')
-                fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
-            end
-        
+        % Note the minus sign below - this is to negate the flip from axis ij later on
+        yp = log10(d.T(ifreq))-scale*ptx(:,ifreq,index(is))./aspect_ratio;  %Y location in period
+        if strcmp(u.phase_tensor_ellipse_fill,'phimin')
+            fill(xp,yp,abs(phimin(ifreq,index(is)))); hold on %Plot filled ellipses with phi min
+        elseif strcmp(u.phase_tensor_ellipse_fill,'beta')
+            fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
+        else
+            disp('Unrecognized input for u.phase_tensor_ellipse_fill. Ellipses are filled with beta skew angle values. Check your user_defaults')
+            fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
         end
+
     end
 end
 

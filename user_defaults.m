@@ -15,7 +15,7 @@ function [u] = user_defaults
 
 %GENERAL OPTIONS-----------------------------------------------------------
 
-u.output_figure = 'none'; %Select file format to save figures.
+u.output_figure = 'png'; %Select file format to save figures.
                    % 'none' no figure is saved
                    % 'jpg' JPG is saved
                    % 'png' PNG is saved
@@ -95,8 +95,8 @@ u.zoff = 0; % km to move a station upward in a vertical section. this prevents s
 %DATA PLOTTING INFO--------------------------------------------------------
 
 %Axis limits
-u.Tlim = [0.0001 25000]; %Period limits in seconds
-u.rholim = [10^-2 10^3]; %Apparent resistivity limits for off-diagonals
+u.Tlim = [0.8 7000]; %Period limits in seconds
+u.rholim = [0.05 10000]; %Apparent resistivity limits for off-diagonals
 %u.rholimdiag = u.rholim;
 u.rholimdiag = [10^-3 10^3]; %Apparent resistivity limits for diagonals
 u.phalim = [0 90]; %Phase limits for data plotting
@@ -139,7 +139,7 @@ u.inset_loc_pt = [0.1 0.6];%'NW'; % Inset location for rose diagram on phase ten
 u.inset_loc_iv = [0.6 0.6];%'NE'; % Inset location for rose diagram on induction vector map
 
 % Pseudo-section profile settings
-u.profile_distance = true; %plot profile as a function of distance (true) or equal-distance between sites (false)
+u.profile_distance = false; %plot profile as a function of distance (true) or equal-distance between sites (false)
 u.profile_azimuth = 0; % If you choose to plot the default profile, it will intersect the center of the station grid with this azimuth. default is 0 degrees, i.e. an E-W profile
 u.profile_stations = 'default'; % must be 'default' or a text file containing a list of station indices. default is all stations selected to plot on profile.
 u.rotate_data_to_azimuth = 0; % set to 1 to rotate data, or 0 to not rotate data.
