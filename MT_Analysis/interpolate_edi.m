@@ -1,4 +1,4 @@
-function d = interpolate_edi
+function d = interpolate_edi(filename)
 %
 % Function which loads EDIs and interpolates those EDIs onto a common set
 % of frequencies. This function was previously called "load_edis_v7". Most
@@ -8,8 +8,9 @@ function d = interpolate_edi
 % contains a "d" MT data structure instead of outputting ZZZ, ZZZ_HZ, EEE,
 % EEE_HZ, etc.
 %
-% Usage: d = interpolate_edi
-%       No inputs required
+% Usage: d = interpolate_edi(filename)
+%       
+%   *Optional Input* = filename to save data structure mat file
 %
 % Option to bin data into frequency bins or interpolate data based on an
 % input frequency text file. It is most common to use a frequency text
@@ -202,7 +203,12 @@ end
 d = set_map_projection(d);
 d.origin = [(max(d.loc(:,1))-min(d.loc(:,1)))/2+min(d.loc(:,1)),(max(d.loc(:,2))-min(d.loc(:,2)))/2+min(d.loc(:,2)),0];
 d.niter = '';
-d.name = ['Data_',edst{1}(1:3)];
+
+if exist('filename','var')
+    d.name = filename;
+else
+    d.name = ['Data_',edst{1}(1:3)];
+end
 
 
 save(d.name,'d');
