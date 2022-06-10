@@ -1,4 +1,4 @@
-function write_data_edi(d,is)
+function write_data_edi(d,idx)
 %
 % This function is identical to write_edi_imp but takes a standardized data
 % structure as input and re-arranged the data in this structure to be
@@ -7,7 +7,9 @@ function write_data_edi(d,is)
 % Usage: write_data_edi(d,is)
 %
 % Inputs: "d" is a standard data structure
-%       "is" is the index of the site that you want to save
+%       "is" is the OPTIONAL index of the site that you want to save
+%           If no "is" is provided, then the script loops over all sites in
+%           "d"
 %
 % If you want to write out all the data as EDI files then you need:
 %
@@ -24,17 +26,22 @@ function write_data_edi(d,is)
 
 mu = 4*pi*10^-7;
 
+%Convert impedances and impedance standard errors to field units.
+d.Z = d.Z/(mu*1000);
+d.Zerr = d.Zerr/(mu*1000);
+
 zrot = d.zrot;
 rhorot = d.zrot;
 trot = d.trot;
 
+if ~exist('idx','var')
+    idx = 1:d.ns;
+end
+
+for is = idx
 filename = [d.site{is},'.edi'];
 
 [~, name, ~] = fileparts(filename);
-
-%Convert impedances and impedance standard errors to field units.
-d.Z = d.Z/(mu*1000);
-d.Zerr = d.Zerr/(mu*1000);
 
 Z(1,1,:,1) = d.Z(:,1,is); Z(1,2,:,1) = d.Z(:,2,is); Z(2,1,:,1) = d.Z(:,3,is); Z(2,2,:,1) = d.Z(:,4,is);
 rho(1,1,:,1) = d.rho(:,1,is); rho(1,2,:,1) = d.rho(:,2,is); rho(2,1,:,1) = d.rho(:,3,is); rho(2,2,:,1) = d.rho(:,4,is);
@@ -623,4 +630,7 @@ end
 fprintf(fid,'\n');
 fprintf(fid,'>END');
 fclose(fid);
+
+end
+
 end
