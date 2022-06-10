@@ -62,6 +62,8 @@ end
 % accordingly
 b.cx = b.cx-ns;
 b.cy = b.cy-ew;
+b.x = b.x-ns;
+b.y = b.y-ew;
 db.origin = da.origin;
 db.x = db.x-ns;
 db.y = db.y-ew;
@@ -72,17 +74,19 @@ if b.origin(3) == 0 && a.origin(3) ~=0 || b.origin(3) ~=0 && a.origin(3) == 0
     disp('One of your models has topography while the other does not. Make sure your models are geo-referenced properly!')           
 end
   
-interp_menu = menu('','Interpolate Onto 1st Model Mesh','Interpolate Onto 2nd Model Mesh');
+interp_menu = menu('','Interpolate Onto 1st Model Mesh','Interpolate Onto 2nd Model Mesh','No Interpolation');
 
 % Find the shared region that the two models share
 if interp_menu == 1 %a.cx(end)-a.cx(1) < b.cx(end)-b.cx(1)
     %Use "a" mesh NS range
     cx = a.cx; b.npad(1) = a.npad(1); x = a.x;
     indx = a.npad(2)+1:a.nx-a.npad(2); %x range to plot model (ignore padding)
-else
+elseif interp_menu == 2
     %Use "b" mesh NS range
     cx = b.cx; a.npad(1) = b.npad(1); x = b.x;
     indx = b.npad(2)+1:b.nx-b.npad(2);
+else
+    return
 end
 
 if interp_menu == 1 %a.cy(end)-a.cy(1) < b.cy(end)-b.cy(1)
