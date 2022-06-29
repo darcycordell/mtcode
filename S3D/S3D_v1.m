@@ -80,7 +80,7 @@ if inversion_algorithm_menu == 1 || inversion_algorithm_menu == 2 %ModEM inversi
 
         [m0_file]=uigetfile({'*.model'},'Choose Initial ModEM model file'); if m0_file == 0; return; end
         [m_file]=uigetfile({'*.rho'},'Choose an output model file from the ModEM inversion'); if m_file == 0; return; end
-        [dobs_file]=uigetfile({'*.data'},'Choose Initial ModEM data file'); if dobs_file == 0; return; end
+        [dobs_file]=uigetfile({'*'},'Choose Initial ModEM data file'); if dobs_file == 0; return; end
 
     end
 
