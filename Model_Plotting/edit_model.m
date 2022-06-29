@@ -62,29 +62,35 @@ north_ll = -20; south_ll = -30; east_ll = -67; west_ll = -68; % defaults for lat
 while 1
 
 % Main Menu
-main_menu=menu('','View Model','Jump to Layer','Add a Rectangular Prism with NS, EW, Depth range in km','Add a Rectangular Prism with Lat, Lon, Depth range','Add an irregular polygon by clicking','Manually edit point by point','Replace Sections/Layers','Load Indices to Replace','Start Over','Save Model','Save Edited Indices','Quit');
+main_menu=menu('','View Model','Add a Rectangular Prism with NS, EW, Depth range in km','Add a Rectangular Prism with Lat, Lon, Depth range','Add an irregular polygon by clicking','Manually edit point by point','Replace Sections/Layers','Load Indices to Replace','Start Over','Save Model','Save Edited Indices','Quit');
 
 if main_menu == 1 %VIEW MODEL----------------------------------------------
-    %Loops through the model slice by slice
-    set_figure_size(1);
-    [indz] = plot_slice_menus(me,indz,d);
     
-elseif main_menu == 2 %JUMP TO LAYER--------------------------------------
+    view_menu = menu('','Plot Slices','Jump to Layer','Cross Section');
     
-    prompt={'Layer Depth (km):'};
-    dlg_title='Jump to Layer';
-    def={num2str(m.z(indz)/1000)};
-    num_lines=1;
-    dinp = inputdlg(prompt,dlg_title,num_lines,def);
-    
-    if ~isempty(dinp)
-        indz = nearestpoint(str2double(dinp{1})*1000,m.z);
+    if view_menu == 1 %Loops through the model slice by slice
+        set_figure_size(1);
+        [indz] = plot_slice_menus(me,indz,d);
+    elseif view_menu == 2 % Jump to layer
+        prompt={'Layer Depth (km):'};
+        dlg_title='Jump to Layer';
+        def={num2str(m.z(indz)/1000)};
+        num_lines=1;
+        dinp = inputdlg(prompt,dlg_title,num_lines,def);
+
+        if ~isempty(dinp)
+            indz = nearestpoint(str2double(dinp{1})*1000,m.z);
+        end
+
+        set_figure_size(1);
+        plot_slice(me,indz,d);
+    elseif view_menu == 3 %Cross section
+        
+        plot_diagonal_section(me,d);
+               
     end
-    
-    set_figure_size(1);
-    plot_slice(me,indz,d);
-    
-elseif main_menu == 3 %ADD RECTANGULAR PRISM WITH NS EW DEPTH RANGES IN KM-
+        
+elseif main_menu == 2 %ADD RECTANGULAR PRISM WITH NS EW DEPTH RANGES IN KM-
     
     %Pick slices manually by entering x-y distances. This is useful for repeatability. Once
     %you have clicked around your conductors in the first option, you can
@@ -130,7 +136,7 @@ elseif main_menu == 3 %ADD RECTANGULAR PRISM WITH NS EW DEPTH RANGES IN KM-
     
     end
     
-elseif main_menu == 4 %ADD RECTANGULAR PRISM WITH LAT LON DEPTH------------
+elseif main_menu == 3 %ADD RECTANGULAR PRISM WITH LAT LON DEPTH------------
     
     if ~unique(d.origin) % if no d structure loaded, d.origin = [0 0] from make_nan_data
         disp('No data structure loaded, so latitude and longitude of model are unknown! Load a data structure or edit in model coordinates')
@@ -190,7 +196,7 @@ elseif main_menu == 4 %ADD RECTANGULAR PRISM WITH LAT LON DEPTH------------
     end
     
     
-elseif main_menu == 5 %ADD POLYGON-----------------------------------------
+elseif main_menu == 4 %ADD POLYGON-----------------------------------------
     
     %Add a polygon by clicking on a given slice and specifying the z range that you want to add the polygon   
     
@@ -260,6 +266,8 @@ elseif main_menu == 5 %ADD POLYGON-----------------------------------------
                                         me.A(col(i),row(i),j) = str2double(new_rho{1});
                                         vol = (me.dx(col(i))/1000)*(me.dy(row(i))/1000)*(me.dz(j)/1000)+vol;
                                         
+                                        ind = sub2ind(size(me.A),col(i),row(i),j);
+                                        R(ind,:) = [1; str2double(new_rho{1})];
                                     end
                                 end
                             else
@@ -290,7 +298,7 @@ elseif main_menu == 5 %ADD POLYGON-----------------------------------------
     
     end
 
-elseif main_menu==6 %MANUAL EDIT-------------------------------------------
+elseif main_menu==5 %MANUAL EDIT-------------------------------------------
     
     %Manually edit model point-by-point by clicking
     
@@ -374,7 +382,7 @@ elseif main_menu==6 %MANUAL EDIT-------------------------------------------
     
     end
     
-elseif main_menu == 7 %REPLACE SECTIONS OR LAYERS------------------------------
+elseif main_menu == 6 %REPLACE SECTIONS OR LAYERS------------------------------
     
     replace_menu = menu('Replace:','NS Section','EW Section','Layer','Halfspace below','Back');
     
@@ -556,7 +564,7 @@ elseif main_menu == 7 %REPLACE SECTIONS OR LAYERS------------------------------
         
     end
     
-elseif main_menu == 8 %LOAD INDICES AND REPLACE----------------------------
+elseif main_menu == 7 %LOAD INDICES AND REPLACE----------------------------
     %Anytime you save a model, it also outputs the x,y,z,rho indices that
     %were replaced. For repeatability, you can load those indices into the
     %a different model and do the same replacements.
@@ -610,7 +618,7 @@ elseif main_menu == 8 %LOAD INDICES AND REPLACE----------------------------
     
     end
     
-elseif main_menu == 9 %START OVER------------------------------------------
+elseif main_menu == 8 %START OVER------------------------------------------
     %%
     %Resets the model back to the original model
     
@@ -621,7 +629,7 @@ elseif main_menu == 9 %START OVER------------------------------------------
     set_figure_size(1);
     plot_slice(m,indz,d);
     
-elseif main_menu == 10 %SAVE MODEL------------------------------------------
+elseif main_menu == 9 %SAVE MODEL------------------------------------------
     %Save model as WSINV or ModEM format
     curdir = pwd;
     outputfile = ['edit_',num2str(save_count),'_',me.name];
@@ -650,7 +658,7 @@ elseif main_menu == 10 %SAVE MODEL------------------------------------------
         cd(curdir)
     
     end
-elseif main_menu == 11 %SAVE EDITED INDICES
+elseif main_menu == 10 %SAVE EDITED INDICES
     
     [ixr,iyr,izr] = ind2sub(size(me.A),find(R(:,1)==1));
 
