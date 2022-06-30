@@ -153,7 +153,7 @@ License for Utils/Mapping/read_hgt/dem.m:
 
 https://www.mathworks.com/matlabcentral/fileexchange/36379-readhgt-import-download-nasa-srtm-data-files-hgt
 
-Copyright (c) 2020, François Beauducel
+Copyright (c) 2020, Francois Beauducel
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
