@@ -6,4 +6,6 @@ See the Documentation Folder for detailed description of how to use the scripts,
 
 If you use these scripts please provide an acknowledgement:
 
-Unsworth, M.J., Cordell, D., Lee, B., 2022. mtcode: A repository of MATLAB scripts for magnetotelluric data analysis, data editing, model building, and model viewing. (DOI TO BE CREATED)
+Unsworth, M.J., Cordell, D., Lee, B., 2022. mtcode: A repository of MATLAB scripts for magnetotelluric data analysis, data editing, model building, and model viewing, doi:10.5281/zenodo.6784201
+
+[![DOI](https://zenodo.org/badge/277923435.svg)](https://zenodo.org/badge/latestdoi/277923435)
