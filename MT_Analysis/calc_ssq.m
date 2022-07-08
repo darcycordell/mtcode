@@ -1,15 +1,18 @@
 function [ssqZ, ssqZerr] = calc_ssq(Z,Zerr)
-%Function to compute the determinant of a given impedance tensor
+%Function to compute the ssq impedance of a given impedance tensor
 %
-% Usage: [detZ,detZerr] = calc_determinant(Z,Zerr)
+% Usage: [ssqZ,ssqZerr] = calc_ssq(Z,Zerr)
 %
 % Inputs: Z is a nf x 4 x ns complex vector with each column being [xx,xy,yx,yy]
 %       Zerr is an nf x 4 x ns complex vector of the same size as Z
 %
-% Outputs: detZ is a nf x 1 x ns complex vector of the determinant of Z
-%       detZerr is an nf x 1 x ns complex vector of the errors.
+% Outputs: ssqZ is a nf x 1 x ns complex vector of the determinant of Z
+%       ssqZerr is an nf x 1 x ns complex vector of the errors.
 %               Note: the error propagation is likely incorrect and should
 %               be corrected in the future
+%
+% See Rung-Arunwan et al. (2016), On the Berdichevsky average
+%     Rung-Arunwan et al. (2017), Use of ssq rotational invariants
 
 sze = size(Z);
 
