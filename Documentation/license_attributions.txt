@@ -87,6 +87,16 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ====================================================================================================
+License for Utils/Figures/hist2d.m
+
+https://www.mathworks.com/matlabcentral/fileexchange/66629-2-d-histogram-plot
+
+Copyright (c) 2022, François Beauducel 
+All rights reserved.
+
+2-D histogram plot (https://github.com/beaudu/hist2d/releases/tag/v1.3), GitHub. Retrieved July 8, 2022.
+
+====================================================================================================
 License for Utils/Mapping/deg2utm.m:
 
 https://www.mathworks.com/matlabcentral/fileexchange/10915-deg2utm
