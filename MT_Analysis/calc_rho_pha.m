@@ -29,9 +29,9 @@ for i = 1:sze(1)
     %resistivity and phase. Greg and Juliane wrote a PDF document with the
     %derivation.
     %Use real(Zerr)
-    dZ(i,:,:) = real(real(Zerr(i,:,:))./sqrt(Z(i,:,:).*conj(Z(i,:,:))));
+    dZ(i,:,:) = real(Zerr(i,:,:))./abs(Z(i,:,:));
       
-    rhoerr(i,:,:) = abs(2*rho(i,:,:).*(dZ(i,:,:)));
+    rhoerr(i,:,:) = 2*rho(i,:,:).*(dZ(i,:,:));
     %rhoerr(i,:,:) = rho(i,:,:).*((2*dZ(i,:,:))+(dZ(i,:,:)).^2);
     phaerr(i,:,:) = (180/pi)*dZ(i,:,:); %Phase error in degrees
     

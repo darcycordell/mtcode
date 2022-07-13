@@ -25,11 +25,11 @@ for i = 1:sze(1)
     %The formulas which convert impedance error to error in apparent
     %resistivity and phase and vice versa. Greg and Juliane wrote a PDF document with the
     %derivation.
-    Zerr(i,:,:) = real(0.5*(rhoerr(i,:,:)./rho(i,:,:)).*sqrt(Z(i,:,:).*conj(Z(i,:,:))));
+    Zerr(i,:,:) = 0.5*(rhoerr(i,:,:)./rho(i,:,:)).*abs(Z(i,:,:));
     
     %This is an alternative definition using the phase error (gives
     %identical results as above)
-    %Zerr_2(i,:,:) = real((pi/180)*phaerr(i,:,:).*sqrt(Z(i,:,:).*conj(Z(i,:,:))));      
+    Zerr(i,:,:) = (pi/180)*phaerr(i,:,:).*abs(Z(i,:,:));
     
 end
 
