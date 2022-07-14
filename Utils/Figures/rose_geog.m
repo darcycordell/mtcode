@@ -23,6 +23,7 @@ function rose_geog(E,nbins,rmax,col)
 % edited BL 2020 - prepare azimuths separately for phase tensor and
 % induction arrows in invoking functions - focus on ploting in this
 % function
+E = -E; %function takes angle CCW but we want CW from north
 E = E*pi/180;  % Convert to radians
 
 if nargin > 1  
