@@ -95,12 +95,16 @@ if fmmin<rmsdes
     %print('-djpeg',[finame,'_goldenS_iter_',num2str(iter-1)]);
 end
 % figure(3);
- x3=logspace(-5,4,30);
+ x3=logspace(-5,4,30); f4 = 1;
  for ii=1:30
      A3=x3(ii)*rgh2+son;
-     m3=b/A3;
-     [F3,~,~]=mt_fwd_occ(10.^m3,nl,w,thick);
-     f4(ii) = norm(W*F3'-W*d')/sqrt(ndG);
+     if det(A3)>10^-8
+         m3=b/A3;
+         [F3,~,~]=mt_fwd_occ(10.^m3,nl,w,thick);
+         f4(ii) = norm(W*F3'-W*d')/sqrt(ndG);
+     else
+         f4(ii) = nan;
+     end
  end
 % xminr=floor(min(x3)); xmaxr=ceil(max(x3)); yminr=floor(min(f4)); ymaxr=ceil(max(f4));
 % figure(3); semilogx(x3,f4,'.'); hold on; plot(xmin,fmmin,'p','markersize',20); xlabel('Lagrange Multiplier (mu)'); ylabel('RMS Misfit');
