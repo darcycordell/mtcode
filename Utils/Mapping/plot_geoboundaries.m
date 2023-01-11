@@ -157,6 +157,9 @@ for i = 1:length(L)
     end
 end
 
+% ax = gca;
+% ax.Clipping = 'off';
+
 % if isempty(varargin)
 %     m_grid('box','fancy','xlabeldir','end','tickdir','in');
 % end

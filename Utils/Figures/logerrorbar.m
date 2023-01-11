@@ -10,11 +10,11 @@ function [h,g] = logerrorbar(X,Y,dY,linetype1,linetype2)
 %   linetype2 = string for plotting the linetype of the errorbar lines (usually should be '-' with some color).
 %%
 
-h = loglog(X,Y,linetype1); hold on
+h = loglog(X,Y,linetype1,'LineWidth',1); hold on
 
 lower = Y-dY;
 lower(lower<=0) = 10^-40; 
-g = plot([X X]',[lower Y+dY]',linetype2); hold on %Plot vertical error bar
+g = plot([X X]',[lower Y+dY]',linetype2,'LineWidth',1); hold on %Plot vertical error bar
 
 
 set(gca, 'YScale', 'log')

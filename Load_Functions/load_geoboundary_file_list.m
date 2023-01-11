@@ -225,7 +225,7 @@ for i = 1:length(L)
     fid = fopen(L(i).file);
 
     if fid == -1
-        error(['Specified geoboundary file ',file{i},' does not exist on path!'])
+        error(['Specified geoboundary file ',L(i).file{i},' does not exist on path!'])
     end
 
     line_str=fgetl(fid);

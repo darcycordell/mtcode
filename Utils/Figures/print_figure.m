@@ -26,12 +26,12 @@ end
 
 u = user_defaults;
 
-if strcmp(u.output_figure,'none')
-    return
-end
-
 if override
     u.output_figure = 'png';
+end
+
+if strcmp(u.output_figure,'none')
+    return
 end
 
 if isempty(folder)

@@ -44,4 +44,4 @@ for i = 1:numel
     end
 end
 
-legend(h, legend_string,'AutoUpdate','off');
+legend(h, legend_string,'AutoUpdate','off','Interpreter','none');

@@ -41,6 +41,7 @@ if ~all(isnan(d.tip(:))) %If the entire tipper array is NaN, then no tipper data
     set(gca,'XScale','log')
     ylabel('Real Tipper')
     xlabel('Period (s)');
+    grid on
     title(['Station ',num2str(is),' out of ',num2str(d.ns),': ',char(d.site(is))],'Interpreter','none');
     h = zeros(2, 1);
     h(1) = plot(NaN,NaN,linetype{1});
@@ -59,7 +60,7 @@ if ~all(isnan(d.tip(:))) %If the entire tipper array is NaN, then no tipper data
     axis([u.Tlim(1) u.Tlim(2) u.tiplim(1) u.tiplim(2)])
     ylabel('Imaginary Tipper')
     xlabel('Period (s)')
-
+    grid on
 else
     disp('No Tipper data in your observed data!')
 end
