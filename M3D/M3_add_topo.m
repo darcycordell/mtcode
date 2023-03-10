@@ -262,7 +262,7 @@ function M3_add_topo(hObject, ~, ~)
     %elevations below sea level in this calculation
     elev_grid_orig = elev_grid;
     elev_grid(elev_grid<=0)=0;
-    H.numair = floor((max(max(elev_grid)) - min(min(elev_grid(xpad:H.nx-xpad,ypad:H.ny-ypad)))) / aircellthk);
+    H.numair = max([1 floor((max(max(elev_grid)) - min(min(elev_grid(xpad:H.nx-xpad,ypad:H.ny-ypad)))) / aircellthk)]);
     aircells = ones(size(H.AA,1),size(H.AA,2),H.numair).*def_res;
 %%
     H.AAt = cat(3,aircells,H.AA);
@@ -302,9 +302,30 @@ function M3_add_topo(hObject, ~, ~)
     %H.AAt(elev<elev_grid) = 10^17; %DC Edit: ModEM needs 10^17 for air cells
     % right now the x and y are reversed, need to decide what format to keep it in
 
+
     H.Z = squeeze(Z_new)'; % replace old Z vector, transpose to keep as row vector
     H.nz = length(H.Z);
     H.top = min(H.Z)*1000;
+
+    %Determine elevation topography surface
+    H.Zsurf = zeros(H.nx,H.ny);
+    for i = 1:H.nx
+        for j = 1:H.ny
+            
+            ind = find(elev(i,j,:)>elev_grid(i,j,:),1,'first');
+            
+            if isempty(ind)
+                ind = 1;
+            end
+            
+            if ind == H.nz
+                ind = H.nz;
+            end
+            
+            H.Zsurf(i,j) = ind;
+            
+        end
+    end
         
     % 3DGrid sets top of model to 0, so all station Z in data file are postiive. Here we will keep in depth b.s.l.
 %     H.z = -H.d.loc(:,3); % in meters % also does not seem necessary

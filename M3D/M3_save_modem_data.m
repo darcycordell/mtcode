@@ -186,14 +186,17 @@ function M3_save_modem_data(hObject, ~, ~)
                 siteLoc_tmp(i,2) = ((H.YY(indy1)+H.YY(indy2))/2)*1000; %Move the station to the middle of that cell and over-write station location info
 
                 if ~isfield(H,'AAt')
-                     [indz]= min(find(H.AA(indx1,indy1,:)<10^16)); %Move station elevation coordinate to the surface of the topo
+                     indair= min(find(H.AA(indx1,indy1,:)<10^16)); %Move station elevation coordinate to the surface of the topo
+                     indocean = max(find(abs(squeeze(H.AA(indx1,indy1,:))-0.3)<10^-5))+1;
+                     indz = max([indair indocean]);
                      if isfield(H,'top') % currently, this will only be the case if you generate a model and add topo, or if you load a ModEM data file 
                         siteLoc_tmp(i,3) =((H.Z(indz)*1000)); %Note this is m.b.s.l. so station elevations are negative!
                      else
                         siteLoc_tmp(i,3) = H.Z(indz); %If there is no topography added then set elevations to zero.
                      end
                 elseif isfield(H,'AAt')
-                    [indz]= min(find(H.AAt(indx1,indy1,:)<10^16)); %Move station elevation coordinate to the surface of the topo
+                    indz = H.Zsurf(indx1,indy1);
+                    %[indz]= min(find(H.AAt(indx1,indy1,:)<10^16)); %Move station elevation coordinate to the surface of the topo
                     siteLoc_tmp(i,3) =((H.Z(indz)*1000)); %Note this is m.b.s.l. so station elevations are negative!
                 end
             end

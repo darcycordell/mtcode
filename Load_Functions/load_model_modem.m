@@ -97,7 +97,10 @@ m.Z = zeros(m.nx,m.ny);
 for i = 1:m.nx
     for j = 1:m.ny
         
-        ind = find(isnan(squeeze(m.A(i,j,:))),1,'last');
+        indair = find(isnan(squeeze(m.A(i,j,:))),1,'last');
+        indocean = find(abs(squeeze(m.A(i,j,:))-0.3)<10^-5,1,'last');
+
+        ind = max([indair indocean]);
         
         if isempty(ind)
             ind = 0;
