@@ -597,14 +597,14 @@ d.Zerr = d.Zerr*(mu*1000); %The standard errors are converted rather than the va
 %If the off-diagonals are very large (e.g. 10^5) then it is possible that 
 %the EDI was in field units and give a warning.
 units_code = 1;
-if nanmedian(d.rho(:,2:3,:))<1 %Possible that the EDI impedances were already in field units
+if median(d.rho(:,2:3,:),'omitnan')<1 %Possible that the EDI impedances were already in field units
     %This if statement checks if the median rho value is <1 Ohm m. It is assumed that if your entire
     %EDI has a median value <1 Ohm m, then something strange is going on. Either the units are
     %incorrect in the EDI, or you have some strange geology/static shift which should probably be
     %noted.
     disp(['WARNING: Site ', filename(1:end-4),' HAS VERY LOW RESISTIVITES (MEDIAN <1 OHM M). Check: (1) Does EDI file impedance have correct units? (2) Was site was processed correctly? (3) Large static shifts present?'])
     units_code = 0;
-elseif nanmedian(d.rho(:,2:3,:))>10^6 %Possible that something else is wrong with your EDI involving units, processing or static shift
+elseif median(d.rho(:,2:3,:),'omitnan')>10^6 %Possible that something else is wrong with your EDI involving units, processing or static shift
     disp(['WARNING: Site ', filename(1:end-4),' HAS VERY HIGH RESISTIVITES (MEDIAN >10^6 OHM M). Check: (1) Does EDI file impedance have correct units? (2) Was site was processed correctly? (3) Large static shifts present?'])
     units_code = 2;
 end
