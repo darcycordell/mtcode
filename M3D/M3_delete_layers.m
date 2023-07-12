@@ -41,6 +41,8 @@ function M3_delete_layers(hObject, ~, ~)
         disp([num2str(length(sel)),' layers removed from model'])
         if isfield(H,'AAt')
             H.AAt(:,:,sel) = [];
+            H.Zsurf = H.Zsurf - length(sel);
+            H.Zsurf(H.Zsurf<=0) = 1;
         elseif isfield(H,'AA')
             H.AA(:,:,sel) = [];
         end
