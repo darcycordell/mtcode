@@ -125,7 +125,12 @@ if strcmp(flag,'NS')
     
     %If a data structure exists, project the nearby sites onto the section
     if exist('d','var') && isfield(d,'idx')
+        %The old way uses m.Z but this gets messy if you have marine
+        %sites. It's cleaner to just use the d.z variable directly
+        %However, this causes a problem since sites that are off profile
+        %will sometimes be "in the air" or "in the ground".
         plot(d.x(site_disty<=u.tol)/1000,m.Z(d.idx(site_disty<=u.tol),idy)/1000 -u.zoff,'vk','MarkerFaceColor','k')
+        %plot(d.x(site_disty<=u.tol)/1000,d.z(site_disty<=u.tol)/1000 -u.zoff,'vk','MarkerFaceColor','k')
     end
     print_figure(['vertical_profiles_',m.niter],['N-S_at_slice_',num2str(idy,'%03.0f')]);
     
@@ -176,7 +181,13 @@ elseif strcmp(flag,'EW')
     
     %If a data structure exists, project the nearby sites onto the section
     if exist('d','var') && isfield(d,'idy')
+
+        %The old way uses m.Z but this gets messy if you have marine
+        %sites. It's cleaner to just use the d.z variable directly
+        %However, this causes a problem since sites that are off profile
+        %will sometimes be "in the air" or "in the ground".
         plot(d.y(site_distx<=u.tol)/1000,m.Z(idx,d.idy(site_distx<=u.tol))/1000 -u.zoff,'vk','MarkerFaceColor','k')
+        %plot(d.y(site_distx<=u.tol)/1000,d.z(site_distx<=u.tol)/1000 -u.zoff,'vk','MarkerFaceColor','k')
     end
     print_figure(['vertical_profiles_',m.niter],['E-W_at_slice_',num2str(idx,'%03.0f')]);
 
