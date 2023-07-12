@@ -155,12 +155,14 @@ else %If x,y,z station locations in model coordinates do not yet exist, then add
     [d.y,d.x] = geo2utm(d.loc(:,2),d.loc(:,1),d.origin(2),d.origin(1));
     d.y = d.y-500000;
     d.z = d.loc(:,3);
+
 end
 
 %Find NS (idx) and EW (idy) indices where sites are located in the model
 %mesh
 d.idx = nearestpoint(d.x,m.cx);
 d.idy = nearestpoint(d.y,m.cy);
+d.idz = nearestpoint(d.z,m.cz,'next');
 
 
 
