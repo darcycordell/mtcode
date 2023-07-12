@@ -26,7 +26,7 @@ function M3_generate_model(hObject, eventdata, ~)
        
         H.XX=sort([X2,X1,0]); H.YY=sort([Y2,Y1,0]);
         
-        if ismember(unique(H.d.x),H.XX.*1000) & ismember(unique(H.d.y),H.YY.*1000) % synthetic data check
+        if all(ismember(unique(H.d.x),H.XX.*1000)) && all(ismember(unique(H.d.y),H.YY.*1000)) % synthetic data check
             H.XX = H.XX - uniquetol(diff(H.XX),10^-10)/2;
             H.YY = H.YY - uniquetol(diff(H.YY),10^-10)/2; 
             H.XX(1) = [];
@@ -58,6 +58,19 @@ function M3_generate_model(hObject, eventdata, ~)
         end
         
         %thicknesses
+        %
+        % Note that you can predict the total number of layers based off
+        % the max desired depth, geometric factor increase, and starting
+        % thickness using rules from geometric series:
+        %
+        %       n = ceil(log10(1-(s/a)*(1-r))/log10(r)-1)
+        %
+        %           where a = starting thickness
+        %                 r = geometric factor
+        %                 s = desired maximum model depth
+        %
+        %   see: https://en.wikipedia.org/wiki/Geometric_series#Sum
+        %
         if length(firstthick)==1
             z = cumprod([firstthick ones(1,H.nz-1).*zcoef]);
         else
