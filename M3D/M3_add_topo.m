@@ -43,9 +43,10 @@ function M3_add_topo(hObject, ~, ~)
         H.topo_z = elev.z; % this is in m a.s.l.
     elseif topo_source_menu == 3 % Geotiff file
         %Global Geotiff elevation data can be downloaded from https://maps.ngdc.noaa.gov/viewers/bathymetry/
+        % new link: https://www.ncei.noaa.gov/maps/bathymetry/
         %
         curdir = pwd;
-        [file,path] = uigetfile('*.tiff','Select GeoTiff file');
+        [file,path] = uigetfile({'*.tif','*.tif'},'Select GeoTiff file');
         cd(path)
         
         [A,R] = readgeoraster(file);
@@ -65,6 +66,7 @@ function M3_add_topo(hObject, ~, ~)
         %
         % For global datasets, one option is NOAA: 
         % https://maps.ngdc.noaa.gov/viewers/wcs-client/
+        % New link: https://www.ncei.noaa.gov/maps/grid-extract/
         %   Select region you want
         %   Select Output Format as GMT NetCDF
         %   Download and put into your current directory
