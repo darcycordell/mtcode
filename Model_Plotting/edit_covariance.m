@@ -1,10 +1,11 @@
-function edit_covariance(m)
+function edit_covariance(m,d)
 % Function which allows you to "edit" the covariance file for a given model
 % The function allows you to view the covariance matrix slice-by-slice
 %
 % Usage: edit_covariance(m)
 %
 % Inputs: "m" is a standard model structure
+%         "d" is an optional data structure (for plotting site locs)
 %
 %
 % To "edit" the covariance file you need to have a *.mat file containing
@@ -33,17 +34,24 @@ function edit_covariance(m)
 % and below that on Line #7 you say 1 2 0 (to turn off smoothing between 1
 % and 2)
 %
+
+if ~exist('d','var')
+    d = make_nan_data;
+end
+
 cov = ones(m.nx,m.ny,m.nz);
 cov(isnan(m.A)) = 0; %Set air cells to zero
+cov(abs(m.A-0.3)<10^-5) = 9;
 
 a = m;
 a.A = cov*10;
 
 exception_count = 2;
 is = round(m.nz/2);
+is = 30;
 while 1
 set_figure_size(1);
-plot_slice(a,is);
+plot_slice(a,is,d);
 colorbar off
 caxis([0 2])
 h = manual_legend('Halfspace','sg','Air Cells','sr','Exceptions','sb');
@@ -77,7 +85,7 @@ elseif imenu==3
     
     cov(indices) = exception_count; %Set "exception" cells
     
-    a.A = cov*10;
+    a.A = cov*100;
     
     exception_count = exception_count+1;
     
@@ -90,7 +98,7 @@ elseif imenu==4
     
     cov(indices) = 9; %Set "exception" cells to 9 (fixed) or 2 (smoothing exception)
     
-    a.A = cov*10;
+    a.A = cov*100;
     
 elseif imenu==5
     
