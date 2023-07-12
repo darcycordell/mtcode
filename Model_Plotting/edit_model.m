@@ -124,6 +124,14 @@ elseif main_menu == 2 %ADD RECTANGULAR PRISM WITH NS EW DEPTH RANGES IN KM-
             iminz = nearestpoint(top*1000,me.z,'next');
             imaxz = nearestpoint(bottom*1000,me.z,'previous')-1;
 
+            if imaxx > m.nx
+                imaxx = m.nx;
+            end
+
+            if imaxy > m.ny
+                imaxy = m.ny;
+            end
+
             %Edit either conductors, resistors or replace box directly
             [me.A,R]=edit_block(R,iminx,imaxx,iminy,imaxy,iminz,imaxz,me.A);
 
