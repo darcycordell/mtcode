@@ -378,7 +378,7 @@ while irun == 1
         
         while 1
 
-            polar_menu = menu('Polar Diagrams','By Station','On Map','Distort Polar Diagrams','Return');
+            polar_menu = menu('Polar Diagrams','By Station','On Map','Along Profile','Distort Polar Diagrams (DOES NOT WORK)','Return');
 
             if polar_menu == 1 %By station
                 is = 1; %Initialize station counter
@@ -422,9 +422,15 @@ while irun == 1
                 [polar] = calc_polar(d);
                 plot_polar_map(d,polar)
 
-            elseif polar_menu == 3 %Distort polar diagrams (does not work yet)
+            elseif polar_menu == 3 %Plot polar ellipses along a profile
+
+                plot_polar_ellipse_pseudo(d);
+
+            elseif polar_menu == 4 %Distort polar diagrams (does not work yet)
                 
                 plot_polar_distorted(d)
+
+
             else
                 break
 
