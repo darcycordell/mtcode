@@ -62,7 +62,7 @@ north_ll = -20; south_ll = -30; east_ll = -67; west_ll = -68; % defaults for lat
 while 1
 
 % Main Menu
-main_menu=menu('','View Model','Add a Rectangular Prism with NS, EW, Depth range in km','Add a Rectangular Prism with Lat, Lon, Depth range','Add an irregular polygon by clicking','Manually edit point by point','Replace Sections/Layers','Load Indices to Replace','Start Over','Save Model','Save Edited Indices','Quit');
+main_menu=menu('','View Model','Add a Rectangular Prism with NS, EW, Depth range in km','Add a Rectangular Prism with Lat, Lon, Depth range','Add an irregular polygon by clicking','Manually edit point by point','Replace Sections/Layers','Load Indices to Replace','Start Over','Save Model','Save Edited Indices','Reload User Defaults','Quit');
 
 if main_menu == 1 %VIEW MODEL----------------------------------------------
     
@@ -673,6 +673,10 @@ elseif main_menu == 10 %SAVE EDITED INDICES
     indices = [ixr iyr izr R(R(:,2)~=0,2)];
 
     save(['indices.mat'],'indices');
+
+elseif main_menu == 11 %RELOAD USER DEFAULTS
+
+    u = user_defaults;
 
 else
     close all
