@@ -100,10 +100,10 @@ if isfield(d,'x')
             theta = -unique(d.zrot); % negative TO ROTATE CCW
             R=[cosd(theta) -sind(theta); sind(theta) cosd(theta)];
 
-            YX = [m.X(:) m.Y(:)]; % these are cell centers SWAPPED from load_model_modem X,Y. X IS E-W AND Y IS N-S
+            YX = [m.Xc(:) m.Yc(:)]; % these are cell centers SWAPPED from load_model_modem X,Y. X IS E-W AND Y IS N-S
             rotYX=YX*R';
-            Xqr = reshape(rotYX(:,1), size(m.X,1), []);
-            Yqr = reshape(rotYX(:,2), size(m.Y,1), []);
+            Xqr = reshape(rotYX(:,1), size(m.Xc,1), []);
+            Yqr = reshape(rotYX(:,2), size(m.Yc,1), []);
 
         %         m.X=Xqr;m.Y=Yqr; % new rotated cell centers .. switch these to keep compatibility? or just don't assign new m.X and m.Y     
         %         [m.lon,m.lat] = utm2geo(m.Y(:)+500000,m.X(:),d.origin(2),d.origin(1));
@@ -119,15 +119,22 @@ if isfield(d,'x')
             % rotate and store lon/lat of rotated station coords - since they
             % probably won't be the same as the original lon/lat due to
             % rounding, cell-centering, etc.
-%             yx = [d.y d.x]; % these are cell centers
-%             rotyx=yx*R';
-% 
-%             roty = rotyx(:,1);
-%             rotx = rotyx(:,2);
-% 
-%             [rotlon,rotlat]=utm2geo(roty+500000,rotx,d.origin(2),d.origin(1));
-%             d.loc(:,1) = rotlat; % these won't match original d.loc
-%             d.loc(:,2) = rotlon;     
+             yx = [d.y d.x]; % these are cell centers
+             rotyx=yx*R';
+ 
+             roty = rotyx(:,1);
+             rotx = rotyx(:,2);
+ 
+             [rotlon,rotlat]=utm2geo(roty+500000,rotx,d.origin(2),d.origin(1));
+
+             shiftlon = mean(rotlon-d.loc(:,2));
+             shiftlat = mean(rotlat-d.loc(:,1));
+
+             d.loc(:,1) = rotlat-shiftlat; % these won't match original d.loc
+             d.loc(:,2) = rotlon-shiftlon;
+
+             m.LON = m.LON-shiftlon;
+             m.LAT = m.LAT-shiftlat;
 
         else
 
