@@ -34,8 +34,19 @@ dlat = round(4*abs(u.maplims(2)-u.maplims(1))/10)/4; % interval for latitude tic
 dlon = round(4*abs(u.maplims(4)-u.maplims(3))/10)/4; % interval for longitude ticks and labels
 prec = -2; % precision for axis labels, to the power of 10
 
+if strcmp(u.topo_file,'none')
+    if ~isfield(d,'lim')
+        d = set_map_projection(d);
+    end
 
-srtm = download_srtm(u.maplims); %Download SRTM tiles if necessary. This function outputs an elevation.mat file to the current directory
+    %Download SRTM tiles if necessary. This function outputs an elevation.mat file to the current directory
+
+    maplims = [d.lim(3)-1 d.lim(4)+1 d.lim(1)-1 d.lim(2)+1];
+
+    srtm = download_srtm(maplims);
+else
+    load(u.topo_file);
+end
 
 srtm.z(srtm.z==0) = NaN;
 
