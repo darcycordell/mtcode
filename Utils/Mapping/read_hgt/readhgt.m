@@ -177,11 +177,13 @@ srtm1 = any(strcmpi(varargin,'srtm1'));
 if srtm1
 	% EXPERIMENTAL: SRTM1 full resolution tiles available here (2016):
 	%url = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL1.003/2000.02.11';
-	url = 'http://rmd.neoknet.com/srtm1';
+	%url = 'http://rmd.neoknet.com/srtm1';
+    url = 'https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11';
 else
 	% official USGS SRTM3 tiles (and SRTM1 for USA):
-	url = 'https://dds.cr.usgs.gov/srtm/version2_1';
-    %url = 'http://rmd.neoknet.com/srtm3'; 
+	%url = 'https://dds.cr.usgs.gov/srtm/version2_1';
+    %url = 'http://rmd.neoknet.com/srtm3';
+    url = 'https://srtm.kurviger.de'; % USGS mirror site
 end
 
 srtm3 = any(strcmpi(varargin,'srtm3'));
