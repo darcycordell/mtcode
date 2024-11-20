@@ -184,6 +184,7 @@ else
 	%url = 'https://dds.cr.usgs.gov/srtm/version2_1';
     %url = 'http://rmd.neoknet.com/srtm3';
     url = 'https://srtm.kurviger.de'; % USGS mirror site
+    %url = 'https://bailu.ch/dem3';
 end
 
 srtm3 = any(strcmpi(varargin,'srtm3'));
@@ -389,6 +390,7 @@ else
                         end
                         cd(folder);
 						f(n) = unzip1([url,ff],out);
+                        cd(curdir);
 					end
 					fprintf('done.\n');
                     				catch
