@@ -338,7 +338,7 @@ elseif main_menu == 3 %CLICK ON MAP TO SELECT SITE TO PLOT-----------------
     
 elseif main_menu == 4 %JUMP TO A SPECIFIC SITE
     
-    table(d.site)
+    table(d.site);
     
     pick_site = 1;
     while pick_site
