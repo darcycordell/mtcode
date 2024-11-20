@@ -582,15 +582,17 @@ d.niter = filename(1:end-4);
 % Calculate missing impedances, apparent resistivities and phases
 if all(all(all(isnan(d.Z))))
     [d.Z,d.Zerr]=calc_Z(d.rho,d.rhoerr,d.pha,d.phaerr,d.T);
+
+else
+    %We assume that if Z data are in the EDI file, then they are in SI
+    %units
+
+    %Convert from E/B field units (mv/km / nT) to E/H SI units (Volts / Amp)
+    d.Z = d.Z*(mu*1000);
+    d.Zerr = d.Zerr*(mu*1000); %The standard errors are converted rather than the variances b/c standard errors have same units as impedance
+
 end
 
-if all(all(all(isnan(d.rho)))) && all(all(all(isnan(d.pha)))) 
-    [d.rho,d.pha,d.rhoerr,d.phaerr]=calc_rho_pha(d.Z,d.Zerr,d.T);
-end
-
-%Convert from E/B field units (mv/km / nT) to E/H SI units (Volts / Amp)
-d.Z = d.Z*(mu*1000);
-d.Zerr = d.Zerr*(mu*1000); %The standard errors are converted rather than the variances b/c standard errors have same units as impedance
 [d.rho,d.pha,d.rhoerr,d.phaerr]=calc_rho_pha(d.Z,d.Zerr,d.T); % calculate from the converted impedance
 
 %Check the the calculated apparent resistivities.
