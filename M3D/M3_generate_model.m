@@ -21,6 +21,7 @@ function M3_generate_model(hObject, eventdata, ~)
         H.ny=(ceil(lomax/yspacing)+4)*yspacing; % not sure where the 4 comes from, buffer so that padding doesn't start right at last station
         Y1=linspace(0,H.ny,(ceil(lomax/yspacing)+5))-yspacing; Y1(1:2)=[]; Y2=-Y1; % not sure where the 5 comes from
         lamax=(max(H.d.x)-min(H.d.x))/2000 ;
+        %lamax = lomax;
         H.nx=(ceil(lamax/xspacing)+4)*xspacing; % not sure where the 5 or 6 come from - just make them the same 
         X1=linspace(0,H.nx,(ceil(lamax/xspacing)+5))-xspacing; X1(1:2)=[]; X2=-X1;
        

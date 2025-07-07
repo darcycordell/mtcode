@@ -40,6 +40,7 @@ end
 y = [m.y(yind); m.y(yind(end)+1)]/1000;
 x = [m.x(xind); m.x(xind(end)+1)]/1000;
 C = log10(m.A(xind,yind,id));
+%C = (m.A(xind,yind,id));
 C = horzcat(C,C(:,end));
 C = vertcat(C,C(end,:));
 pcolor(y,x,C); hold on;%view(0,90)
@@ -50,9 +51,11 @@ end
 
 %If data exists, plot site locations
 if exist('d','var')
-    dind = d.z<=m.z(id);
-    plot(d.y(dind)/1000,d.x(dind)/1000,'k.','markersize',12); hold on; axis equal
+    %dind = d.z<=m.z(id);
+    dind = 1:d.ns;
+    plot(d.y(dind)/1000,d.x(dind)/1000,'kv','markersize',12,'MarkerFaceColor','k'); hold on; axis equal
     plot_geoboundaries(L,d.origin,0)
+    %text(d.y(dind)/1000,d.x(dind)/1000,d.site)
 
 end
 
@@ -67,6 +70,7 @@ end
 
 colormap(u.cmap); caxis(u.colim);
 add_rho_colorbar(u);
+colorbar
 
 axis equal
 axis(axlims)

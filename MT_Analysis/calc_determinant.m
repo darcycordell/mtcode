@@ -40,10 +40,10 @@ for i = 1:sze(3) %Loop over stations
     %Another option is to simply take the average of the relative errors of
     %all the tensor components. However, this often results in
     %disproportionately large errors from the diagonal components
-    detZerr(:,1,i) = 0.25*abs(detZ).*(da./abs(a)+db./abs(b)+dc./abs(c)+dd./abs(d));
+    detZerr(:,1,i) = 0.25*abs(detZ(:,:,i)).*(da./abs(a)+db./abs(b)+dc./abs(c)+dd./abs(d));
 
     %A third option is to take the average of the off-diagonal components
     %only
-    detZerr(:,1,i) = 0.5*abs(detZ).*(db./abs(b)+dc./abs(c));
+    detZerr(:,1,i) = 0.5*abs(detZ(:,:,i)).*(db./abs(b)+dc./abs(c));
     
 end

@@ -58,7 +58,32 @@ while ~strcmp(key,'>END')
         
         xspec(count,:) = cell2mat(textscan(fid,'%f',nspec)); %read spectral density matrix in one row
         
-    end    
+    end   
+
+    if( size(key,2) > 7 && strcmp(key(1:8),'>SPECTRA') ) 
+        st = fgetl(fid);
+        st = split(st);
+        count=count+1;
+
+        for sti = 1:length(st)
+            if length(st{sti})>3 && strcmp(st{sti}(1:4),'FREQ')
+                freq(count,1) = sscanf(st{sti}(6:end),'%f');
+            end
+
+            if length(st{sti})>2 && strcmp(st{sti}(1:3),'ROT')
+                zrot(count,1) = sscanf(st{sti}(9:end),'%f');
+            end
+        end
+
+        %nspec = sscanf(st{end},'%f');
+
+        nspec = sscanf(cell2mat(join(regexp(st{end},'[0-9]','match'),'')),'%f');
+
+        xspec(count,:) = cell2mat(textscan(fid,'%f',nspec));
+
+    end
+
+
 end
 
 fclose(fid);

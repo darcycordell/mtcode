@@ -338,36 +338,23 @@ elseif main_menu == 3 %CLICK ON MAP TO SELECT SITE TO PLOT-----------------
     
 elseif main_menu == 4 %JUMP TO A SPECIFIC SITE
     
-    table(d.site);
+    %table(d.site);
+
+    prompt={'Site Name to Go To'};
+    dlg_title='Site to View';
+    def={d.site{1}}; %#ok<*CCAT1>
+    num_lines=1;
+    dinp = inputdlg(prompt,dlg_title,num_lines,def);
     
-    pick_site = 1;
-    while pick_site
+    isq = find(strcmp(dinp{1},d.site));
 
-        prompt={'Site Name to Go To'};
-        dlg_title='Site to View';
-        def={d.site{1}}; %#ok<*CCAT1>
-        num_lines=1;
-        dinp = inputdlg(prompt,dlg_title,num_lines,def);
-
-        i = 1;
-        while 1
-
-            if strcmp(dinp{1},d.site{i})
-                disp(['Site to Show: ',d.site{i}])
-                pick_site = 0;
-                break
-            elseif i<d.ns
-                i=i+1;
-            else
-                disp('Error: Site Name Not Found. Check to make sure the station name you entered is in the station list. Please enter another site.')
-                break
-            end
-
-        end
-    
+    if isempty(isq)
+        disp('Error: Site Name Not Found. Check to make sure the station name you entered is in the station list. Please enter another site.')
+        isq = is;
     end
     
-    is = i;
+    
+    is = isq;
     
     set_figure_size(1);
     plot_rho_pha(d,is);

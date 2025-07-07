@@ -15,7 +15,11 @@ function [u] = user_defaults
 
 %GENERAL OPTIONS-----------------------------------------------------------
 
-u.output_figure = 'jpg'; %Select file format to save figures.
+
+u.output_figure = 'eps'; %Select file format to save figures.
+
+u.output_figure = 'eps'; %Select file format to save figures.
+
                    % 'none' no figure is saved
                    % 'jpg' JPG is saved
                    % 'png' PNG is saved
@@ -24,7 +28,8 @@ u.output_figure = 'jpg'; %Select file format to save figures.
                    %EPS files are quite large so it is recommended to only
                    %use 'eps' option when producing figures you want to use
                    %in presentations or publications.
-u.geofile = 'none'; %Default is 'none', put your geofile text file here if you want it.
+%u.geofile = 'LdM_geoboundfiles.txt'; %Default is 'none', put your geofile text file here if you want it.
+u.geofile = 'geoboundfiles_gic.txt';
 u.projection = 'mercator'; %Projection used for map plotting
     %Options include: 'mercator', 'lambert conformal conic', 'Albers Equal-Area Conic'
         %'Stereographic', 'UTM', etc. See m_map
@@ -61,7 +66,7 @@ u.clabel = 'linear'; % type of colorbar labels for resistivity plot. for example
                     %note that in both cases the colorbar is logarithmic; only the labels are changed
 
 %Contours
-u.plot_contours = true; %"true" to plot contours, "false" to not
+u.plot_contours = false; %"true" to plot contours, "false" to not
 u.contours = [-6 1 6]; %contours to plot on log10(resistivity) slices
 u.contour_text = 'off'; %"on" to plot contour labels, "off" to not
 
@@ -70,6 +75,13 @@ u.zmin = -4; %top of cross-section plots (km)
 u.zmax = 150; %maximum depth to plot cross-sections (km)
 %u.xylims = [-100 100 -500 500]; %x (NS) and y (EW) model coordinate limits to plot in kilometers
 u.xylims = 'default';
+%u.xylims = [-175 175 -175 175]; %for cross sections in square model
+%u.xylims = [-100 180 140 300];
+%u.xylims = [-500 500 -500 500]; %square model
+%u.xylims = [-350 -50 30 250]; %non-uniform NEVIS
+%u.xylims = [-2500 2500 -2500 2500]; %square full
+%u.xylims = [-5 -3 -1 0]; %La Palma topography zoom
+%u.xylims = [-25 25 -16 15]; %La Palma full island
         %Example: [-15 15 -20 20]; First two coordinates are NS
         %'default' plots default non-padding cells
 u.maplims = 'default'; %latitude and longitude limits to plot on map slices
@@ -78,7 +90,7 @@ u.maplims = 'default'; %latitude and longitude limits to plot on map slices
         %plotting data only)
 u.lim_2D = [1 10 0 3]; % plotting limits for 2D in km; [ymin ymax zmin zmax];
 u.ve = 1; %Vertical exaggeration (ve>1 = more exaggeration)
-u.tol = 1; %maximum distance (km) that a site can be away from a profile to be projected onto that profile.
+u.tol = 2; %maximum distance (km) that a site can be away from a profile to be projected onto that profile.
 
 %Diagonal sections can be plotted two ways. "Smooth" diagonal sections
 %averages model cells along the profile while "line" plots the actual model
@@ -95,8 +107,8 @@ u.zoff = 0; % km to move a station upward in a vertical section. this prevents s
 %DATA PLOTTING INFO--------------------------------------------------------
 
 %Axis limits
-u.Tlim = [0.8 7000]; %Period limits in seconds
-u.rholim = [0.05 10000]; %Apparent resistivity limits for off-diagonals
+u.Tlim = [0.1 100000]; %Period limits in seconds
+u.rholim = [0.1 10000]; %Apparent resistivity limits for off-diagonals
 %u.rholimdiag = u.rholim;
 u.rholimdiag = [10^-3 10^3]; %Apparent resistivity limits for diagonals
 u.phalim = [0 90]; %Phase limits for data plotting
@@ -130,7 +142,7 @@ u.pseudo_tol_km = 100; %If a station is less than this distance from a pseudo-se
                     %Units is kilometers. For example if it is 2 km, then
                     %all stations that are >2 km from the line will not be
                     %projected onto the pseudo-section
-u.rose_histogram = 200; %Maximum # of stations for rose diagram histogram
+u.rose_histogram = 50; %Maximum # of stations for rose diagram histogram
 u.inset_size = 0.4; %Inset size for rose diagrams on phase tensor and/or induction vector map
 u.plot_inset_pt = true; % Plot rose diagram inset on phase tensor map. true or false
 u.plot_inset_iv = true; % Plot rose diagram inset on induction vector map. true or false
@@ -182,7 +194,7 @@ u.edit_mode = 'Full Tensor'; %Options: 'Full Tensor' or 'Individual'.
 %Check if geofile exists and if not, set geofile to 'none'
 fid = fopen(u.geofile);
 if fid== -1 && ~strcmp(u.geofile,'none') %If no geo file is found on path, then set geofile to none and it will not be plotted
-    disp('Geoboundary File cannot be found on your path or was not specified and so will not be plotted')
+    %disp('Geoboundary File cannot be found on your path or was not specified and so will not be plotted')
     u.geofile = 'none';
 end
 

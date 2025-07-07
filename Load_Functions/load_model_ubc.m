@@ -60,7 +60,11 @@ m.ny = yxz(1);
 m.nx = yxz(2);
 m.nz = yxz(3);
 
-utm = strsplit(line{2},' ');
+utm = strsplit(line{2},{' ','\t'});
+if length(utm)==5
+    utm(1)=[];
+    utm(end) = [];
+end
 m.origin(2) = str2double(utm{1}); 
 m.origin(1) = str2double(utm{2}); 
 m.origin(3) = -str2double(utm{3}); % negate for m b.s.l. convention

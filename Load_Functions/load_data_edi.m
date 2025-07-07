@@ -67,6 +67,8 @@ function [d,units_code] = load_data_edi(filename)
 
 % Reading in edi file
 fid=fopen(filename,'rt'); linecount = 0;
+
+nfreq = 0;
 while 1
     tline = fgetl(fid);
     if ~ischar(tline), break, end
@@ -215,7 +217,8 @@ while 1
             elseif strcmp(tline(ind1:ind2),'NONE')
                 trot = zeros(1,nfreq);
             else
-                error('Tipper rotation is undefined (ROT= does not match expected values)')
+                trot = zeros(1,nfreq);
+                warning('Tipper rotation is undefined (ROT= does not match expected values)')
             end
         else %if it doesn't say what the rotation is at all
             if ~exist('trot','var') %check if trot exists, if not, there is a problem
@@ -342,6 +345,14 @@ while 1
     linecount = linecount+1;
 end
 fclose(fid);
+
+if nfreq == 0
+    d = 0; 
+    units_code = NaN;
+    return
+end
+
+
 % Creating data array
 % Coordinates
 if exist('lat','var')

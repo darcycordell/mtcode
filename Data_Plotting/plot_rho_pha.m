@@ -25,7 +25,7 @@ u = user_defaults;
 if isnan(d.Zerr) %If all error is NaN then we are looking at predicted data and it will be plotted as a line
     linetype = {'-r','-b','-m','-g'};
 else %If errors exist then we have observed data which will be plotted as points
-    linetype = {'or','sb','om','sg'};
+    linetype = {'*r','*b','om','sg'};
 end
 
 % if isempty(find(ismember(d.responses,'ZXX'),1)) %If diagonals exist, set subplots accordingly
