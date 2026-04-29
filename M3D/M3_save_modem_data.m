@@ -14,7 +14,7 @@ function M3_save_modem_data(hObject, ~, ~)
             return
         end
         
-        [modem_datname,path]=uiputfile('*','Save ModEM Data as:',[pwd,'\','modem.data']);
+        [modem_datname,path]=uiputfile('*','Save ModEM Data as:','modem.data');
         modem_dat=[path,modem_datname];
         
         % give variables shorter names
@@ -146,6 +146,11 @@ function M3_save_modem_data(hObject, ~, ~)
             minid=find(min_per>=T,1,'last'); %DC Corrected so that it gets proper indices
             maxid=find(max_per>=T,1,'first'); %DC Corrected so that it gets proper indices
             frtp = minid:-per_skip:maxid; % frequencies to plot  
+
+        elseif T(1) == T(end) %this is the case where there is only one period to export
+            minid = 1;
+            maxid = 1;
+            frtp = 1;
         end
                   
         set(H.data_text,'string',sprintf('%s\n%s\n%s',['Number of periods = ',num2str(numel(frtp))],['Minimum: ',num2str(T(min(frtp))),' s'],['Maximum: ',num2str(T(max(frtp))),' s']))
