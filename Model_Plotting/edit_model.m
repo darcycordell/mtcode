@@ -122,7 +122,7 @@ elseif main_menu == 2 %ADD RECTANGULAR PRISM WITH NS EW DEPTH RANGES IN KM-
             iminx = nearestpoint(south*1000,me.x,'next');
             imaxx = nearestpoint(north*1000,me.x,'previous');
             iminz = nearestpoint(top*1000,me.z,'next');
-            imaxz = nearestpoint(bottom*1000,me.z,'previous')-1;
+            imaxz = nearestpoint(bottom*1000,me.z,'next')-1;
 
             if imaxx > m.nx
                 imaxx = m.nx;
