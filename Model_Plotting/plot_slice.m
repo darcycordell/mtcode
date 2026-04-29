@@ -53,7 +53,7 @@ end
 if exist('d','var')
     %dind = d.z<=m.z(id);
     dind = 1:d.ns;
-    plot(d.y(dind)/1000,d.x(dind)/1000,'kv','markersize',12,'MarkerFaceColor','k'); hold on; axis equal
+    plot(d.y(dind)/1000,d.x(dind)/1000,'kv','markersize',8,'MarkerFaceColor','k'); hold on; axis equal
     plot_geoboundaries(L,d.origin,0)
     %text(d.y(dind)/1000,d.x(dind)/1000,d.site)
 
