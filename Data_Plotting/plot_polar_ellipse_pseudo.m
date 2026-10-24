@@ -1,9 +1,12 @@
 function plot_polar_ellipse_pseudo(d)
 %
-% Function which plots phase tensors ellipes in pseudo-section format and
-% colors the ellipses with beta skew angle
+% Function which plots polar diagrams (peanuts) in pseudo-section format
+% along a profile. Each polar diagram is plotted at the position of the
+% station along the profile and at the height of its period.
+%   - solid black line : off-diagonal impedance (Zxy)
+%   - red line         : diagonal impedance (Zxx)
 %
-% Usage: plot_phase_tensor_ellipse_pseudo(d)
+% Usage: plot_polar_ellipse_pseudo(d)
 %
 % "d" is an MT data structure
 %
@@ -11,15 +14,22 @@ function plot_polar_ellipse_pseudo(d)
 close all
 u = user_defaults;
 
+% Size of the polar diagrams relative to the cell of the pseudo-section
+% (1 = diagrams fill the cell). Optional: u.polar_pseudo_scale in user_defaults
+if isfield(u,'polar_pseudo_scale')
+    pscale = u.polar_pseudo_scale;
+else
+    pscale = 1;
+end
+
 %Pull a profile to plot the pseudo-section. "sidx" is stations indices
-%included on profile and "rot_ang" is the direction of the normal to the
-%profile direction
+%included on profile and "azimuth" is the profile azimuth
 [sidx,midpoint,azimuth] = get_pseudo_section_indices(d);
 
-rad = 180./pi;      
+rad = 180./pi;
 
 % Process cooordinates
-lon_mean = midpoint(1);  lat_mean = midpoint(2); % km
+lon_mean = midpoint(1);  lat_mean = midpoint(2);
 x = cos(lat_mean/rad)*111*(d.loc(sidx,2)-lon_mean);y = 111*(d.loc(sidx,1)-lat_mean); % km
 N = length(sidx); %Number of stations included in profile
 
@@ -36,59 +46,62 @@ end
 [x_sort,index] = sort(x_rot,'ascend');
 index = sidx(index);
 
-%Initialize arrays
+% Polar diagram coordinates for all stations / periods
+% polar.x, polar.y have size (nf x 4 x ns x nrot+1)
 [polar] = calc_polar(d);
-
 
 %%
 %Plot pseudo-section
 set_figure_size(1);
-%Set vertical scaling for periods and phase tensor ellipses
-aspect_ratio = (max(x_sort)-min(x_sort))/(max(log10(d.T))-min(log10(d.T)));
-if aspect_ratio == 0 % 1 station
-    aspect_ratio = 1;
+
+logT     = log10(d.T(:));
+rangeT   = max(logT)-min(logT);
+dlogT    = u.nskip*rangeT/max(d.nf-1,1);   % spacing (log10 period) between plotted periods
+
+% Horizontal position of each station and aspect ratio of the section
+if u.profile_distance
+    xpos = x_sort(:);                       % true distance along profile (km)
+    if rangeT == 0 || max(xpos)-min(xpos) == 0 % 1 station or 1 period
+        aspect_ratio = 1;
+    else
+        aspect_ratio = (max(xpos)-min(xpos))/rangeT;
+    end
+else
+    xpos = (1:N)';                          % equal spacing between stations
+    if dlogT == 0
+        aspect_ratio = 1;
+    else
+        aspect_ratio = 1/dlogT;             % one period step looks as large as one station step
+    end
 end
+
+% Size of one cell of the pseudo-section in x-axis units
+if N > 1
+    sx = median(diff(xpos));                % station spacing
+else
+    sx = aspect_ratio*dlogT;
+end
+sy = aspect_ratio*dlogT;                    % period spacing (in x-axis units)
+if sy == 0; sy = sx; end
+Rmax = 0.45*pscale*min(sx,sy);              % maximum radius of a polar diagram
 
 for ifreq = 1:u.nskip:d.nf
     for is = 1:N %Loop of stations included on profile
 
+        % Normalized polar diagram radius (based on the off-diagonal term)
         r = 1.1*max([squeeze(abs(polar.x(ifreq,2,index(is),:))); squeeze(abs(polar.y(ifreq,2,index(is),:)))]);
-
-    % Plot whole ellipse
-    plot(squeeze(polar.y(ifreq,2,is,:)),squeeze(polar.x(ifreq,2,is,:)),'k-') % Off-diagonal
-    hold on
-    plot(squeeze(polar.y(ifreq,1,is,:)),squeeze(polar.x(ifreq,1,is,:)),'k:') % Diagonal
-    axis equal
-
-        if u.profile_distance
-            scale = u.pt_pseudo_scale*((max(x_sort)-min(x_sort))/length(x_sort))/r*(((max(log10(d.T)))-min(log10(d.T)))/(d.nf));
-            if scale == 0 % 1 station
-                scale = u.pt_pseudo_scale/r*(((max(log10(d.f)))-min(log10(d.f)))/(d.nf));
-            end
-            xp = x_sort(is)+scale*polar.y(ifreq,index(is)); %X location on profile 
-            %xp = 2*is+scale*pty(:,ifreq,index(is)); %Option to plot site-by-site rather as distance
-
-        else
-            xref = (1/(((max(log10(d.T)))-min(log10(d.T)))/(d.nf)));
-            scale = u.pt_pseudo_scale*((max(x_sort)-min(x_sort))/length(x_sort))/r*(1/xref);
-
-            xp = 1.2*xref*index(is) + scale*pty(:,ifreq,index(is));
-
-            xpref(is) = 1.2*xref*index(is);
-
+        if isnan(r) || r == 0
+            continue % no data at this period / station
         end
-            
-            
-        % Note the minus sign below - this is to negate the flip from axis ij later on
-        yp = log10(d.T(ifreq))-scale*ptx(:,ifreq,index(is))./aspect_ratio;  %Y location in period
-        if strcmp(u.phase_tensor_ellipse_fill,'phimin')
-            fill(xp,yp,abs(phimin(ifreq,index(is)))); hold on %Plot filled ellipses with phi min
-        elseif strcmp(u.phase_tensor_ellipse_fill,'beta')
-            fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
-        else
-            disp('Unrecognized input for u.phase_tensor_ellipse_fill. Ellipses are filled with beta skew angle values. Check your user_defaults')
-            fill(xp,yp,abs(beta(ifreq,index(is)))); hold on %Plot filled ellipses with beta skew angle
-        end
+        scale = Rmax/r;
+
+        % X location on profile, and Y location in period.
+        % Note the minus sign for y - this is to negate the flip from axis ij later on
+        xoff = xpos(is) + scale*squeeze(polar.y(ifreq,:,index(is),:));  % 4 x nrot+1
+        yoff = logT(ifreq) - scale*squeeze(polar.x(ifreq,:,index(is),:))./aspect_ratio;
+
+        plot(xoff(2,:),yoff(2,:),'k-'); hold on % Off-diagonal
+        plot(xoff(1,:),yoff(1,:),'r-');         % Diagonal
 
     end
 end
@@ -97,8 +110,6 @@ daspect(gca,[aspect_ratio 1 1]);
 axis ij
 ylabel('Log(Period (s))')
 
-
-
 if u.profile_distance
 
     set(gca,'fontsize',20)
@@ -106,49 +117,36 @@ if u.profile_distance
 
     %Plot station locations on profile
     dx = 0.05*(x_sort(end) - x_sort(1));
-    plot(x_sort,log10(d.T(1))-0.25,'kv','MarkerFaceColor','k')
+    plot(x_sort,min(logT)-0.25,'kv','MarkerFaceColor','k')
 
-    if dx ==0
-        axis([x_sort(1)-1,x_sort(N)+1, min(log10(d.T))-0.5 ,max(log10(d.T))])
+    if dx == 0
+        axis([x_sort(1)-1,x_sort(N)+1, min(logT)-0.5 ,max(logT)+0.5*dlogT])
     else
-        axis([x_sort(1)-dx,x_sort(N)+dx, min(log10(d.T))-0.5 ,max(log10(d.T))])
+        axis([x_sort(1)-dx,x_sort(N)+dx, min(logT)-0.5 ,max(logT)+0.5*dlogT])
     end
 
     if u.station_names
-        text(x_sort,(x_sort.*0 )+ min(log10(d.T))-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
+        text(x_sort,(x_sort.*0 )+ min(logT)-0.5,d.site(index),'rotation',u.station_names_angle,'interpreter','none');
     else
-        title('Phase Tensor Pseudo Section')
+        title('Polar Diagram Pseudo Section')
     end
-    
+
 else
-    
+
     xlabel('Station Name')
-    
+
     h = gca;
     h.TickLabelInterpreter = 'none';
-    
-    xticks([xpref]);
-    set(h,'XTickLabel',d.site(index),'FontSize',12)
-    
-    axis([min(xpref)-0.75*min(xpref),max(xpref)+0.75*min(xpref), min(log10(d.T))-0.5 ,max(log10(d.T))])
 
+    xticks(xpos);
+    set(h,'XTickLabel',d.site(index),'FontSize',12)
+
+    axis([0.5, N+0.5, min(logT)-0.5 ,max(logT)+0.5*dlogT])
 
 end
 
 set(gca,'Layer','top');
 
+print_figure('polar',['polar_pseudo_ellipse_',num2str(lat_mean),'_lat_',num2str(lon_mean),'_lon']); %Save figure
 
-if strcmp(u.phase_tensor_ellipse_fill,'phimin')
-    caxis(u.phase_tensor_phimin_colim);
-    hcb = colorbar;
-    hcb.Label.String = '\Phi_{min} (degrees)';
-else
-    caxis(u.phase_tensor_beta_colim);
-    hcb = colorbar;
-    hcb.Label.String = 'Beta Skew Angle (degrees)';
 end
-
-
-
-print_figure(['phase_tensor_',d.niter],['pseudo_ellipse_',num2str(lat_mean),'_lat_',num2str(lon_mean),'_lon']); %Save figure
-

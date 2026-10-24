@@ -16,9 +16,9 @@ function [u] = user_defaults
 %GENERAL OPTIONS-----------------------------------------------------------
 
 
-u.output_figure = 'eps'; %Select file format to save figures.
+u.output_figure = 'png'; %Select file format to save figures.
 
-u.output_figure = 'eps'; %Select file format to save figures.
+u.output_figure = 'png'; %Select file format to save figures.
 
                    % 'none' no figure is saved
                    % 'jpg' JPG is saved
@@ -29,11 +29,11 @@ u.output_figure = 'eps'; %Select file format to save figures.
                    %use 'eps' option when producing figures you want to use
                    %in presentations or publications.
 %u.geofile = 'LdM_geoboundfiles.txt'; %Default is 'none', put your geofile text file here if you want it.
-u.geofile = 'geoboundfiles_gic.txt';
+u.geofile = 'none';
 u.projection = 'mercator'; %Projection used for map plotting
     %Options include: 'mercator', 'lambert conformal conic', 'Albers Equal-Area Conic'
         %'Stereographic', 'UTM', etc. See m_map
-u.plot_topo = false; %Automatically plot topography on maps, isosurface plots, etc. 
+u.plot_topo = true; %Automatically plot topography on maps, isosurface plots, etc. 
                 %Topo is not plotted on plots that already have color maps
                 %(e.g. model slice plots, interpolated rho/pha plots, etc.)
                 %Topo is automatically downloaded using download_srtm.m
@@ -44,7 +44,7 @@ u.topo_file = 'none'; %If u.plot_topo = true but no topo_file is specified, then
 u.topo_transparency = 0.5; %Set transparency for topography plots (1 = opaque; 0 = transparent)
 u.elev_colim = [0 3000]; %Set topography colorbar axis when plotting topography on a map
 
-u.gridlines = 'on'; %turn grid lines on or off
+u.gridlines = 'off'; %turn grid lines on or off
 
 %MODEL PLOTTING INFO------------------------------------------------------------
 
@@ -62,7 +62,7 @@ u.num = 'default'; %Default is 'default' for iteration. If your inversion has it
 u.cmap_name = 'mtcode_default';
 
 u.colim=[0 3];%resistivity colorbar limits for color plots (logarithmic)
-u.clabel = 'linear'; % type of colorbar labels for resistivity plot. for example, log = 0,1,2,3 and linear = 1, 10, 100, 1000. 
+u.clabel = 'log'; % type of colorbar labels for resistivity plot. for example, log = 0,1,2,3 and linear = 1, 10, 100, 1000. 
                     %note that in both cases the colorbar is logarithmic; only the labels are changed
 
 %Contours
@@ -71,8 +71,8 @@ u.contours = [-6 1 6]; %contours to plot on log10(resistivity) slices
 u.contour_text = 'off'; %"on" to plot contour labels, "off" to not
 
 %Axis limits
-u.zmin = -4; %top of cross-section plots (km)
-u.zmax = 150; %maximum depth to plot cross-sections (km)
+u.zmin = -4.0; %top of cross-section plots (km)
+u.zmax = 2.0; %maximum depth to plot cross-sections (km)
 %u.xylims = [-100 100 -500 500]; %x (NS) and y (EW) model coordinate limits to plot in kilometers
 u.xylims = 'default';
 %u.xylims = [-175 175 -175 175]; %for cross sections in square model
@@ -88,9 +88,10 @@ u.maplims = 'default'; %latitude and longitude limits to plot on map slices
         %Example: [-36 -35 -70 -71]; %First two coordinates are latitude
         %'default' plots default non-padding cells OR stations area (when
         %plotting data only)
+		%[38.055863 38.315933 47.628380 47.867824]
 u.lim_2D = [1 10 0 3]; % plotting limits for 2D in km; [ymin ymax zmin zmax];
 u.ve = 1; %Vertical exaggeration (ve>1 = more exaggeration)
-u.tol = 2; %maximum distance (km) that a site can be away from a profile to be projected onto that profile.
+u.tol = 1.1; %maximum distance (km) that a site can be away from a profile to be projected onto that profile.
 
 %Diagonal sections can be plotted two ways. "Smooth" diagonal sections
 %averages model cells along the profile while "line" plots the actual model
@@ -107,8 +108,8 @@ u.zoff = 0; % km to move a station upward in a vertical section. this prevents s
 %DATA PLOTTING INFO--------------------------------------------------------
 
 %Axis limits
-u.Tlim = [0.1 100000]; %Period limits in seconds
-u.rholim = [0.1 10000]; %Apparent resistivity limits for off-diagonals
+u.Tlim = [0.001 1000]; %Period limits in seconds
+u.rholim = [0.001 10000]; %Apparent resistivity limits for off-diagonals
 %u.rholimdiag = u.rholim;
 u.rholimdiag = [10^-3 10^3]; %Apparent resistivity limits for diagonals
 u.phalim = [0 90]; %Phase limits for data plotting
@@ -118,7 +119,7 @@ u.Zlim = [10^-5 10^2]; %Impedance limits for data plotting
 u.residual_lim = [-5 5]; % limits for normalized residuals, impedance and tipper
 u.nskip = 1; %Number of periods to skip throughout
 u.sskip = 1; %Number of stations to skip throughout; 1 is plot every station
-
+u.polar_pseudo_scale = 1
 %RMS Map Scaling
 u.rmslim = [0 2]; %Root mean square error limits for misfit plotting
 u.rmsscale = 50; %Scale factor for plotting rms misfit as circles on a map (see plot_misfit_rms_map.m)
@@ -133,25 +134,25 @@ u.dx = 0.005; %Interpolation gridding for north-south direction in latitude degr
 u.dy = 0.005; %Interpolation gridding for east-west direction in longitude degrees
 
 %Phase Tensor and Polar Diagram Scaling
-u.phase_tensor_polar_scale = 10000; %Scaling for phase tensors (usually between 1000 and 10000 depending on survey size?)
-u.phase_tensor_ellipse_fill = 'beta'; % quantity to use to fill phase tensor ellipses. can be 'beta' or 'phimin'
+u.phase_tensor_polar_scale = 1000; %Scaling for phase tensors (usually between 1000 and 10000 depending on survey size?)
+u.phase_tensor_ellipse_fill = 'phimin'; % quantity to use to fill phase tensor ellipses. can be 'beta' or 'phimin'
 u.phase_tensor_beta_colim = [0 5]; %Phase tensor color bar limits (beta skew degrees)
 u.phase_tensor_phimin_colim = [0 60]; %Phase tensor color bar limits (phi min degrees)
-u.pt_pseudo_scale = 5; %Scaling for phase tensor pseudo sections (usually 1 is ok as default; >1 makes them bigger)
-u.pseudo_tol_km = 100; %If a station is less than this distance from a pseudo-section line, it will not be projected on that line
+u.pt_pseudo_scale = 0.35; %Scaling for phase tensor pseudo sections (usually 1 is ok as default; >1 makes them bigger)
+u.pseudo_tol_km = 10; %If a station is less than this distance from a pseudo-section line, it will not be projected on that line
                     %Units is kilometers. For example if it is 2 km, then
                     %all stations that are >2 km from the line will not be
                     %projected onto the pseudo-section
-u.rose_histogram = 50; %Maximum # of stations for rose diagram histogram
+u.rose_histogram = 20; %Maximum # of stations for rose diagram histogram
 u.inset_size = 0.4; %Inset size for rose diagrams on phase tensor and/or induction vector map
-u.plot_inset_pt = true; % Plot rose diagram inset on phase tensor map. true or false
+u.plot_inset_pt = false; % Plot rose diagram inset on phase tensor map. true or false
 u.plot_inset_iv = true; % Plot rose diagram inset on induction vector map. true or false
 u.inset_loc_pt = [0.1 0.6];%'NW'; % Inset location for rose diagram on phase tensor map. Can be a string: NW, NE, SW, SE, 
                        % or an [x y] location where x and y are normalized units between 0 and 1.
 u.inset_loc_iv = [0.6 0.6];%'NE'; % Inset location for rose diagram on induction vector map
 
 % Pseudo-section profile settings
-u.profile_distance = false; %plot profile as a function of distance (true) or equal-distance between sites (false)
+u.profile_distance = true; %plot profile as a function of distance (true) or equal-distance between sites (false)
 u.profile_azimuth = 0; % If you choose to plot the default profile, it will intersect the center of the station grid with this azimuth. default is 0 degrees, i.e. an E-W profile
 u.profile_stations = 'default'; % must be 'default' or a text file containing a list of station indices. default is all stations selected to plot on profile.
 u.rotate_data_to_azimuth = 0; % set to 1 to rotate data, or 0 to not rotate data.
